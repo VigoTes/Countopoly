@@ -129,6 +129,25 @@ function validarPositividad(msjError,id,nombreReferencial){
         return mensaje;
 }
 
+function validarNoNegatividad(msjError,id,nombreReferencial){
+    mensaje ="";
+
+    cantidad = document.getElementById(id).value;
+    cantidad=parseFloat(cantidad);
+    //console.log(cantidad);
+    if(cantidad<0){
+        ponerEnRojo(id);   
+        mensaje="El valor del campo '"+nombreReferencial+"' debe ser positivo.";
+    }
+
+    if(msjError!="") //significa que ya hay un error en el flujo de validaciones
+        return msjError; 
+    else //si no hay ningun error, retorna el mensaje generado en esta funcion (el cual será nulo si no hubo error)
+        return mensaje;
+
+
+}
+
 /* Valida si el contenido del id tiene nombres o apellidos validos */
 function validarRegExpNombres(msjError,id){
     mensaje = "";
@@ -297,6 +316,70 @@ function validarCodigoPresupuestal(msjError,id, codPresupProyecto,nombreReferenc
 
 }
 
+/* Se le pasa un vector de Strings, cada elemento es una id de un radio button */
+function validarGroupButton(msjError,vectorIDs,nombreReferencial){
+    mensaje = "";
+
+    algunoSeleccionado = false;
+    for (let index = 0; index < vectorIDs.length && !algunoSeleccionado; index++) {
+        const element = document.getElementById(vectorIDs[index]);
+        if(element.checked) algunoSeleccionado = true;
+    }
+
+    if(!algunoSeleccionado)
+        mensaje = "No ha seleccionado ningún " +  nombreReferencial + "."
+
+
+    if(msjError!="") //significa que ya hay un error en el flujo de validaciones
+        return msjError; 
+    else //si no hay ningun error, retorna el mensaje generado en esta funcion (el cual será nulo si no hubo error)
+        return mensaje;
+
+}
+
+
+function invocarHtmlEnID(ruta,idElemento){
+    
+    $.get(ruta, function(data){                       
+            console.log('Se ha actualizado el objeto de id '+idElemento + ' con contenido invocado de  ' + ruta 
+            //   + ' con el siguiente contenido: ' + data
+            );
+            objeto = document.getElementById(idElemento);
+            objeto.innerHTML = data;
+        }
+    );
+
+}
+ 
+
+ //  datos = {coche: "Ford", modelo: "Focus", color: "rojo"};
+function enviarPeticionPOST(ruta,datos){
+    
+
+}
+
+function cerrarModal(idModal){
+    $("#"+idModal+" .close").click()
+
+}
+
+    
+//GIRA UN ICONO 90 grados, se vale de las clases vaAGirar y rotado que están en editarProyecto
+function girarIcono(idIcono){    
+    //console.log('GIRANDO EL ' + idIcono);
+    elemento = document.querySelector('#'+idIcono);
+    estaGirado = elemento.classList.contains('rotado'); //booleano para ver si lo contiene
+
+    if(estaGirado)
+        elemento.classList.remove('rotado')
+    else
+        elemento.classList.add('rotado')
+
+}
+
+function inicializarReloj(nombreFuncion,intervalo){
+        setInterval( nombreFuncion, intervalo);
+    }
 
 
 </script>

@@ -40,5 +40,8 @@ class Partida extends Model
 
     }
 
+    public function getStringJugadoresYmaximo(){
+        return $this->cantJugadores. "/". $this->maxJugadores;
+    }
     
 }

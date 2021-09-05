@@ -13,3 +13,10 @@ Route::get('/login', 'UserController@verLogin')->name('user.verLogin'); //para d
 Route::post('/ingresar', 'UserController@logearse')->name('user.logearse'); //post
 
 Route::get('/cerrarSesion','UserController@cerrarSesion')->name('user.cerrarSesion');
+
+
+Route::get('/Partidas/{codPartida}/IngresarSalaEspera/','PartidaController@IngresarSalaEspera')
+    ->name('Partida.IngresarSalaEspera');
+
+//INVOCABLES JS
+Route::get('/Partida/getActualizacionPartida/{codUltimaTransaccion}','PartidaController@getActualizacionPartida');
