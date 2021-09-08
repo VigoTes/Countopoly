@@ -1,11 +1,24 @@
 
-<div id="contenedor">
+
+@extends('Layout.Plantilla')
+@section('titulo')
+    Flujograma
+@endsection
+
+@section('contenido')
+
+ 
+    <div id="contenedor">
 
 
-</div>
+    </div>
+ 
+@endsection
+
+@section('script')
+@include('Layout.ValidatorJS')
 
 <script>
-    
     inicializarReloj(actualizarPartidas,700);
     
     function actualizarPartidas(){ 
@@ -13,8 +26,8 @@
         $.get(ruta, function(dataRecibida){
             console.log('DATA RECIBIDA:');
             console.log(dataRecibida);
-            contenedor = document.getElementById('contenidoMisTransacciones');
-            contenedor.innerHtml = objetoRespuesta.body;
+            contenedor = document.getElementById('contenedor');
+            contenedor.innerHTML = dataRecibida;
             
             
         });
@@ -22,5 +35,7 @@
 
 
 </script>
+ 
+@endsection
 
-PARA LA LIBRERIA VALIDATOR JS LLAMAR DE TODAS MIS APLICACIONES MEDIANTE UNA API CON JSON 
+ 

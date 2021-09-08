@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -27,16 +28,16 @@ class Partida extends Model
     }
 
     public static function getPartidasEnEspera(){
-        return Partida::where('codEstado','=',EstadoPartida::codEnEspera())->get();
+        return Partida::where('codEstadoPartida','=',EstadoPartida::codEnEspera())->get();
 
     }
     
     public static function getPartidasFinalizadas(){
-        return Partida::where('codEstado','=',EstadoPartida::codFinalizada())->get();
+        return Partida::where('codEstadoPartida','=',EstadoPartida::codFinalizada())->get();
     }
     
     public function getUltimaTransaccion(){
-        return TransaccionPartida::where('codPartida','=',$this->codPartda)->last();
+        return TransaccionMonetaria::where('codPartida','=',$this->codPartda)->last();
 
     }
 
@@ -44,4 +45,7 @@ class Partida extends Model
         return $this->cantJugadores. "/". $this->maxJugadores;
     }
     
+    public function getCuentaHost(){
+        return Cuenta::findOrFail($this->codCuentaHost);
+    }
 }

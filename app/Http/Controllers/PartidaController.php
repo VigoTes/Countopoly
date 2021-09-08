@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Partida;
 use Illuminate\Http\Request;
 use App\User;
 use App\Usuario;
@@ -23,8 +24,7 @@ class PartidaController extends Controller
     //invocable que será llamado cada x segundos
     public function invocarListaPartidasEnEspera(){
         $listaPartidas = Partida::getPartidasEnEspera();
-
-        return view('Partidas.Invocables.inv_ListaPartidas',compact('listaPartidas'))
+        return view('Partidas.Invocables.inv_ListaPartidas',compact('listaPartidas'));
     }
     
 
@@ -69,7 +69,7 @@ class PartidaController extends Controller
             'sincronizado'=> $estadoSincronizacion,
             'body'=> $body,
             'codUltimaTransaccion' => $codUltimaTransaccionReal
-        ]
+        ];
         return json_encode($vectorRespuesta);
     }
   

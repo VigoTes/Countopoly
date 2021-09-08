@@ -1,44 +1,42 @@
 
-<table>
+<table class="table table-sm">
     <thead>
         <tr>
             <th class="text-center" >
                 Item
             </th>
             <th class="text-center">
-                Concepto
+                Cuenta
             </th>
             <th>
-                Emisor
+                Jugadores
             </th>
             <th>
-                Receptor
-            </th>
-            <th class="text-center">
-                Monto
+                Opciones
             </th>
         </tr>
     </thead>
 
-
+    @php
+        $i=1;
+    @endphp
     @foreach($listaPartidas as $partida)
         <tr>
             <td class="text-center">
                 {{$partida->codPartida}}
             </td>
             <td class="text-center">
-                {{$partida->getCuentaHost()->nombre}}
+                {{$partida->getCuentaHost()->usuario}}
             </td>
             <td>
-                {{$partida->getStringJugadoresYmaximo(}}
+                {{$partida->getStringJugadoresYmaximo()}}
             </td>
 
             <td>
-                <a href="" class="btn btn-success">
+                <a href="{{route('Partida.IngresarSalaEspera',$partida->codPartida)}}" class="btn btn-success">
                     Ingresar
                 </a>
             </td>
-
         </tr>
         @php
             $i = $i-1;

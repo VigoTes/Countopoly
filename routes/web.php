@@ -14,6 +14,11 @@ Route::post('/ingresar', 'UserController@logearse')->name('user.logearse'); //po
 
 Route::get('/cerrarSesion','UserController@cerrarSesion')->name('user.cerrarSesion');
 
+Route::get('/Partidas/listarPartidasEnEspera','PartidaController@listarPartidasEnEspera')->name('Partida.listarPartidasEnEspera');
+
+Route::get('/Partida/getActualizacionListaPartidas/','PartidaController@invocarListaPartidasEnEspera')->name('Partida.invocarListaPartidasEnEspera');
+
+
 
 Route::get('/Partidas/{codPartida}/IngresarSalaEspera/','PartidaController@IngresarSalaEspera')
     ->name('Partida.IngresarSalaEspera');
