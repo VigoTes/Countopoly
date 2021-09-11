@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -20,11 +21,19 @@ class Jugador extends Model
     }
 
 
+    public function getCuenta(){
+        return Cuenta::findOrFail($this->codCuenta);
+    }
+
+    public function getNombreUsuario(){
+        return $this->getCuenta()->usuario;
+    }
+
     /* 
-    Retorna el jugador asociado a la cuenta que está logeada
-    si no está jugando en una partida activa, arroja una exception
+        Retorna el jugador asociado a la cuenta que está logeada
+        si no está jugando en una partida activa, arroja una exception
     */
-    public function getJugadorLogeado(){
+    public static function getJugadorLogeado(){
 
         $cuenta = Cuenta::getCuentaLogeada();
         $ultimoJugadorDeCuenta = Jugador::where('codCuenta','=',$cuenta->codCuenta)->last();

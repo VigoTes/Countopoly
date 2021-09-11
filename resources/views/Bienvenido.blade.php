@@ -10,7 +10,7 @@
 
 
     BIENVENIDO A ESTA PLANTILLA
-
+    {{App\Cuenta::getCuentaLogeada()}}
 </h1>
 @endsection
 

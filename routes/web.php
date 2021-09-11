@@ -19,9 +19,29 @@ Route::get('/Partidas/listarPartidasEnEspera','PartidaController@listarPartidasE
 Route::get('/Partida/getActualizacionListaPartidas/','PartidaController@invocarListaPartidasEnEspera')->name('Partida.invocarListaPartidasEnEspera');
 
 
+Route::get('/Partida/EntrarSalaJuego/{codPartida}','PartidaController@EntrarSalaJuego')->name('Partida.EntrarSalaJuego');
 
-Route::get('/Partidas/{codPartida}/IngresarSalaEspera/','PartidaController@IngresarSalaEspera')
+
+//Ruta que te hace unirte a una sala de espera y te retorna la vista de esa sala 
+Route::get('/Partidas/{codPartida}/SalaEspera/','PartidaController@IngresarSalaEspera')
     ->name('Partida.IngresarSalaEspera');
+
+
+//Te hace salirte de la sala de espera de una partida, si eres el host, se cancela
+Route::get('/Partidas/SalirmeDePartida/{codPartida}','PartidaController@SalirmeDePartida')
+    ->name('Partida.SalirmeDePartida');
+
+
+    //Vista para crear nueva partida
+Route::get('/Partida/abrirPartida/','PartidaController@abrirPartida')->name('Partida.abrirPartida');
+
+Route::get('/Partida/IniciarPartida/{codPartida}','PartidaController@IniciarPartida')->name('Partida.IniciarPartida');
+Route::get('/Partida/CancelarPartida/{codPartida}','PartidaController@CancelarPartida')->name('Partida.CancelarPartida');
 
 //INVOCABLES JS
 Route::get('/Partida/getActualizacionPartida/{codUltimaTransaccion}','PartidaController@getActualizacionPartida');
+
+Route::get('/Partida/getActualizacionSalaEspera/{codPartida}','PartidaController@getActualizacionSalaEspera');
+
+Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@HacerBancarioAJugador')
+    ->name('Partida.HacerBancarioAJugador');

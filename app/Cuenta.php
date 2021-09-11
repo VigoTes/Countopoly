@@ -2,16 +2,42 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
-class Cuenta extends Model
+class Cuenta extends Authenticatable
 {
-    
+    use Notifiable;
 
-    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $table = "cuenta";
     protected $primaryKey = "codCuenta";
-    public $timestamps = false;  //para que no 
+    public $timestamps = false;  //para que no trabaje con los campos fecha 
     
+
+    public static function getCuentaLogeada(){
+        $codCuenta = Auth::id();
+        if(is_null($codCuenta))
+            return "Ninguna cuenta logeada";
+
+        return Cuenta::findOrFail($codCuenta);
+    }
     
+    public function getAuthPassword()
+	{
+		return $this->password;
+	}
+    public function getAuthIdentifier()
+	{
+		return $this->getKey();
+	}
+
+
+
 }

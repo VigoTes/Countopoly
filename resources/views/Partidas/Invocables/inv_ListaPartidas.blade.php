@@ -3,13 +3,16 @@
     <thead>
         <tr>
             <th class="text-center" >
-                Item
+                #Partida
             </th>
             <th class="text-center">
-                Cuenta
+                Host
             </th>
             <th>
                 Jugadores
+            </th>
+            <th>
+                Limite
             </th>
             <th>
                 Opciones
@@ -29,9 +32,11 @@
                 {{$partida->getCuentaHost()->usuario}}
             </td>
             <td>
-                {{$partida->getStringJugadoresYmaximo()}}
+                {{$partida->getStringJugadores()}}
             </td>
-
+            <td>
+                {{$partida->getCantJugadoresYMaximo()}}
+            </td>
             <td>
                 <a href="{{route('Partida.IngresarSalaEspera',$partida->codPartida)}}" class="btn btn-success">
                     Ingresar

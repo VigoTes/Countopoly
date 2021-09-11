@@ -6,12 +6,28 @@
 @endsection
 
 @section('contenido')
+@include('Layout.MensajeEmergenteDatos')
 
- 
-    <div id="contenedor">
+
+<div class="row">
+    <div class="col">
+
+    </div>
+    <div class="col text-right">
+        <a href="{{route('Partida.abrirPartida')}}" class="m-2 btn btn-success" >
+            Nueva Partida
+
+        </a>
+    </div>
+
+</div>
+<div class="row m-2">
+    <div class="col" id="contenedor">
 
 
     </div>
+</div>
+ 
  
 @endsection
 
@@ -19,13 +35,19 @@
 @include('Layout.ValidatorJS')
 
 <script>
-    inicializarReloj(actualizarPartidas,700);
-    
+
+    $( document ).ready(function() {
+
+
+        inicializarReloj(actualizarPartidas,700);
+            
+    });
+
     function actualizarPartidas(){ 
         ruta = "/Partida/getActualizacionListaPartidas/";
         $.get(ruta, function(dataRecibida){
             console.log('DATA RECIBIDA:');
-            console.log(dataRecibida);
+            //console.log(dataRecibida);
             contenedor = document.getElementById('contenedor');
             contenedor.innerHTML = dataRecibida;
             

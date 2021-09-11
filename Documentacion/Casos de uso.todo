@@ -1,0 +1,13 @@
+Casos de uso:
+    ✔ Listar partidas @done(10-09-21 12:21)
+    ☐ Crear nueva partida
+    ☐ Ingresar a sala de espera
+    ☐ Iniciar juego
+    ☐ Ver mis transacciones monetarias
+    ☐ Registrar y Ver mis propiedades
+    ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
+    ☐ Tener varias partidas activas
+    ☐ Valor de mi patrimonio total
+    ☐ Sistema de turnos (no puedo hacer pagos ni nada si no es miturno, cuando lo es debo ceder el turno)
+    ☐ Personalizacion del perfil
+    ☐ Que te llegue la notificación de que es tu turno (que se vea el circulito de turnos como llega)

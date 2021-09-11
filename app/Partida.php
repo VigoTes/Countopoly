@@ -41,11 +41,47 @@ class Partida extends Model
 
     }
 
-    public function getStringJugadoresYmaximo(){
-        return $this->cantJugadores. "/". $this->maxJugadores;
+    public function getStringJugadores(){
+
+        $string = "";
+        $listaJugadores = Jugador::where('codPartida','=',$this->codPartida)->get();
+        foreach($listaJugadores as $jugador){
+            $string .= ",".$jugador->getCuenta()->usuario;
+        }
+       
+        $string = trim($string,',');
+        return $string;
+    }
+
+    public function getCantJugadoresYMaximo(){
+         
+        return $this->getCantidadJugadores(). "/4". $this->maxJugadores;
+    }
+    public function getJugadores(){
+        return Jugador::where('codPartida','=',$this->codPartida)->get();
+    }
+    public function getCantidadJugadores(){
+        return count($this->getJugadores());
     }
     
     public function getCuentaHost(){
         return Cuenta::findOrFail($this->codCuentaHost);
+    }
+
+    public function elHostEstaLogeado(){
+        $cuentaLogeada = Cuenta::getCuentaLogeada();
+        return $cuentaLogeada->codCuenta == $this->codCuentaHost;
+
+    }
+
+    
+
+    public function tieneAJugador($codCuenta){
+        $lista = Jugador::where('codCuenta','=',$codCuenta)
+        ->where('codPartida',$this->codPartida)
+        ->get();
+
+        return count($lista)>0;
+
     }
 }

@@ -181,7 +181,7 @@
               <a href="/verMisDatos" class="d-block"></a>
              
                 <label for="" style="color: rgb(255, 255, 255))">
-                 Diego Vigo, Admin
+                 {{App\Cuenta::getCuentaLogeada()->usuario}}
                 </label>
       
             </div>
@@ -197,7 +197,7 @@
           
            @include('Layout.MenuLateral.AdminSistema')  {{-- Este tiene todo --}}
            
-
+        
            
 
         </ul>

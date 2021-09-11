@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Cliente;
 use Illuminate\Support\Carbon;
 use App\Carrito;
+use App\Cuenta;
+use App\Debug;
 use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
@@ -17,52 +19,53 @@ class UserController extends Controller
     const PAGINATION = 10; // PARA QUE PAGINEE DE 10 EN 10
     public function logearse(Request $request)
     {
-       
+         
+        try {
+            //error_log('El hash para '.$request->password.' es '.Hash::make($request->password));
+            $data=$request->validate([
+                'usuario'=>'required',
+                'password'=>'required',
+            ],
+            [
+                'usuario.required'=>'Ingrese E-mail', 
+                'password.required'=>'Ingrese Contraseña',
+            ]);
 
-        //error_log('El hash para '.$request->password.' es '.Hash::make($request->password));
-        $data=$request->validate([
-            'usuario'=>'required',
-            'password'=>'required',
-        ],
-        [
-            'usuario.required'=>'Ingrese E-mail', 
-            'password.required'=>'Ingrese Contraseña',
-        ]);
+
             $usuario=$request->get('usuario');
-            $query=User::where('usuario','=',$usuario)->get();
-             
+            $query=Cuenta::where('usuario','=',$usuario)->get();
+            
+            
             if($query->count()!=0){
-               // error_log($query[0].'aaaaaaaaaaaaaaaaaaa');
                 $hashp=$query[0]->password; // guardamos la contraseña cifrada de la BD en hashp
                 $password=$request->get('password');    //guardamos la contraseña ingresada en password
+                
                 if(password_verify($password,$hashp))       //comparamos con el metodo password_verifi ??¡ xdd
                 {
-                        // Preguntamos si es admin o no
+                    // Preguntamos si es admin o no
                     //LogeoHistorial::registrarLogeo();
                     if($usuario=='admin')
                     {
-
                         //SI INGRESÓ EL ADMIN 
-                        if(Auth::attempt($request->only('usuario','password'))){ //este attempt es para que el Auth se inicie
-                             
+                        if(Auth::attempt($request->only('usuario','password'))) //este attempt es para que el Auth se inicie
                             return redirect()->route('user.home');
-                        }
-                    }//si es user normal
-                    else{
-                        if(Auth::attempt($request->only('usuario','password'))){
-                            
+                        
+                    }else{ //user normal
+                        Debug::mensajeSimple('Entro user normal');
+                        if(Auth::attempt($request->only('usuario','password'))) //aqui es el error
                             return redirect()->route('user.home');
-                        }
-    
                     }
-                }
-                else{
+                }else{
+                     
                     return back()->withErrors(['password'=>'Contraseña no válida'])->withInput([request('password')]);
                 }                
-            }
-            else
-            {
+            }else{
                 return redirect()->route('user.verLogin')->with('datos','Usuario no valido!');
+            }
+
+
+            } catch (\Throwable $th) {
+                return $th;
             }
         }
 
@@ -106,9 +109,9 @@ class UserController extends Controller
 
 
     public function home(){
-       /*  if(is_null(Auth::id()))
+        if(is_null(Auth::id()))
             return redirect()->route('user.verLogin');
- */
+
         return view('Bienvenido');
     }
 

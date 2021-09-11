@@ -2,7 +2,7 @@
 <html>
 <head>
 	 <meta charset="utf-8"/>
-     <title>CEDEPAS Norte | Login</title>
+     <title>Countopoly | Login</title>
 	 <link rel="shortcut icon" href="/img/LogoCedepas.png" type="image/png">
   
      <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -97,8 +97,9 @@
 	
 			</div>
 			<div style="text-align: center">
-				<img src="/img/LogoCedepas.png"
-				width="200" height="140" >
+				AQUI VA UNA IMAGEN CHIDA DE MONOPOLY
+				{{-- <img src="/img/LogoCedepas.png"
+				width="200" height="140" > --}}
 			</div>
 		</div>
 		

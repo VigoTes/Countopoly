@@ -1,0 +1,29 @@
+Fortalezas:
+    ☐ El banco no se tiene que complicar tanto con dar cambio ni tener efectivo
+    ☐ Se tiene un registro ordenado de las transacciones del usuario
+    ☐ Permite jugar monopoly sin tener billetes en buen estad
+Debilidades:
+    ☐ Algunos jugadores quieren sentir el billete en sus manos
+    ☐ Se necesita internet para conectarse al sistema
+Amenazas:
+    ☐ Los jugadores estén con su celular, se pierde el momento familiar (es juego de mesa)
+    ☐ En caso de usar efectivo a la vez que la app -> de que se aburran/confundan de hacer los pagos dobles
+    ☐ Celular se apaga por bateria baja
+    ☐ El celular se puede bloquear si no se usa (cuando los turnos son muy largos)
+Oportunidades:
+    ☐ Listar partidas
+    ☐ Ver mis transacciones monetarias
+    ☐ Registrar y Ver mis propiedades
+    ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
+    ☐ Tener varias partidas activas
+    ☐ Valor de mi patrimonio total
+Necesidades:
+    ✔ Listar partidas @done(10-09-21 12:21)
+    ☐ Ver mis transacciones monetarias
+    ☐ Registrar y Ver mis propiedades
+    ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
+    ☐ Tener varias partidas activas
+    ☐ Valor de mi patrimonio total
+    ☐ Sistema de turnos (no puedo hacer pagos ni nada si no es miturno, cuando lo es debo ceder el turno)
+    ☐ Personalizacion del perfil
+    ☐ Que te llegue la notificación de que es tu turno (que se vea el circulito de turnos como llega)
