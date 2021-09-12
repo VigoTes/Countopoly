@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Link;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,11 +14,22 @@ class LinkController extends Controller
     //
 
     public function verLink($stringCodigoQR){
-        $link = Link::where('stringCodigoQR','=',$stringCodigoQR)->get()[0];
         $error = false;
-        $nombreImagen = $link->nombreImagen;
-        $mensaje = $link->descripcion;
-        return view('Links.VerLink',compact('error','nombreImagen','mensaje'));
+        try {
+            $link = Link::where('stringCodigoQR','=',$stringCodigoQR)->get()[0];
+            
+            if(!$link->sePuedeVer())
+                $error = true;
+            
+            return view('Links.VerLink',compact('link','error'));            
+        } catch (\Throwable $th) {
+            $error = true;
+            $nombreImagen="";
+            $mensaje="";
+            return view('Links.VerLink',compact('link','error'));
+            
+        }
+        
 
     }
 

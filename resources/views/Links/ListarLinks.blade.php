@@ -30,6 +30,7 @@
                 <th>stringCodigoQR</th>
                 <th>fechaDesbloqueo</th>
                 <th>nombreImagen</th>
+                <th>Descripción</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -49,6 +50,9 @@
                     </td>
                     <td>
                         {{$link->nombreImagen}}
+                    </td>
+                    <td>
+                        {{$link->descripcion}}
                     </td>
                     <td>
                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" 

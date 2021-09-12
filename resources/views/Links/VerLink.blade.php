@@ -9,9 +9,20 @@
 
 </head>
 <body>
-    
+    <div style="text-align:center; margin:50px; color:white">
+        <h3 >
+          Mensaje del día 
+          <b style="color:rgb(126, 209, 230)">
+            {{$link->getFechaDesbloqueo()}}
+
+          </b>
+          
+          <br> para la Novia más hermosa del universo <br> porque se fue a Rioja pero ya pronto volverá
+        </h3>
+        
+    </div>
     @if($error==true)
-        <h2 > </h2>
+        <h2 ></h2>
         <div >
             {{-- Link de la foto del icono de usuario --}}
             <img src="/img/CheemsError.png" style="width: 30%; height:30%;"  >
@@ -29,7 +40,7 @@
 
             </h2>
             
-            <img src="/img/memes/{{$nombreImagen}}" alt="">
+            <img src="/img/memes/{{$link->nombreImagen}}" alt="">
         </div>
     @endif  
 </body>
@@ -246,7 +257,7 @@
     function clickBotonMargarita(){
       $('#botonMargarita').fadeOut("slow",function(){
           $("#container").fadeIn();
-          document.getElementById("mensaje").innerHTML = "{{$mensaje}}";
+          document.getElementById("mensaje").innerHTML = "{{$link->descripcion}}";
       });
 
     }
