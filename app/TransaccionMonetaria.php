@@ -27,12 +27,26 @@ class TransaccionMonetaria extends Model
         Si no es ninguno de los dos, retorna negro
     */
     public function getColorSegunLogeado(){
-        if(Cuenta::getJugadorLogeado() == $this->codJugadorEmisor)
+        $codJugadorLogeado = Jugador::getJugadorLogeado()->codJugador;
+        if($codJugadorLogeado == $this->codJugadorSaliente)
             return "red";
-        if(Cuenta::getJugadorLogeado() == $this->codJugadorE)
+        if($codJugadorLogeado == $this->codJugadorEntrante)
             return "green";
         
         return "black";
 
     }    
+    public function getConcepto(){
+        return "a";
+    }
+
+    public function getEmisor(){
+        return Cuenta::findOrFail(Jugador::findOrFail($this->codJugadorSaliente)->codCuenta);
+
+    }
+
+
+    public function getReceptor(){
+        return Cuenta::findOrFail(Jugador::findOrFail($this->codJugadorEntrante)->codCuenta);
+    }
 }

@@ -33,7 +33,7 @@
 </div>
 <div class="row m-2">
     <div class="col" id="contenedor">
-
+        @include('Partidas.Invocables.inv_SalaEspera')
 
     </div>
 </div>

@@ -1,9 +1,9 @@
 Casos de uso:
     ✔ Listar partidas @done(10-09-21 12:21)
-    ☐ Crear nueva partida
-    ☐ Ingresar a sala de espera
-    ☐ Iniciar juego
-    ☐ Ver mis transacciones monetarias
+    ✔ Crear nueva partida @done(11-09-21 14:36)
+    ✔ Ingresar a sala de espera @done(11-09-21 14:36)
+    ✔ Iniciar juego @done(11-09-21 14:36)
+    ✔ Ver mis transacciones monetarias @done(11-09-21 14:36)
     ☐ Registrar y Ver mis propiedades
     ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
     ☐ Tener varias partidas activas

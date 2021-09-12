@@ -23,8 +23,8 @@
 </div>
 <div class="row m-2">
     <div class="col" id="contenedor">
-
-
+        {{-- Para que aparezcan las partidas antes de empezar a actualizarse --}}
+        @include('Partidas.Invocables.inv_ListaPartidas')
     </div>
 </div>
  

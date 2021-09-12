@@ -36,7 +36,7 @@ class Jugador extends Model
     public static function getJugadorLogeado(){
 
         $cuenta = Cuenta::getCuentaLogeada();
-        $ultimoJugadorDeCuenta = Jugador::where('codCuenta','=',$cuenta->codCuenta)->last();
+        $ultimoJugadorDeCuenta = Jugador::where('codCuenta','=',$cuenta->codCuenta)->get()->last();
         if(!$ultimoJugadorDeCuenta->getPartida()->estaJugandose())
             throw new Exception("La cuenta logeada no está jugando ninguna partida", 1);
         
@@ -48,8 +48,9 @@ class Jugador extends Model
     //obtiene la lista de transacciones en las que este jugador es emisor o receptor de dinero
     public function getListaTransacciones(){
         return TransaccionMonetaria::
-              where('codJugadorEmisor','=',$this->codJugador)
-            ->orWhere('codJugadorEmisor','=',$this->codJugador)->get();
+              where('codJugadorSaliente','=',$this->codJugador)
+            ->orWhere('codJugadorEntrante','=',$this->codJugador)
+            ->orderBy('codTransaccionMonetaria','DESC')->get();
 
     }
     

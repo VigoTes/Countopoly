@@ -1,13 +1,17 @@
 
 @php
     $cantidadTransacciones = count($listaMisTransacciones);
-    $i = $$cantidadTransacciones;
+    $i = $cantidadTransacciones;
 @endphp
 
 
-Cantidad actual en caja: {{$jugador->montoActual}}
+Cantidad actual en caja: 
+<b>
+    {{$jugador->montoActual}}
+</b>
 
-<table>
+
+<table class="table table-sm fontSize9">
     <thead>
         <tr>
             <th class="text-center" >
@@ -38,13 +42,13 @@ Cantidad actual en caja: {{$jugador->montoActual}}
                 {{$transaccion->getConcepto()}}
             </td>
             <td>
-                {{$transaccion->getEmisor()->nombreUsuario}}
+                {{$transaccion->getEmisor()->usuario}}
             </td>
             <td>
-                {{$transaccion->getReceptor()->nombreUsuario}}
+                {{$transaccion->getReceptor()->usuario}}
             </td>
 
-            <td class="text-center" style="background-color:{{$transaccion->getColorSegunLogeado()}}">
+            <td class="text-center" style="color:{{$transaccion->getColorSegunLogeado()}}">
                 {{$transaccion->monto}}
             </td>
         </tr>

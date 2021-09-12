@@ -17,11 +17,11 @@ class Partida extends Model
     public $timestamps = false;  //para que no trabaje con los campos fecha 
     
     public function getEstado(){
-        return EstadoPartida::findOrFail($this->codEstado);
+        return EstadoPartida::findOrFail($this->codEstadoPartida);
     }
 
     public function estaJugandose(){
-        return $this->verificarEstado('Jugando');
+        return $this->verificarEstado('Jugandose');
     }
     private function verificarEstado($nombreEstado){
         return $this->getEstado()->nombre == $nombreEstado;
@@ -37,7 +37,7 @@ class Partida extends Model
     }
     
     public function getUltimaTransaccion(){
-        return TransaccionMonetaria::where('codPartida','=',$this->codPartda)->last();
+        return TransaccionMonetaria::where('codPartida','=',$this->codPartida)->get()->last();
 
     }
 

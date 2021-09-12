@@ -23,7 +23,8 @@ class PartidaController extends Controller
     //vista sin datos que llamara al invocable
     public function listarPartidasEnEspera(){
         
-        return view('Partidas.ListarPartidas');
+        $listaPartidas = Partida::getPartidasEnEspera();
+        return view('Partidas.ListarPartidas',compact('listaPartidas'));
     }
     //invocable que será llamado cada x segundos
     public function invocarListaPartidasEnEspera(){
@@ -53,12 +54,13 @@ class PartidaController extends Controller
             $partida->codCuentaHost = $cuentaLogeada->codCuenta; //por ahora, pondremos que siempre sea Vigo el host
             $partida->codEstadoPartida = 1; //por ahora, pondremos que siempre sea Vigo el host
             $partida->save();
-
+            
             //ahora incluimos en esa partida a el host
             $jugadorHost = new Jugador();
             $jugadorHost->codCuenta = $cuentaLogeada->codCuenta;
             $jugadorHost->codPartida = $partida->codPartida;
             $jugadorHost->montoActual = 0;
+            $jugadorHost->esBanco =0; //Esto se refiere a que este jugador no es el Banco (aunque será el bancario)
             $jugadorHost->save();
 
             $partida->codJugadorBancario = $jugadorHost->codJugador;
@@ -81,18 +83,17 @@ class PartidaController extends Controller
         $partida->codEstadoPartida = 2;
         $partida->save();
 
-
         //esta es la cuenta en la partida del jugador que manejará el banco, le creo un jugador porque su monto es infinito
         $jugadorBanco = new Jugador();
-        $jugadorBanco->codCuenta = $partida->codJugadorBancario; //el que se seteó en la sala de espera como BANCO
+        $jugadorBanco->codCuenta = 0; //el que se seteó en la sala de espera como BANCO
         $jugadorBanco->codPartida = $codPartida;
         $jugadorBanco->montoActual = 99999999;
+        $jugadorBanco->esBanco = 1;
         $jugadorBanco->save();
 
         //ahora guardamos en partida el codigo de este jugador bancos
         $partida->codJugadorBanco = $jugadorBanco->codJugador;
         $partida->save();
-
 
         $montoInicial = 5000;
         //ahora le damos a cada jugador la cantidad inicial de dinero
@@ -107,7 +108,8 @@ class PartidaController extends Controller
             $transaccion->codPartida = $codPartida;
             $transaccion->codTipoTransaccion = 2; //pago del banco
             $transaccion->fechaHora = Carbon::now();
-
+            $transaccion->monto = $montoInicial;
+            $transaccion->save();
         }
 
         return redirect()->route('Partida.EntrarSalaJuego',$codPartida);
@@ -129,7 +131,9 @@ class PartidaController extends Controller
             DB::beginTransaction();
             $jugador = Jugador::findOrFail($codJugador);
             $partida = $jugador->getPartida();
+
             $partida->codJugadorBancario = $codJugador;
+            
             $partida->save();
             $nombre = $jugador->getNombreUsuario();
             DB::commit();
@@ -147,19 +151,23 @@ class PartidaController extends Controller
 #endregion
 
 
-
+    //Te crea un nuevo jugador para ti y te retorna la vista de la sala de espera
     public function IngresarSalaEspera ($codPartida){
         $partida = Partida::findOrFail($codPartida);
         $cuentaLogeada = Cuenta::getCuentaLogeada();
+        
         if(!$partida->tieneAJugador($cuentaLogeada->codCuenta)){
             $jugadorHost = new Jugador();
             $jugadorHost->codCuenta = $cuentaLogeada->codCuenta;
             $jugadorHost->codPartida = $partida->codPartida;
             $jugadorHost->montoActual = 0;
+            $jugadorHost->esBanco = 0;
             $jugadorHost->save();
         }
+        $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
 
-        return view('Partidas.SalaEsperaPartida',compact('partida'));
+
+        return view('Partidas.SalaEsperaPartida',compact('partida','listaJugadores','cuentaLogeada'));
     }
 
     public function SalirmeDePartida($codPartida){
@@ -185,10 +193,38 @@ class PartidaController extends Controller
     public function entrarSalaJuego($codPartida){
         $partida = Partida::findOrFail($codPartida);
         $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
+        $jugadorLogeado = Jugador::getJugadorLogeado();
 
-        return view('Partidas.SalaJuego',compact('partida','listaJugadores'));
+        return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado'));
     }
     
+    public function realizarPago(Request $request){
+         
+        $jugadorLogeado = Jugador::getJugadorLogeado();
+
+        if($jugadorLogeado->montoActual < $request->montoEnviado){
+            return RespuestaAPI::respuestaError("No dispone de fondos suficientes.");
+        }
+
+        $transaccion = new TransaccionMonetaria();
+        $transaccion->codJugadorSaliente = $jugadorLogeado->codJugador;
+        $transaccion->codJugadorEntrante = $request->codJugadorDestino;
+        $transaccion->codPartida = $request->codPartida;
+        $transaccion->codTipoTransaccion = $request->codTipoTransaccion;
+        $transaccion->fechaHora = Carbon::now();
+        $transaccion->monto = $request->montoEnviado;
+        $transaccion->save();
+
+        $jugadorEntrante = Jugador::findOrFail($request->codJugadorDestino);
+        $jugadorEntrante->montoActual = $jugadorEntrante->montoActual + $request->montoEnviado;
+        $jugadorLogeado->montoActual = $jugadorLogeado->montoActual - $request->montoEnviado;
+
+        $jugadorEntrante->save();
+        $jugadorLogeado->save();
+
+        return RespuestaAPI::respuestaOk("Se ha realizado el pago exitosamente.");
+
+    }
 
 
     /* 
@@ -209,28 +245,35 @@ class PartidaController extends Controller
             ]
 
     */
-    public function getActualizacionPartida($codUltimaTransaccionFrontend){
-        $ultimaTransaccionFrontend = TransaccionMonetaria::findOrFail($codUltimaTransaccionFrontend);
-        $partida = Partida::findOrFail($ultimaTransaccionFrontend->codPartida);
+    public function getActualizacionPartida(Request $request){
+        
 
+        //$ultimaTransaccionFrontend = TransaccionMonetaria::findOrFail($request->codUltimaTransaccion);
+        
+        $partida = Partida::findOrFail($request->codPartida);
+        
+        //return $partida->getUltimaTransaccion();
         $codUltimaTransaccionReal = $partida->getUltimaTransaccion()->codTransaccionMonetaria;
-        if($codUltimaTransaccionFrontend == $codUltimaTransaccionReal){ //sincronizado
+
+        if($request->codUltimaTransaccion !=0 //primera iteracion 
+            && $request->codUltimaTransaccion == $codUltimaTransaccionReal){ //sincronizado
             $estadoSincronizacion = '1';
             $body = '';
+            Debug::mensajeSimple('sincro');
         }else{ //desincronizado
             $jugador = Cuenta::getCuentaLogeada()->getJugadorPorPartida($partida->codPartida);
-            
             //lista de las transacciones del jugador
             $listaMisTransacciones = $jugador->getListaTransacciones($partida->codPartida);
-
-
             $estadoSincronizacion = '0';
-            $body = view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
+
+            $body = (string) view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
+            Debug::mensajeSimple($body);
+             
         }
 
         $vectorRespuesta = [
             'sincronizado'=> $estadoSincronizacion,
-            'body'=> $body,
+            'body' => $body,
             'codUltimaTransaccion' => $codUltimaTransaccionReal
         ];
         return json_encode($vectorRespuesta);

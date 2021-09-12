@@ -1,11 +1,23 @@
 <?php
 
+use App\Jugador;
+use App\Partida;
+use App\TransaccionMonetaria;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
 /* RUTAS PARA INGRESO Y REGISTRO DE USUARIO Y CLIENTE */
 
+Route::get('/ProbandoCosas',function(){
+
+    return Partida::findOrFail(17)->getUltimaTransaccion();
+    
+    Jugador::where('codJugador','>','-1')->delete();
+    Partida::where('codPartida','>','0')->delete();
+    TransaccionMonetaria::where('codTransaccionMonetaria','>','0')->delete();
+
+});
 
 Route::get('/', 'UserController@home')->name('user.home');
 
@@ -19,7 +31,7 @@ Route::get('/Partidas/listarPartidasEnEspera','PartidaController@listarPartidasE
 Route::get('/Partida/getActualizacionListaPartidas/','PartidaController@invocarListaPartidasEnEspera')->name('Partida.invocarListaPartidasEnEspera');
 
 
-Route::get('/Partida/EntrarSalaJuego/{codPartida}','PartidaController@EntrarSalaJuego')->name('Partida.EntrarSalaJuego');
+Route::get('/Partida/SalaJuego/{codPartida}','PartidaController@EntrarSalaJuego')->name('Partida.EntrarSalaJuego');
 
 
 //Ruta que te hace unirte a una sala de espera y te retorna la vista de esa sala 
@@ -32,6 +44,8 @@ Route::get('/Partidas/SalirmeDePartida/{codPartida}','PartidaController@SalirmeD
     ->name('Partida.SalirmeDePartida');
 
 
+
+
     //Vista para crear nueva partida
 Route::get('/Partida/abrirPartida/','PartidaController@abrirPartida')->name('Partida.abrirPartida');
 
@@ -39,9 +53,39 @@ Route::get('/Partida/IniciarPartida/{codPartida}','PartidaController@IniciarPart
 Route::get('/Partida/CancelarPartida/{codPartida}','PartidaController@CancelarPartida')->name('Partida.CancelarPartida');
 
 //INVOCABLES JS
-Route::get('/Partida/getActualizacionPartida/{codUltimaTransaccion}','PartidaController@getActualizacionPartida');
+Route::get('/Partida/getActualizacionPartida/','PartidaController@getActualizacionPartida');
 
 Route::get('/Partida/getActualizacionSalaEspera/{codPartida}','PartidaController@getActualizacionSalaEspera');
 
 Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@HacerBancarioAJugador')
     ->name('Partida.HacerBancarioAJugador');
+
+Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Partida.realizarPago');
+
+
+
+
+
+
+
+
+
+
+/* SISTEMA LINKS */
+
+Route::get('/QRs/{string}','LinkController@verLink')->name('Link.Ver');
+
+ //  "1gatosinventana.maracsoft.com/QRs/6a37adk282jy8k8y85"  // 13
+ //  "1gatosinventana.maracsoft.com/QRs/a6a3s5yy80ykyyamaa"   //14 
+ //  "1gatosinventana.maracsoft.com/QRs/a4a6367652aksa3baa"   //15
+ //  "1gatosinventana.maracsoft.com/QRs/ad926a3612a5skaehj"   //16
+ //  "1gatosinventana.maracsoft.com/QRs/e75as765s1daaksdaa"  
+ //  "1gatosinventana.maracsoft.com/QRs/g08y0asg8yyky8y08b"   //18
+ //  "1gatosinventana.maracsoft.com/QRs/se5a65s7ssd3as75ea"  
+ //  "1gatosinventana.maracsoft.com/QRs/adsa5fmhf1d8yasaw5"   //20
+ //  "1gatosinventana.maracsoft.com/QRs/bb5sadfhadsmfh3qu5"  
+ //  "1gatosinventana.maracsoft.com/QRs/s57ebn63asyy8yty57"   //22
+ //  "1gatosinventana.maracsoft.com/QRs/aw4fm6shsasada67aa"  
+ //  "1gatosinventana.maracsoft.com/QRs/hfhm4fmhda58yky45h"   //24
+ //  "1gatosinventana.maracsoft.com/QRs/c6fds46masflhm8458"  
+ //  "1gatosinventana.maracsoft.com/QRs/ityrutkk5y8ky3udfd"   //26

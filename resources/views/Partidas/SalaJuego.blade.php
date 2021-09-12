@@ -16,16 +16,43 @@
 </div>
 <div class="row">
 
+
+    <div class="col">    
+        
+    <label  for="" >Pagar a:</label>
+        <div class="row">
+            <input  style="width:30%" type="number" class="text-right form-control m-1" step="01" id="monto" name="monto" value="0">
+            <select  style="width:40%" class="form-control m-1" name="codJugadorDestino" id="codJugadorDestino">
+                <option value="0">*Jugadores*</option>
+                @foreach ($listaJugadores as $jugador)
+                    @if($jugador->codJugador != $jugadorLogeado->codJugador)
+                        <option value="{{$jugador->codJugador}}">
+                            {{$jugador->getNombreUsuario()}}
+                        </option>
+                    @endif
+                    
+                @endforeach
+            </select>
+
+            <button onclick="clickRealizarPago()" type="button" class="btn btn-primary btn-sm">
+                pagar
+            </button>
+        </div>
+        
+    </div>    
+</div>
+<div class="row">
+    
     <div class="col">
+        Jugadores de la partida:
         {{$partida->getStringJugadores()}}
     </div>
-    
 </div>
 <div class="row m-2">
     
 
     <div clas="col" id="contenidoMisTransacciones">
-
+        
     </div>
 </div>
  
@@ -39,26 +66,85 @@
         Funcion que actualiza el contenido de la pagina a la ultima transaccion
     */
     codUltimaTransaccion = 0;
+    debugear = false;
 
-    inicializarReloj(actualizarTransacciones,500);
+    inicializarReloj(actualizarTransacciones,800);
     
     function actualizarTransacciones(){ 
-        ruta = "/Partida/getActualizacionPartida/" + codUltimaTransaccion ;
-        $.get(ruta, function(dataRecibida){
-            console.log('DATA RECIBIDA:');
-            console.log(dataRecibida);
-            
+        ruta = "/Partida/getActualizacionPartida/";
+        datosEnviados = {
+            codUltimaTransaccion : codUltimaTransaccion,
+            codPartida:{{$partida->codPartida}}
+        };
+
+
+        $.get(ruta,datosEnviados, function(dataRecibida){
+             
+            //console.log('DATA RECIBIDA:');
+            //console.log(dataRecibida);
+             
             objetoRespuesta = JSON.parse(dataRecibida);
             if(objetoRespuesta.sincronizado == '1'){ //SINCRONIZADO
                 console.log("El Contenido ya está sincronizado.");
             }else{ //DESINCRONIZADO
                 console.log("Sincronizando el contenido...");
                 contenedor = document.getElementById('contenidoMisTransacciones');
-                contenedor.innerHtml = objetoRespuesta.body;
+                contenedor.innerHTML = objetoRespuesta.body;
             }
             codUltimaTransaccion = objetoRespuesta.codUltimaTransaccion;
             console.log('Ciclo de sincronización completada. Ultima tr=' + codUltimaTransaccion );
         });
+    }
+
+    function validarPago(){
+        limpiarEstilos(['codJugadorDestino','monto']);
+        msjError="";
+        msjError = validarSelect(msjError,'codJugadorDestino','0',"Jugador receptor del pago");
+        msjError = validarPositividadYNulidad(msjError,'monto',"Monto a enviar");
+        return msjError;
+    }
+
+    function clickRealizarPago(){
+        msjError = validarPago();
+        if(msjError!=""){
+            alerta(msjError);
+            return;
+        }
+
+        //                  titulo,         texto,                  tipoMensaje,    nombreFuncionAEjecutar
+        confirmarConMensaje("Confirmacion","¿Seguro que quiere pagar?",'warning',ejecutarRealizarPago);
+    }
+
+    function ejecutarRealizarPago(){
+        ruta = "/Partida/realizarPago/";
+        montoEnviado = document.getElementById('monto').value;
+        codJugadorDestino = document.getElementById('codJugadorDestino').value;
+
+        datosEnviados = {
+            montoEnviado : montoEnviado ,
+            codJugadorDestino: codJugadorDestino,
+            codPartida : {{$partida->codPartida}},
+            codTipoTransaccion : 1,
+
+        };
+        $.get(ruta,datosEnviados, function(dataRecibida){
+            console.log('DATA RECIBIDA:');
+            
+            objetoRespuesta = JSON.parse(dataRecibida);
+            console.log(objetoRespuesta);
+            alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+            if(objetoRespuesta.ok=='1')
+                limpiarCampos();
+            
+
+        });
+
+    }
+
+    function limpiarCampos(){
+        document.getElementById('monto').value = "";
+        document.getElementById('codJugadorDestino').value = "0";
+
     }
 
 </script>
