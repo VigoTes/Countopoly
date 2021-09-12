@@ -72,6 +72,12 @@ Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Par
 
 
 /* SISTEMA LINKS */
+Route::post('/QRs/agregarEditarLink','LinkController@agregarEditarLink')->name('Link.agregarEditarLink');
+
+Route::get('/QRs/eliminarLink/{codLink}','LinkController@eliminarLink')->name('Link.eliminarLink');
+
+Route::get('/QRs/ListarLinks/','LinkController@ListarLinks')->name('Link.ListarLinks');
+
 
 Route::get('/QRs/{string}','LinkController@verLink')->name('Link.Ver');
 

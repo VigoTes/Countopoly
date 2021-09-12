@@ -38,9 +38,9 @@
 
             
               <li class="nav-item">
-                <a href=" " class="nav-link">
+                <a href="{{route('Link.ListarLinks')}}" class="nav-link">
                   <i class="far fa-address-card nav-icon"></i>
-                  <p>Contador</p>
+                  <p>Links QR</p>
                 </a>
               </li>
            
