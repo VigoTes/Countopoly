@@ -31,6 +31,7 @@
                 <th>fechaDesbloqueo</th>
                 <th>nombreImagen</th>
                 <th>Descripción</th>
+                <th>Tamaño IMG (0-100)</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -54,6 +55,10 @@
                     <td>
                         {{$link->descripcion}}
                     </td>
+                    <td>
+                        {{$link->tamañoImagen}}
+                    </td>
+                    
                     <td>
                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" 
                         data-target="#ModalLink" onclick="clickEditarLink({{$link->codLink}})"> 
@@ -110,6 +115,11 @@
                                 <label for="">Nombre de la imagen</label>
                                 <input type="text"  class="form-control" name="nombreImagen" id="nombreImagen">
                             </div>
+                            <div class="col">
+                                <label for="">Tamaño de la Imagen (0-100)</label>
+                                <input type="text"  class="form-control" name="tamañoImagen" id="tamañoImagen">
+                            </div>
+                            
                             <div class="w-100"></div>
                             <div class="col">
                                 <label for="">Descripción</label>
@@ -159,6 +169,9 @@
         document.getElementById('fechaDesbloqueo').value = "";
         document.getElementById('nombreImagen').value = "";
         document.getElementById('descripcion').value = "";
+        document.getElementById('tamañoImagen').value = "";
+
+        
     }
 
 
@@ -181,6 +194,8 @@
         msj = validarTamañoMaximoYNulidad(msj,'nombreImagen',1500,'Nombre de la imagen');
         msj = validarTamañoMaximoYNulidad(msj,'descripcion',400,'Descripción');
         msj = validarNulidad(msj,'fechaDesbloqueo','Fecha de desbloqueo');         
+        msj = validarPositividad(msj,'tamañoImagen','Tamaño de la imagen');
+
         return msj;
 
     }
@@ -197,6 +212,8 @@
         document.getElementById('fechaDesbloqueo').value = obj.fechaDesbloqueo;
         document.getElementById('nombreImagen').value = obj.nombreImagen;
         document.getElementById('descripcion').value = obj.descripcion;
+        document.getElementById('tamañoImagen').value = obj.tamañoImagen;
+        
          
     }
 

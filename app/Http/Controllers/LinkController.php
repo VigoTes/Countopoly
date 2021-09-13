@@ -56,6 +56,8 @@ class LinkController extends Controller
             $link->fechaDesbloqueo= $request->fechaDesbloqueo;
             $link->descripcion= $request->descripcion;
             $link->nombreImagen= $request->nombreImagen;
+            $link->tamañoImagen= $request->tamañoImagen;
+            
             $link->save();
 
             $nombre =$link->descripcion;

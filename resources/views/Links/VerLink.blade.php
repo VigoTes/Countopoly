@@ -39,7 +39,7 @@
 
             </h3>
             
-            <img src="/img/memes/{{$link->nombreImagen}}" alt="">
+            <img style="width: {{$link->tamañoImagen}}%" src="/img/memes/{{$link->nombreImagen}}" alt="">
         </div>
     @endif  
 </body>
@@ -83,7 +83,7 @@
     bottom: 0;
     margin: auto;
     width: 400px;
-    height: 400px;
+    height: 500px;
     border-radius: 5px;
     background: rgba(3,3,3,0.25);
     box-shadow: 1px 1px 50px #000;
