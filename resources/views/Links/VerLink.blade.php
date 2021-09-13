@@ -256,7 +256,7 @@
     function clickBotonMargarita(){
       $('#botonMargarita').fadeOut("slow",function(){
           $("#container").fadeIn();
-          document.getElementById("mensaje").innerHTML = "{{$link->descripcion}}";
+          document.getElementById("mensaje").innerHTML = `{{$link->descripcion}}`;
       });
 		document.getElementById("titulo").innerHTML = "";
 		
