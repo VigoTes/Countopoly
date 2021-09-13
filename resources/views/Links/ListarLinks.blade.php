@@ -201,7 +201,7 @@
     }
 
     codLinkAEliminar = 0;
-    function clickEliminarObjEstrategico(codLink){
+    function clickEliminarLink(codLink){
         obj = listaLinks.find(element => element.codLink == codLink);
         codLinkAEliminar = codLink;
         confirmarConMensaje("Confirmación",'¿Desea eliminar el link # "'+obj.codLink+'" ?',"warning",ejecutarEliminacionLink);

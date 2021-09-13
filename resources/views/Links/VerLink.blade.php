@@ -18,7 +18,7 @@
         </div>
     @else
         <div style="text-align:center; margin:50px; color:white">
-          <h3 >
+          <h3 id="titulo">
             Mensaje del día 
             <b style="color:rgb(126, 209, 230)">
               {{$link->getFechaDesbloqueo()}}
@@ -258,7 +258,9 @@
           $("#container").fadeIn();
           document.getElementById("mensaje").innerHTML = "{{$link->descripcion}}";
       });
-
+		document.getElementById("titulo").innerHTML = "";
+		
+		
     }
  
 
