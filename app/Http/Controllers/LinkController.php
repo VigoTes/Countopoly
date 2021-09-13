@@ -90,4 +90,11 @@ class LinkController extends Controller
     }
     /* FALTARIA HACER EL CRUD PARA HACER EL LINK */
 
+
+    //sube una imagen al public path que será usada luego
+    public function subirImagen(Request $request){
+
+    }
+
+
 }

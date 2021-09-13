@@ -9,18 +9,7 @@
 
 </head>
 <body>
-    <div style="text-align:center; margin:50px; color:white">
-        <h3 >
-          Mensaje del día 
-          <b style="color:rgb(126, 209, 230)">
-            {{$link->getFechaDesbloqueo()}}
-
-          </b>
-          
-          <br> para la Novia más hermosa del universo <br> porque se fue a Rioja pero ya pronto volverá
-        </h3>
-        
-    </div>
+    
     @if($error==true)
         <h2 ></h2>
         <div >
@@ -28,6 +17,16 @@
             <img src="/img/CheemsError.png" style="width: 30%; height:30%;"  >
         </div>
     @else
+        <div style="text-align:center; margin:50px; color:white">
+          <h3 >
+            Mensaje del día 
+            <b style="color:rgb(126, 209, 230)">
+              {{$link->getFechaDesbloqueo()}}
+            </b>
+            <br> para la Novia más hermosa del universo <br> porque se fue a Rioja pero ya pronto volverá
+          </h3>
+          
+        </div>
         <div id="botonMargarita" onclick="clickBotonMargarita()">
             {{-- Link de la foto del icono de usuario --}}
             <img src="/img/margarita1.png">
