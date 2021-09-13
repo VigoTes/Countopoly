@@ -37,7 +37,14 @@ class TransaccionMonetaria extends Model
 
     }    
     public function getConcepto(){
-        return "a";
+        $jugadorLogeado = Jugador::getJugadorLogeado();
+        $tipoTransaccion = TipoTransaccionMonetaria::findOrFail($this->codTipoTransaccion);
+
+        if($this->codJugadorSaliente == $jugadorLogeado->codJugador)
+            return $tipoTransaccion->conceptoEmisor;
+        else
+            return $tipoTransaccion->conceptoReceptor;
+        
     }
 
     public function getEmisor(){

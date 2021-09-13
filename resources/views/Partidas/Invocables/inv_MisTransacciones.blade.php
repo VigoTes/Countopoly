@@ -7,11 +7,11 @@
 
 Cantidad actual en caja: 
 <b>
-    {{$jugador->montoActual}}
+    {{$jugador->montoActual}} $
 </b>
 
 
-<table class="table table-sm fontSize9">
+<table class="table table-sm">
     <thead>
         <tr>
             <th class="text-center" >
@@ -57,3 +57,5 @@ Cantidad actual en caja:
         @endphp
     @endforeach
 </table>
+
+

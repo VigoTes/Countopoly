@@ -21,9 +21,9 @@
         
     <label  for="" >Pagar a:</label>
         <div class="row">
-            <input  style="width:30%" type="number" class="text-right form-control m-1" step="01" id="monto" name="monto" value="0">
+            <input  style="width:30%" placeholder ="Monto pago..." type="number" class="text-right form-control m-1" step="01" id="monto" name="monto" value="0">
             <select  style="width:40%" class="form-control m-1" name="codJugadorDestino" id="codJugadorDestino">
-                <option value="0">*Jugadores*</option>
+                <option value="0">- Jugadores -</option>
                 @foreach ($listaJugadores as $jugador)
                     @if($jugador->codJugador != $jugadorLogeado->codJugador)
                         <option value="{{$jugador->codJugador}}">
@@ -34,13 +34,25 @@
                 @endforeach
             </select>
 
-            <button onclick="clickRealizarPago()" type="button" class="btn btn-primary btn-sm">
-                pagar
+            <select  style="width:40%" class="form-control m-1" name="codTipoTransaccion" id="codTipoTransaccion">
+                <option value="0">- Tipo Pago - </option>
+                @foreach ($listaTipoTransaccion as $tipoTransaccion)
+                    <option value="{{$tipoTransaccion->codTipoTransaccion}}">
+                        {{$tipoTransaccion->conceptoEmisor}}
+                    </option>
+                @endforeach
+            </select>
+            
+
+            <button style="height:70%" onclick="clickRealizarPago()" type="button" class="mt-2 ml-2 btn btn-primary btn-sm">
+                <i class="fas fa-hand-holding-usd"></i>
+                Pagar
             </button>
         </div>
         
     </div>    
 </div>
+{{-- 
 <div class="row">
     
     <div class="col">
@@ -48,10 +60,10 @@
         {{$partida->getStringJugadores()}}
     </div>
 </div>
-<div class="row m-2">
-    
+ --}}
 
-    <div clas="col" id="contenidoMisTransacciones">
+<div class="row">
+    <div class="col" id="contenidoMisTransacciones">
         
     </div>
 </div>
@@ -119,12 +131,13 @@
         ruta = "/Partida/realizarPago/";
         montoEnviado = document.getElementById('monto').value;
         codJugadorDestino = document.getElementById('codJugadorDestino').value;
+        codTipoTransaccion = document.getElementById('codTipoTransaccion').value;
 
         datosEnviados = {
             montoEnviado : montoEnviado ,
             codJugadorDestino: codJugadorDestino,
             codPartida : {{$partida->codPartida}},
-            codTipoTransaccion : 1,
+            codTipoTransaccion : codTipoTransaccion
 
         };
         $.get(ruta,datosEnviados, function(dataRecibida){

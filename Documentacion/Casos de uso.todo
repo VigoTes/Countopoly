@@ -11,3 +11,8 @@ Casos de uso:
     ☐ Sistema de turnos (no puedo hacer pagos ni nada si no es miturno, cuando lo es debo ceder el turno)
     ☐ Personalizacion del perfil
     ☐ Que te llegue la notificación de que es tu turno (que se vea el circulito de turnos como llega)
+
+
+    ☐ CRUD ediciones (aqui poner el de propiedades)
+    ☐ CRUD de usuarios
+    ☐ Al iniciar la partida, a todos los usuarios los debe redirigir

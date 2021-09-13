@@ -16,6 +16,10 @@ class Partida extends Model
     protected $primaryKey = "codPartida";
     public $timestamps = false;  //para que no trabaje con los campos fecha 
     
+
+    public function getEdicion(){
+        return Edicion::findOrFail($this->codEdicion);
+    }
     public function getEstado(){
         return EstadoPartida::findOrFail($this->codEstadoPartida);
     }

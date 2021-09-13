@@ -68,12 +68,19 @@
             //console.log('DATA RECIBIDA:');
             //console.log(dataRecibida);
             contenedor = document.getElementById('contenedor');
-            if(contenidoActual!=dataRecibida){ //si es diferente, actualizamos. Si
+            objetoRespuesta = JSON.parse(dataRecibida);
+            htmlRecibido = objetoRespuesta.html;
+
+            if(contenidoActual!=htmlRecibido){ //si es diferente, actualizamos.
                 console.log('Actualizando...');
-                contenedor.innerHTML = dataRecibida;
-                contenidoActual = dataRecibida;
-            }else{
+                contenedor.innerHTML = htmlRecibido;
+                contenidoActual = htmlRecibido;
+            }else{ //si es igual, no hay por que actualizar
                  
+            }
+
+            if(objetoRespuesta.partidaIniciada=='1'){
+                location.href="{{route('Partida.EntrarSalaJuego',$partida->codPartida)}}"
             }
                 
         });

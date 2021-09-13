@@ -6,7 +6,9 @@ use App\Cuenta;
 use App\Debug;
 use App\Jugador;
 use App\Partida;
+use App\PropiedadPartida;
 use App\RespuestaAPI;
+use App\TipoTransaccionMonetaria;
 use App\TransaccionMonetaria;
 use Illuminate\Http\Request;
 use App\User;
@@ -112,6 +114,16 @@ class PartidaController extends Controller
             $transaccion->save();
         }
 
+        //Ahora creamos las instancias de propiedad_partida de la partida, inicialmente todas estas las tendrá el Jugador Banco
+        $edicion = $partida->getEdicion();
+        $listaPropiedadesExistentes = $edicion->getPropiedades();
+        foreach ($listaPropiedadesExistentes as $propiedad) {
+            $propPartida = new PropiedadPartida();
+            $propPartida->codJugadorDueño = $partida->codJugadorBanco; //por defecto las propiedades las tiene el banco al iniciar
+            $propPartida->codPropiedad = $propiedad->codPropiedad;
+            $propPartida->save();
+        }
+        
         return redirect()->route('Partida.EntrarSalaJuego',$codPartida);
 
     }
@@ -195,7 +207,13 @@ class PartidaController extends Controller
         $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
         $jugadorLogeado = Jugador::getJugadorLogeado();
 
-        return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado'));
+        if($jugadorLogeado->codJugador == $partida->codJugadorBancario){
+            $listaTipoTransaccion = TipoTransaccionMonetaria::All();
+        }else{
+            $listaTipoTransaccion = TipoTransaccionMonetaria::where('esDelBanco','=','0')->get();
+        }
+
+        return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado','listaTipoTransaccion'));
     }
     
     public function realizarPago(Request $request){
@@ -276,6 +294,7 @@ class PartidaController extends Controller
             'body' => $body,
             'codUltimaTransaccion' => $codUltimaTransaccionReal
         ];
+        
         return json_encode($vectorRespuesta);
     }
   
@@ -291,6 +310,18 @@ class PartidaController extends Controller
         
         $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
 
-        return view('Partidas.Invocables.inv_SalaEspera',compact('listaJugadores','partida','cuentaLogeada'));
+
+
+        $html = (string) view('Partidas.Invocables.inv_SalaEspera',compact('listaJugadores','partida','cuentaLogeada'));
+        if($partida->estaJugandose())
+            $partidaIniciada = '1';
+        else
+            $partidaIniciada = '0';
+
+        $vector = [
+            'html' => $html,
+            'partidaIniciada' => $partidaIniciada
+        ];
+        return json_encode($vector); 
     }
 }
