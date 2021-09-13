@@ -35,9 +35,9 @@
         <div id="container">
             <h1>Buenas Buenas</h1>
 
-            <h2 id="mensaje">
+            <h3 style="color:white" id="mensaje">
 
-            </h2>
+            </h3>
             
             <img src="/img/memes/{{$link->nombreImagen}}" alt="">
         </div>
@@ -256,7 +256,7 @@
     function clickBotonMargarita(){
       $('#botonMargarita').fadeOut("slow",function(){
           $("#container").fadeIn();
-          document.getElementById("mensaje").innerHTML = `{{$link->descripcion}}`;
+          document.getElementById("mensaje").innerHTML = "{{$link->descripcion}}";
       });
 		document.getElementById("titulo").innerHTML = "";
 		
