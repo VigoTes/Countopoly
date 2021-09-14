@@ -54,4 +54,8 @@ class Jugador extends Model
 
     }
     
+    public function getPropiedades(){
+        return PropiedadPartida::where('codJugadorDueño','=',$this->codJugador)->get();
+
+    }
 }

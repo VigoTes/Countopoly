@@ -14,6 +14,7 @@ class Edicion extends Model
         return Propiedad::where('codEdicion','=',$this->codEdicion)->get();
 
     }
+    
     public function tienePartidas(){
         $lista = Partida::where('codEdicion','=',$this->codEdicion)->get();
         return count($lista)>0;

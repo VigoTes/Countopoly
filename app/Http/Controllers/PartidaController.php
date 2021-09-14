@@ -123,9 +123,12 @@ class PartidaController extends Controller
             $edicion = $partida->getEdicion();
             $listaPropiedadesExistentes = $edicion->getPropiedades();
             foreach ($listaPropiedadesExistentes as $propiedad) {
+                Debug::mensajeSimple('haciendo ');
                 $propPartida = new PropiedadPartida();
                 $propPartida->codJugadorDueño = $partida->codJugadorBanco; //por defecto las propiedades las tiene el banco al iniciar
                 $propPartida->codPropiedad = $propiedad->codPropiedad;
+                $propPartida->codPartida = $partida->codPartida;
+                
                 $propPartida->save();
             }
             db::commit();
@@ -182,7 +185,7 @@ class PartidaController extends Controller
         } catch (\Throwable $th) {
             db::rollBack();
             Debug::mensajeError('Partida Controller: ', $th );
-            
+
             return RespuestaAPI::respuestaError("Ha ocurrido un error interno.");
         }
 

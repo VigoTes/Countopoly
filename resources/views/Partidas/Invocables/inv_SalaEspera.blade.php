@@ -4,13 +4,23 @@
     
     --}}
 
-<div class="row">
 
-    <div class="col">
-         
+
+{{-- Info de la partida que le aparece al jugador y no al admin (pq el host lo tiene como panel de control ) --}}
+@if(!$partida->elHostEstaLogeado())
+                
+    <div class="row">
+
+        <div class="col">
+            Edición: 
+            <b>
+                {{$partida->getEdicion()->nombre}}
+            </b>
+            
+        </div>
+
     </div>
-
-</div>
+@endif
 <div class="row">
     <table class="table table-sm">
         <thead class="header">
