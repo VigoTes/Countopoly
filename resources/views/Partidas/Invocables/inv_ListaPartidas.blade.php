@@ -12,6 +12,9 @@
                 Jugadores
             </th>
             <th>
+                Estado
+            </th>
+            <th>
                 Limite
             </th>
             <th>
@@ -38,9 +41,35 @@
                 {{$partida->getCantJugadoresYMaximo()}}
             </td>
             <td>
-                <a href="{{route('Partida.IngresarSalaEspera',$partida->codPartida)}}" class="btn btn-success">
-                    Ingresar
-                </a>
+                {{$partida->getEstado()->nombre}}
+            </td>
+            <td>
+                @php
+
+                    if($partida->estaEnEspera()){
+                        $ruta = route('Partida.IngresarSalaEspera',$partida->codPartida);
+                        $tipoBoton = "primary";
+                        $icono = "fas fa-hourglass-half";
+                        $msj = "Sala de espera";
+                    }
+                        
+                    if($partida->estaJugandose()){
+                        $ruta = route('Partida.EntrarSalaJuego',$partida->codPartida);
+                        $tipoBoton = "success";
+                        $icono = "fas fa-sign-in-alt";
+                        $msj = "Entrar a sala de Juego";
+                    }
+                        
+                @endphp
+                @if($partida->estaJugandose() && $partida->estoyEnLaPartida() || $partida->estaEnEspera())
+                        
+                    <a href="{{$ruta}}" class="btn btn-{{$tipoBoton}}">
+                        <i class="{{$icono}}"></i>
+                        {{$msj}}
+                    </a>
+
+                    
+                @endif
             </td>
         </tr>
         @php

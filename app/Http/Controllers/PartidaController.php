@@ -26,12 +26,12 @@ class PartidaController extends Controller
     //vista sin datos que llamara al invocable
     public function listarPartidasEnEspera(){
         
-        $listaPartidas = Partida::getPartidasEnEspera();
+        $listaPartidas = Partida::getPartidasEnEsperaYJugandose();
         return view('Partidas.ListarPartidas',compact('listaPartidas'));
     }
     //invocable que será llamado cada x segundos
     public function invocarListaPartidasEnEspera(){
-        $listaPartidas = Partida::getPartidasEnEspera();
+        $listaPartidas = Partida::getPartidasEnEsperaYJugandose();
         return view('Partidas.Invocables.inv_ListaPartidas',compact('listaPartidas'));
     }
 

@@ -27,12 +27,24 @@ class Partida extends Model
     public function estaJugandose(){
         return $this->verificarEstado('Jugandose');
     }
+
+    public function estaEnEspera(){
+        return $this->verificarEstado('En espera');
+    }
+
+    
     private function verificarEstado($nombreEstado){
         return $this->getEstado()->nombre == $nombreEstado;
     }
 
     public static function getPartidasEnEspera(){
         return Partida::where('codEstadoPartida','=',EstadoPartida::codEnEspera())->get();
+    }
+
+    public static function getPartidasEnEsperaYJugandose(){
+        return Partida::whereIn('codEstadoPartida',[1,2])
+            ->orderBy('codEstadoPartida','ASC')
+            ->get();
 
     }
     
@@ -48,9 +60,11 @@ class Partida extends Model
     public function getStringJugadores(){
 
         $string = "";
-        $listaJugadores = Jugador::where('codPartida','=',$this->codPartida)->get();
+        $listaJugadores = Jugador::where('codPartida','=',$this->codPartida)
+            ->where('esBanco','!=','1')
+            ->get();
         foreach($listaJugadores as $jugador){
-            $string .= ",".$jugador->getCuenta()->usuario;
+                $string .= ",".$jugador->getCuenta()->usuario;
         }
        
         $string = trim($string,',');
@@ -78,7 +92,15 @@ class Partida extends Model
 
     }
 
-    
+    public function estoyEnLaPartida(){
+        $cuentaLogeada = Cuenta::getCuentaLogeada();
+        $listaJug = Jugador::where('codPartida','=',$this->codPartida)
+            ->where('codCuenta','=',$cuentaLogeada->codCuenta)
+            ->get();
+
+        return count($listaJug)>0;
+
+    }
 
     public function tieneAJugador($codCuenta){
         $lista = Jugador::where('codCuenta','=',$codCuenta)
