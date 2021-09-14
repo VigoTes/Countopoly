@@ -60,15 +60,46 @@ Route::get('/Partida/getActualizacionSalaEspera/{codPartida}','PartidaController
 Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@HacerBancarioAJugador')
     ->name('Partida.HacerBancarioAJugador');
 
+Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
+    ->name('Partida.CambiarEdicion');
+
+
 Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Partida.realizarPago');
 
 
 
 
+/* CRUD Edicion */
+Route::get('/Edicion/Listar','EdicionController@listarEdiciones')->name('Edicion.Listar');
+Route::get('/Edicion/Editar/{codEdicion}','EdicionController@Editar')->name('Edicion.Editar');
+Route::get('/Edicion/Eliminar/{codEdicion}','EdicionController@EliminarEdicion')->name('Edicion.Eliminar');
+
+Route::post('/Edicion/ActualizarNombre','EdicionController@ActualizarNombre')->name('Edicion.ActualizarNombre');
+
+
+/* CRUD PROPIEDAD */
+
+Route::post('/Edicion/agregarEditarPropiedad','EdicionController@agregarEditarPropiedad')->name('Edicion.agregarEditarPropiedad');
+Route::get('/Edicion/eliminarPropiedad/{codPropiedad}','EdicionController@eliminarPropiedad')->name('Edicion.eliminarPropiedad');
+
+/* CRUD COLOR */
+Route::get('/Color/Listar','ColorController@listarColores')->name('Color.Listar');
+Route::post('/Color/agregarEditarColor','ColorController@agregarEditarColor')->name('Color.agregarEditarColor');
+Route::get('/Color/eliminar/{codColor}','ColorController@Eliminar')->name('Color.Eliminar');
+ 
 
 
 
 
+/* ****************************************************************************************************************************** */
+/* ****************************************************************************************************************************** */
+/* ****************************************************************************************************************************** */
+/* ****************************************************************************************************************************** */
+/* *********************************************         SISTEMA LINKS      ***************************************************** */
+/* ****************************************************************************************************************************** */
+/* ****************************************************************************************************************************** */
+/* ****************************************************************************************************************************** */
+/* ****************************************************************************************************************************** */
 
 
 /* SISTEMA LINKS */

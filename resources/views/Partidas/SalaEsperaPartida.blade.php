@@ -14,12 +14,21 @@
 </div>
 <div class="row">
 
-    <div class="col">
-         
-    </div>
 
     {{-- Estas opciones solo le aparecen al dueño de la partida --}}
     @if($partida->elHostEstaLogeado())
+
+        <div class="col">
+            <label for="">Edición</label>
+            <select class="form-control" name="codEdicion" id="codEdicion" onchange="cambioEdicion()">
+                @foreach($listaEdiciones as $edicion)
+                    <option value="{{$edicion->codEdicion}}">
+                        {{$edicion->nombre}}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
         <div class="col text-right">
             <a href="{{route('Partida.IniciarPartida',$partida->codPartida)}}" class="m-2 btn btn-success" >
                 Iniciar Partida
@@ -28,6 +37,9 @@
                 Cancelar Partida
             </a>
         </div>
+
+
+
     @endif
 
 </div>
@@ -95,6 +107,25 @@
             console.log('DATA RECIBIDA:');
             console.log(dataRecibida);
 
+            objetoRespuesta = JSON.parse(dataRecibida);
+            alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+
+        });
+
+    }
+
+    function cambioEdicion(){
+        codEdicion = document.getElementById('codEdicion').value;
+        ruta = "/Partida/CambiarEdicion/";
+        datos = {
+            codEdicion : codEdicion,
+            codPartida : {{$partida->codPartida}}
+        };
+        
+        $.get(ruta, datos, function(dataRecibida){
+            console.log('DATA RECIBIDA:');
+            console.log(dataRecibida);
+            
             objetoRespuesta = JSON.parse(dataRecibida);
             alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
 

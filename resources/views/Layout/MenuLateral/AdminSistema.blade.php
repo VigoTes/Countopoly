@@ -22,17 +22,17 @@
           
          
               <li class="nav-item">
-                <a href=" " class="nav-link">
+                <a href="{{route('Color.Listar')}}" class="nav-link">
                   <i class="far fa-address-card nav-icon"></i>
-                  <p>GerenteS</p>
+                  <p>Colores</p>
                 </a>
               </li>
           
 
               <li class="nav-item">
-                <a href=" " class="nav-link">
+                <a href="{{route('Edicion.Listar')}}" class="nav-link">
                   <i class="far fa-address-card nav-icon"></i>
-                  <p>Administrador</p>
+                  <p>Ediciones</p>
                 </a>
               </li>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cuenta;
 use App\Debug;
+use App\Edicion;
 use App\Jugador;
 use App\Partida;
 use App\PropiedadPartida;
@@ -55,6 +56,7 @@ class PartidaController extends Controller
             $partida = new Partida();
             $partida->codCuentaHost = $cuentaLogeada->codCuenta; //por ahora, pondremos que siempre sea Vigo el host
             $partida->codEstadoPartida = 1; //por ahora, pondremos que siempre sea Vigo el host
+            $partida->codEdicion = 1;
             $partida->save();
             
             //ahora incluimos en esa partida a el host
@@ -81,51 +83,58 @@ class PartidaController extends Controller
     }
 
     public function IniciarPartida($codPartida){
-        $partida = Partida::findOrFail($codPartida);
-        $partida->codEstadoPartida = 2;
-        $partida->save();
 
-        //esta es la cuenta en la partida del jugador que manejará el banco, le creo un jugador porque su monto es infinito
-        $jugadorBanco = new Jugador();
-        $jugadorBanco->codCuenta = 0; //el que se seteó en la sala de espera como BANCO
-        $jugadorBanco->codPartida = $codPartida;
-        $jugadorBanco->montoActual = 99999999;
-        $jugadorBanco->esBanco = 1;
-        $jugadorBanco->save();
+        try {
+            DB::beginTransaction();
+            $partida = Partida::findOrFail($codPartida);
+            $partida->codEstadoPartida = 2;
+            $partida->save();
 
-        //ahora guardamos en partida el codigo de este jugador bancos
-        $partida->codJugadorBanco = $jugadorBanco->codJugador;
-        $partida->save();
+            //esta es la cuenta en la partida del jugador que manejará el banco, le creo un jugador porque su monto es infinito
+            $jugadorBanco = new Jugador();
+            $jugadorBanco->codCuenta = 0; //el que se seteó en la sala de espera como BANCO
+            $jugadorBanco->codPartida = $codPartida;
+            $jugadorBanco->montoActual = 99999999;
+            $jugadorBanco->esBanco = 1;
+            $jugadorBanco->save();
 
-        $montoInicial = 5000;
-        //ahora le damos a cada jugador la cantidad inicial de dinero
-        $jugadores = $partida->getJugadores();
-        foreach ($jugadores as $jugador){
-            $jugador->montoActual = $montoInicial;
-            $jugador->save();
+            //ahora guardamos en partida el codigo de este jugador bancos
+            $partida->codJugadorBanco = $jugadorBanco->codJugador;
+            $partida->save();
 
-            $transaccion = new TransaccionMonetaria();
-            $transaccion->codJugadorSaliente = $partida->codJugadorBanco;
-            $transaccion->codJugadorEntrante = $jugador->codJugador;
-            $transaccion->codPartida = $codPartida;
-            $transaccion->codTipoTransaccion = 2; //pago del banco
-            $transaccion->fechaHora = Carbon::now();
-            $transaccion->monto = $montoInicial;
-            $transaccion->save();
-        }
+            $montoInicial = 5000;
+            //ahora le damos a cada jugador la cantidad inicial de dinero
+            $jugadores = $partida->getJugadores();
+            foreach ($jugadores as $jugador){
+                $jugador->montoActual = $montoInicial;
+                $jugador->save();
 
-        //Ahora creamos las instancias de propiedad_partida de la partida, inicialmente todas estas las tendrá el Jugador Banco
-        $edicion = $partida->getEdicion();
-        $listaPropiedadesExistentes = $edicion->getPropiedades();
-        foreach ($listaPropiedadesExistentes as $propiedad) {
-            $propPartida = new PropiedadPartida();
-            $propPartida->codJugadorDueño = $partida->codJugadorBanco; //por defecto las propiedades las tiene el banco al iniciar
-            $propPartida->codPropiedad = $propiedad->codPropiedad;
-            $propPartida->save();
-        }
+                $transaccion = new TransaccionMonetaria();
+                $transaccion->codJugadorSaliente = $partida->codJugadorBanco;
+                $transaccion->codJugadorEntrante = $jugador->codJugador;
+                $transaccion->codPartida = $codPartida;
+                $transaccion->codTipoTransaccion = 2; //pago del banco
+                $transaccion->fechaHora = Carbon::now();
+                $transaccion->monto = $montoInicial;
+                $transaccion->save();
+            }
+
+            //Ahora creamos las instancias de propiedad_partida de la partida, inicialmente todas estas las tendrá el Jugador Banco
+            $edicion = $partida->getEdicion();
+            $listaPropiedadesExistentes = $edicion->getPropiedades();
+            foreach ($listaPropiedadesExistentes as $propiedad) {
+                $propPartida = new PropiedadPartida();
+                $propPartida->codJugadorDueño = $partida->codJugadorBanco; //por defecto las propiedades las tiene el banco al iniciar
+                $propPartida->codPropiedad = $propiedad->codPropiedad;
+                $propPartida->save();
+            }
+            db::commit();
+            return redirect()->route('Partida.EntrarSalaJuego',$codPartida);
         
-        return redirect()->route('Partida.EntrarSalaJuego',$codPartida);
-
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     public function CancelarPartida($codPartida){
@@ -159,7 +168,25 @@ class PartidaController extends Controller
         
     }
 
+    public function CambiarEdicion(Request $request){
+        try {
+            db::beginTransaction();
+            $partida = Partida::findOrFail($request->codPartida);
+            $partida->codEdicion = $request->codEdicion;
+            $partida->save();
+            $nuevaEdicion = $partida->getEdicion()->nombre;
 
+            db::commit();
+            return RespuestaAPI::respuestaOk("Se ha cambiado la edición a la '$nuevaEdicion' exitosamente.");
+            
+        } catch (\Throwable $th) {
+            db::rollBack();
+            Debug::mensajeError('Partida Controller: ', $th );
+            
+            return RespuestaAPI::respuestaError("Ha ocurrido un error interno.");
+        }
+
+    }
 #endregion
 
 
@@ -167,7 +194,7 @@ class PartidaController extends Controller
     public function IngresarSalaEspera ($codPartida){
         $partida = Partida::findOrFail($codPartida);
         $cuentaLogeada = Cuenta::getCuentaLogeada();
-        
+        $listaEdiciones = Edicion::All();
         if(!$partida->tieneAJugador($cuentaLogeada->codCuenta)){
             $jugadorHost = new Jugador();
             $jugadorHost->codCuenta = $cuentaLogeada->codCuenta;
@@ -179,7 +206,7 @@ class PartidaController extends Controller
         $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
 
 
-        return view('Partidas.SalaEsperaPartida',compact('partida','listaJugadores','cuentaLogeada'));
+        return view('Partidas.SalaEsperaPartida',compact('partida','listaJugadores','cuentaLogeada','listaEdiciones'));
     }
 
     public function SalirmeDePartida($codPartida){
