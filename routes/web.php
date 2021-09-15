@@ -90,6 +90,15 @@ Route::get('/Color/eliminar/{codColor}','ColorController@Eliminar')->name('Color
 
 
 
+/* CRUD USUARIOS */
+
+Route::get('/Cuenta/Listar','CuentaController@listar')->name('Cuenta.Listar');
+
+Route::get('/Cuenta/Crear','CuentaController@crear')->name('Cuenta.Crear');
+Route::post('/Cuenta/AgregarEditarCuenta','CuentaController@agregarEditarCuenta')->name('Cuenta.AgregarEditarCuenta');
+
+Route::get('/Cuenta/{cod}/Eliminar','CuentaController@eliminar')->name('Cuenta.Eliminar');
+
 
 /* ****************************************************************************************************************************** */
 /* ****************************************************************************************************************************** */

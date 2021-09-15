@@ -20,6 +20,9 @@ class Cuenta extends Authenticatable
     protected $primaryKey = "codCuenta";
     public $timestamps = false;  //para que no trabaje con los campos fecha 
     
+    public function getTipoCuenta(){
+        return TipoCuenta::findOrFail($this->codTipoCuenta);
+    }
 
     public static function getCuentaLogeada(){
         $codCuenta = Auth::id();
