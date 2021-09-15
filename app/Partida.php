@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use NunoMaduro\Collision\Adapters\Phpunit\ConfigureIO;
 
 class Partida extends Model
 {
@@ -16,6 +17,19 @@ class Partida extends Model
     protected $primaryKey = "codPartida";
     public $timestamps = false;  //para que no trabaje con los campos fecha 
     
+
+
+    //cambia el token para que todos sepan que la partida ha sufrido algun cambio
+    public function cambiarToken(){
+        $this->tokenSincronizacion = 
+            rand(
+                Configuracion::TokenAleatorio_LimiteInferior
+                ,
+                Configuracion::TokenAleatorio_LimiteSuperior
+                );
+        $this->save();
+
+    }
 
     public function getEdicion(){
         return Edicion::findOrFail($this->codEdicion);
@@ -30,6 +44,11 @@ class Partida extends Model
 
     public function estaEnEspera(){
         return $this->verificarEstado('En espera');
+    }
+
+    public function estaCancelada(){
+        return $this->verificarEstado('Cancelada');
+
     }
 
     

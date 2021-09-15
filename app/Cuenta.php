@@ -43,7 +43,8 @@ class Cuenta extends Authenticatable
 
 
     public function getJugadorPorPartida($codPartida){
-        return Jugador::where('codPartida','=',$codPartida)->where('codCuenta','=',$this->codCuenta)->get()[0];
+        return Jugador::where('codPartida','=',$codPartida)
+            ->where('codCuenta','=',$this->codCuenta)->get()[0];
     }
 
 }

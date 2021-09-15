@@ -236,6 +236,7 @@ class PartidaController extends Controller
         $partida = Partida::findOrFail($codPartida);
         $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
         $jugadorLogeado = Jugador::getJugadorLogeado();
+        $listaMisPropiedades = $jugadorLogeado->getPropiedades();
 
         if($jugadorLogeado->codJugador == $partida->codJugadorBancario){
             $listaTipoTransaccion = TipoTransaccionMonetaria::All();
@@ -243,7 +244,7 @@ class PartidaController extends Controller
             $listaTipoTransaccion = TipoTransaccionMonetaria::where('esDelBanco','=','0')->get();
         }
 
-        return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado','listaTipoTransaccion'));
+        return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado','listaTipoTransaccion','listaMisPropiedades'));
     }
     
     public function realizarPago(Request $request){
@@ -269,6 +270,9 @@ class PartidaController extends Controller
 
         $jugadorEntrante->save();
         $jugadorLogeado->save();
+
+        $partida = $jugadorLogeado->getPartida();
+        $partida->cambiarToken();
 
         return RespuestaAPI::respuestaOk("Se ha realizado el pago exitosamente.");
 
@@ -299,30 +303,32 @@ class PartidaController extends Controller
         //$ultimaTransaccionFrontend = TransaccionMonetaria::findOrFail($request->codUltimaTransaccion);
         
         $partida = Partida::findOrFail($request->codPartida);
-        
-        //return $partida->getUltimaTransaccion();
-        $codUltimaTransaccionReal = $partida->getUltimaTransaccion()->codTransaccionMonetaria;
+        $tokenSincronizacionActual = $partida->tokenSincronizacion;
 
-        if($request->codUltimaTransaccion !=0 //primera iteracion 
-            && $request->codUltimaTransaccion == $codUltimaTransaccionReal){ //sincronizado
+        if($request->tokenSincronizacion !=0 //primera iteracion
+            && $request->tokenSincronizacion == $tokenSincronizacionActual){ //sincronizado
             $estadoSincronizacion = '1';
-            $body = '';
+            $misTransacciones = '';
+            $misPropiedades = '';
             Debug::mensajeSimple('sincro');
         }else{ //desincronizado
             $jugador = Cuenta::getCuentaLogeada()->getJugadorPorPartida($partida->codPartida);
             //lista de las transacciones del jugador
             $listaMisTransacciones = $jugador->getListaTransacciones($partida->codPartida);
+            $listaMisPropiedades = $jugador->getPropiedades();
             $estadoSincronizacion = '0';
 
-            $body = (string) view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
-            Debug::mensajeSimple($body);
+            $misTransacciones = (string) view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
+            $misPropiedades = (string ) view('Partidas.Invocables.inv_MisPropiedades',compact('jugador','listaMisPropiedades'));
+            //Debug::mensajeSimple($body);
              
         }
 
         $vectorRespuesta = [
             'sincronizado'=> $estadoSincronizacion,
-            'body' => $body,
-            'codUltimaTransaccion' => $codUltimaTransaccionReal
+            'misTransacciones' => $misTransacciones,
+            'misPropiedades' => $misPropiedades,
+            'tokenSincronizacion' => $tokenSincronizacionActual
         ];
         
         return json_encode($vectorRespuesta);
@@ -343,14 +349,17 @@ class PartidaController extends Controller
 
 
         $html = (string) view('Partidas.Invocables.inv_SalaEspera',compact('listaJugadores','partida','cuentaLogeada'));
+        
+        $rutaRedireccion = "";
+        //si ya se está jugando, redireccionamos al link de la sala de juego
         if($partida->estaJugandose())
-            $partidaIniciada = '1';
-        else
-            $partidaIniciada = '0';
-
+            $rutaRedireccion = route('Partida.EntrarSalaJuego',$partida->codPartida);
+        if($partida->estaCancelada())
+            $rutaRedireccion = route('Partida.SalirmeDePartida',$partida->codPartida);
+        
         $vector = [
             'html' => $html,
-            'partidaIniciada' => $partidaIniciada
+            'rutaRedireccion' => $rutaRedireccion
         ];
         return json_encode($vector); 
     }

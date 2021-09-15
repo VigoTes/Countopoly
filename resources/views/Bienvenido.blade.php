@@ -7,8 +7,7 @@
 
 
 <h1 class="text-center">
-
-
+    
     BIENVENIDO A ESTA PLANTILLA
     {{App\Cuenta::getCuentaLogeada()}}
 </h1>

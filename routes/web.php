@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 /* RUTAS PARA INGRESO Y REGISTRO DE USUARIO Y CLIENTE */
 
-Route::get('/ProbandoCosas',function(){
-
+Route::get('/probandoCosas',function(){
+    return rand(1,99999999);
+      
     return Partida::findOrFail(17)->getUltimaTransaccion();
     
     Jugador::where('codJugador','>','-1')->delete();
@@ -63,11 +64,11 @@ Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@Hace
 Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
     ->name('Partida.CambiarEdicion');
 
-
 Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Partida.realizarPago');
 
+Route::get('/Partida/getPartidasDeJugador/{codPartida}','PropiedadPartidaController@getPartidasDeJugador');
 
-
+Route::post('/Partida/transferirPropiedad','PropiedadPartidaController@transferirPropiedad')->name('Partida.transferirPropiedad');
 
 /* CRUD Edicion */
 Route::get('/Edicion/Listar','EdicionController@listarEdiciones')->name('Edicion.Listar');

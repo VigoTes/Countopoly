@@ -28,6 +28,7 @@ class RespuestaAPI
         return json_encode([
             'ok'=>'1',
             'mensaje'=> $mensaje,
+            'rutaRedireccion' => '',
             'titulo' => 'Enhorabuena',
             'tipoWarning' => 'success',
             'httpCode'=>'200'
@@ -38,9 +39,24 @@ class RespuestaAPI
         return json_encode([
             'ok'=>'0',
             'mensaje'=> $mensaje,
+            'rutaRedireccion' => '',
             'titulo' => 'ERROR',
             'tipoWarning' => 'error',
             'httpCode'=>'500'
         ]);
     }
+
+
+    public static function respuestaRedireccion($ruta){
+        return json_encode([
+            'ok'=>'3',
+            'mensaje'=> '',
+            'rutaRedireccion' => $ruta,
+            'titulo' => 'ERROR',
+            'tipoWarning' => 'error',
+            'httpCode'=>'500'
+        ]);
+    }
+
+    
 }

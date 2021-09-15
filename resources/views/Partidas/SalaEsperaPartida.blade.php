@@ -67,71 +67,74 @@
 
 <script>
 
+    relojActivo = true;
 
     $( document ).ready(function() {
         inicializarReloj(actualizarPartidas,700);
         
     });
+
     contenidoActual = "";
-    
     function actualizarPartidas(){ 
         ruta = "/Partida/getActualizacionSalaEspera/{{$partida->codPartida}}";
-        $.get(ruta, function(dataRecibida){
-            //console.log('DATA RECIBIDA:');
-            //console.log(dataRecibida);
-            contenedor = document.getElementById('contenedor');
-            objetoRespuesta = JSON.parse(dataRecibida);
-            htmlRecibido = objetoRespuesta.html;
 
-            if(contenidoActual!=htmlRecibido){ //si es diferente, actualizamos.
-                console.log('Actualizando...');
-                contenedor.innerHTML = htmlRecibido;
-                contenidoActual = htmlRecibido;
-            }else{ //si es igual, no hay por que actualizar
-                 
-            }
+        if(relojActivo)
+            $.get(ruta, function(dataRecibida){
+                console.log('DATA RECIBIDA:');
+                console.log(dataRecibida);
+                contenedor = document.getElementById('contenedor');
+                objetoRespuesta = JSON.parse(dataRecibida);
+                htmlRecibido = objetoRespuesta.html;
 
-            if(objetoRespuesta.partidaIniciada=='1'){
-                location.href="{{route('Partida.EntrarSalaJuego',$partida->codPartida)}}"
-            }
+                if(contenidoActual!=htmlRecibido){ //si es diferente, actualizamos.
+                    console.log('Actualizando...');
+                    contenedor.innerHTML = htmlRecibido;
+                    contenidoActual = htmlRecibido;
+                }else{ //si es igual, no hay por que actualizar
+                    
+                }
                 
-        });
+                redireccionó = verificarRedireccion(objetoRespuesta);
+                if(redireccionó){
+                    relojActivo = false;   
+                }
+            });
     }
 
 
     @if($partida->elHostEstaLogeado())
-    
-    function hacerBancario(codJugador){
-        ruta = "/Partida/HacerBancarioAJugador/" + codJugador;
-        $.get(ruta, function(dataRecibida){
-            console.log('DATA RECIBIDA:');
-            console.log(dataRecibida);
-
-            objetoRespuesta = JSON.parse(dataRecibida);
-            alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
-
-        });
-
-    }
-
-    function cambioEdicion(){
-        codEdicion = document.getElementById('codEdicion').value;
-        ruta = "/Partida/CambiarEdicion/";
-        datos = {
-            codEdicion : codEdicion,
-            codPartida : {{$partida->codPartida}}
-        };
         
-        $.get(ruta, datos, function(dataRecibida){
-            console.log('DATA RECIBIDA:');
-            console.log(dataRecibida);
+        function hacerBancario(codJugador){
+            ruta = "/Partida/HacerBancarioAJugador/" + codJugador;
+            $.get(ruta, function(dataRecibida){
+                console.log('DATA RECIBIDA:');
+                console.log(dataRecibida);
+
+                objetoRespuesta = JSON.parse(dataRecibida);
+                alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+
+            });
+
+        }
+
+        function cambioEdicion(){
+            codEdicion = document.getElementById('codEdicion').value;
+            ruta = "/Partida/CambiarEdicion/";
+            datos = {
+                codEdicion : codEdicion,
+                codPartida : {{$partida->codPartida}}
+            };
             
-            objetoRespuesta = JSON.parse(dataRecibida);
-            alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+            $.get(ruta, datos, function(dataRecibida){
+                console.log('DATA RECIBIDA:');
+                console.log(dataRecibida);
+                
+                objetoRespuesta = JSON.parse(dataRecibida);
+                alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
 
-        });
+            });
 
-    }
+        }
     @endif
 </script>
  

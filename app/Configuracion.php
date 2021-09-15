@@ -17,7 +17,9 @@ class Configuracion extends Model
     const mostrarInputsEscondidos = false;
     //define si se muestran o no algunos inputs que usamos como Hidden para almacenar variables
     
-
+    const TokenAleatorio_LimiteInferior = 1;
+    const TokenAleatorio_LimiteSuperior = 99999999;
+    
 
     const pesoMaximoArchivoMB = 10;
 
@@ -64,6 +66,8 @@ class Configuracion extends Model
         return Configuracion::mensajeErrorEstandar.$formateado." .";
 
     }
+
+    
 
 
 }

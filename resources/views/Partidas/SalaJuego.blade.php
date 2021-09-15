@@ -6,7 +6,7 @@
 @endsection
 
 @section('contenido')
-
+@csrf
 <div class="row">
     <div class="col">
         <h1>
@@ -19,7 +19,7 @@
 
     <div class="col">    
         
-    <label  for="" >Pagar a:</label>
+        <label  for="" >Pagar a:</label>
         <div class="row">
             <input  style="width:30%" placeholder ="Monto pago..." type="number" class="text-right form-control m-1" step="01" id="monto" name="monto" value="0">
             <select  style="width:40%" class="form-control m-1" name="codJugadorDestino" id="codJugadorDestino">
@@ -67,7 +67,51 @@
         
     </div>
 </div>
- 
+
+<div class="row">
+
+
+    <div class="col">    
+        
+        <label  for="" >Transferir propiedad a:</label>
+        <div class="row">
+            <select  style="width:40%" class="form-control m-1" name="codJugadorATransferirPropiedad" id="codJugadorATransferirPropiedad">
+                <option value="0">- Jugadores -</option>
+                @foreach ($listaJugadores as $jugador)
+                    @if($jugador->codJugador != $jugadorLogeado->codJugador)
+                        <option value="{{$jugador->codJugador}}">
+                            {{$jugador->getNombreUsuario()}}
+                        </option>
+                    @endif
+                    
+                @endforeach
+            </select>
+
+            <select  style="width:40%" class="form-control m-1" name="codPropiedadPartida" id="codPropiedadPartida">
+                <option value="0">- Propiedades - </option>
+                @foreach ($listaMisPropiedades as $miPropiedad)
+                    <option value="{{$miPropiedad->codPropiedadPartida}}">
+                        {{$miPropiedad->getPropiedad()->nombre}}
+                    </option>
+                @endforeach
+            </select>
+            
+
+            <button style="height:70%" onclick="clickTransferirPropiedad()" type="button" class="mt-2 ml-2 btn btn-primary btn-sm">
+                <i class="fas fa-hand-holding-usd"></i>
+                Transferir
+            </button>
+        </div>
+        
+    </div>    
+</div>
+<div class="row">
+
+    <div class="col" id="contenidoMisPropiedades">
+        
+    </div>
+
+</div>
  
 @endsection
 
@@ -77,7 +121,8 @@
     /* 
         Funcion que actualiza el contenido de la pagina a la ultima transaccion
     */
-    codUltimaTransaccion = 0;
+    tokenSincronizacion = 0;
+     
     debugear = false;
 
     inicializarReloj(actualizarTransacciones,800);
@@ -85,7 +130,7 @@
     function actualizarTransacciones(){ 
         ruta = "/Partida/getActualizacionPartida/";
         datosEnviados = {
-            codUltimaTransaccion : codUltimaTransaccion,
+            tokenSincronizacion : tokenSincronizacion,
             codPartida:{{$partida->codPartida}}
         };
 
@@ -100,11 +145,16 @@
                 console.log("El Contenido ya está sincronizado.");
             }else{ //DESINCRONIZADO
                 console.log("Sincronizando el contenido...");
-                contenedor = document.getElementById('contenidoMisTransacciones');
-                contenedor.innerHTML = objetoRespuesta.body;
+                contenidoMisTransacciones = document.getElementById('contenidoMisTransacciones');
+                contenidoMisTransacciones.innerHTML = objetoRespuesta.misTransacciones;
+
+                contenidoMisPropiedades = document.getElementById('contenidoMisPropiedades');
+                contenidoMisPropiedades.innerHTML = objetoRespuesta.misPropiedades;
+
+                actualizarSelectMisPropiedades();
             }
-            codUltimaTransaccion = objetoRespuesta.codUltimaTransaccion;
-            console.log('Ciclo de sincronización completada. Ultima tr=' + codUltimaTransaccion );
+            tokenSincronizacion = objetoRespuesta.tokenSincronizacion;
+            console.log('Ciclo de sincronización completada. Ultima tr=' + tokenSincronizacion );
         });
     }
 
@@ -147,17 +197,90 @@
             console.log(objetoRespuesta);
             alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
             if(objetoRespuesta.ok=='1')
-                limpiarCampos();
+                limpiarCamposPago();
             
 
         });
 
     }
 
-    function limpiarCampos(){
+    function limpiarCamposPago(){
         document.getElementById('monto').value = "";
         document.getElementById('codJugadorDestino').value = "0";
 
+    }
+
+
+
+    /* TRANSACCIONES DE PROPIEDADES */
+    function clickTransferirPropiedad(){
+        msjError = validarTransferirPropiedad();
+        if(msjError!=""){
+            alerta(msjError);
+            return;
+        }
+
+        //                  titulo,         texto,                  tipoMensaje,    nombreFuncionAEjecutar
+        confirmarConMensaje("Confirmacion","¿Seguro que desea transferir la propiedad?",'warning',ejecutarTransferirPropiedad);
+    }
+
+    function validarTransferirPropiedad(){
+        limpiarEstilos(['codJugadorATransferirPropiedad','codPropiedadPartida']);
+        msjError="";
+        msjError = validarSelect(msjError,'codJugadorATransferirPropiedad','0',"Jugador a transferir la propiedad");
+        msjError = validarSelect(msjError,'codPropiedadPartida','0',"Propiedad a transferir");
+        
+        return msjError;
+
+    }
+
+    function ejecutarTransferirPropiedad(){
+
+
+        ruta = "{{route('Partida.transferirPropiedad')}}";
+
+        codPropiedadPartida = document.getElementById('codPropiedadPartida').value;
+        codJugadorATransferirPropiedad = document.getElementById('codJugadorATransferirPropiedad').value;
+        token = document.getElementsByName('_token')[0].value;
+
+        datosEnviados = {
+            _token : token,
+            codJugadorEmisor : {{$jugadorLogeado->codJugador}},
+            codPropiedadPartida : codPropiedadPartida,
+            codJugadorReceptor : codJugadorATransferirPropiedad
+        };
+
+        $.post(ruta,datosEnviados, function(dataRecibida){
+            console.log('DATA RECIBIDA:');
+            
+            objetoRespuesta = JSON.parse(dataRecibida);
+            console.log(objetoRespuesta);
+            alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+            if(objetoRespuesta.ok=='1'){
+                limpiarCamposTransaccionPropiedad();
+                actualizarSelectMisPropiedades();
+            }
+                
+        });
+
+    }
+
+
+    function actualizarSelectMisPropiedades(){
+
+        ruta = "/Partida/getPartidasDeJugador/{{$partida->codPartida}}";
+
+        $.get(ruta,function(htmlRecibido){
+            console.log('DATA RECIBIDA:');
+            console.log(htmlRecibido);
+            document.getElementById('codPropiedadPartida').innerHTML = htmlRecibido;
+        });
+
+    }
+
+    function limpiarCamposTransaccionPropiedad(){
+        document.getElementById('codJugadorATransferirPropiedad').value = "0";
+        document.getElementById('codPropiedadPartida').value = "0";
     }
 
 </script>

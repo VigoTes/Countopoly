@@ -14,9 +14,9 @@
          
 
               <li class="nav-item">
-                <a href=" " class="nav-link">
+                <a href="{{route('Cuenta.Listar')}}" class="nav-link">
                   <i class="far fa-address-card nav-icon"></i>
-                  <p>SUBNIVEL 1</p>
+                  <p>Cuentas</p>
                 </a>
               </li>
           

@@ -382,4 +382,13 @@ function inicializarReloj(nombreFuncion,intervalo){
     }
 
 
+//se le pasa el objeto que lee el json de RespuestaAPI
+function verificarRedireccion(objetoRespuesta){
+    if(objetoRespuesta.rutaRedireccion!=""){
+        location.href = objetoRespuesta.rutaRedireccion;
+        return true;
+    }
+    return false;
+
+}
 </script>
