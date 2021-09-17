@@ -192,7 +192,7 @@
 
         msj = validarTamañoMaximoYNulidad(msj,'stringCodigoQR',100,'Valor del código QR');
         msj = validarTamañoMaximoYNulidad(msj,'nombreImagen',1500,'Nombre de la imagen');
-        msj = validarTamañoMaximoYNulidad(msj,'descripcion',400,'Descripción');
+        msj = validarTamañoMaximoYNulidad(msj,'descripcion',1800,'Descripción');
         msj = validarNulidad(msj,'fechaDesbloqueo','Fecha de desbloqueo');         
         msj = validarPositividad(msj,'tamañoImagen','Tamaño de la imagen');
 

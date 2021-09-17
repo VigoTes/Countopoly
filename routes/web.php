@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Route;
 /* RUTAS PARA INGRESO Y REGISTRO DE USUARIO Y CLIENTE */
 
 Route::get('/probandoCosas',function(){
+    
+    return json_encode(new DateTime());
+    
     return rand(1,99999999);
       
     return Partida::findOrFail(17)->getUltimaTransaccion();
