@@ -14,12 +14,18 @@ class Link extends Model
 
     public function sePuedeVer(){
         
-        $fechaActual = new DateTime();
+        $fechaActual = new DateTime("now");
         $fechaDesbloqueo= new DateTime($this->fechaDesbloqueo);
+        Debug::mensajeSimple('fechaDesbloqueo: '.json_encode($fechaDesbloqueo));
+        Debug::mensajeSimple('fechaActual: '.json_encode($fechaActual));
         
         if($fechaActual<$fechaDesbloqueo){
+            Debug::mensajeSimple('es menor');
             return false;            
         }
+
+
+        Debug::mensajeSimple('es mayor');
         return true;
 
     }
