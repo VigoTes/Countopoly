@@ -33,4 +33,14 @@ class Link extends Model
     public function getFechaDesbloqueo(){
         return Fecha::formatoParaVistas($this->fechaDesbloqueo);
     }
+
+
+
+    public function getDescripcion(){
+        
+        $c = substr_count($this->descripcion,"\n");
+        $desc = str_replace("\n",'<br>',$this->descripcion);
+        Debug::mensajeSimple($c);
+        return $desc;
+    }
 }

@@ -105,6 +105,12 @@
                                 <label for="">String del código QR</label>
                                 <input type="text" class="form-control" name="stringCodigoQR" id="stringCodigoQR">
                             </div>
+                            <div class="col">
+                                <label for="">Alineamiento</label>
+                                <input type="text" class="form-control" name="alineamiento" id="alineamiento" placeholder="center">
+                            </div>
+
+
                             <div class="w-100"></div>
                             <div class="col">
                                 <label for="">Fecha desbloqueo</label>
@@ -170,7 +176,9 @@
         document.getElementById('nombreImagen').value = "";
         document.getElementById('descripcion').value = "";
         document.getElementById('tamañoImagen').value = "";
-
+        document.getElementById('alineamiento').value = "";
+        
+        
         
     }
 
@@ -193,6 +201,8 @@
         msj = validarTamañoMaximoYNulidad(msj,'stringCodigoQR',100,'Valor del código QR');
         msj = validarTamañoMaximoYNulidad(msj,'nombreImagen',1500,'Nombre de la imagen');
         msj = validarTamañoMaximoYNulidad(msj,'descripcion',1800,'Descripción');
+        msj = validarTamañoMaximoYNulidad(msj,'alineamiento',20,'alineamiento');
+        
         msj = validarNulidad(msj,'fechaDesbloqueo','Fecha de desbloqueo');         
         msj = validarPositividad(msj,'tamañoImagen','Tamaño de la imagen');
 
@@ -213,8 +223,8 @@
         document.getElementById('nombreImagen').value = obj.nombreImagen;
         document.getElementById('descripcion').value = obj.descripcion;
         document.getElementById('tamañoImagen').value = obj.tamañoImagen;
+        document.getElementById('alineamiento').value = obj.alineamiento;
         
-         
     }
 
     codLinkAEliminar = 0;

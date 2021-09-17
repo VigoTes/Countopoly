@@ -57,6 +57,7 @@ class LinkController extends Controller
             $link->descripcion= $request->descripcion;
             $link->nombreImagen= $request->nombreImagen;
             $link->tamañoImagen= $request->tamañoImagen;
+            $link->alineamiento= $request->alineamiento;
             
             $link->save();
 

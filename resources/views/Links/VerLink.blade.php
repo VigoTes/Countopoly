@@ -35,7 +35,7 @@
         <div id="container">
             <h1>Buenas Buenas</h1>
 
-            <h3 style="color:white" id="mensaje">
+            <h3 style="color:white; margin:5%; text-align:{{$link->alineamiento}}" id="mensaje">
 
             </h3>
             
@@ -51,6 +51,7 @@
     -o-background-size: cover;
     background-size: 100% 100%;
     overflow: hidden;
+    
   }
   img{
     display: block;
@@ -256,7 +257,10 @@
     function clickBotonMargarita(){
       $('#botonMargarita').fadeOut("slow",function(){
           $("#container").fadeIn();
-          document.getElementById("mensaje").innerHTML = `{{$link->descripcion}}`;
+          document.getElementById("mensaje").innerHTML = 
+          `@php
+          echo $link->getDescripcion()
+          @endphp`;
       });
 		document.getElementById("titulo").innerHTML = "";
 		
