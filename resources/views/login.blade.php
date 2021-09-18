@@ -16,17 +16,21 @@
       
 </head>
 <div class="conteiner">
-	<br>
-	<div class="login-wrap">
+	 
+	<div class="login-wrap margenSuperiorCuadroAzul">
 		<form method="POST" action="{{route('user.logearse')}}">
 			@csrf  
 			<div class="login-html">
 				<input id="tab-1" type="radio" name="tab" class="sign-in" checked>
-					<label for="tab-1" class="tab" style="font-size: xx-large">Iniciar Sesión</label>
+				<label for="tab-1" class="tab" style="font-size: xx-large">
+					Iniciar Sesión
+				</label>
 
 
+
+				{{-- Esto es para voltear la página al register, no sirve pero lo dejo --}}
 				<input id="tab-2" type="radio" name="tab" class="sign-up">
-					<label for="tab-2" class="tab"></label>
+				<label for="tab-2" class="tab"></label>
 
 
 				<div class="login-form">
@@ -60,6 +64,7 @@
 							<img src="/img/SeñorSaltandoSinFondo.png"
 							width="200" >
 						</div>
+
 					</div>
  
 				</div>

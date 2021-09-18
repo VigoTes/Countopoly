@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+
 body{
 	margin:0;
 	color:#212431;
@@ -6,10 +8,26 @@ body{
 	background-size: 100%;
 	font:600 16px/18px 'Open Sans',sans-serif;
 }
-*,:after,:before{box-sizing:border-box}
-.clearfix:after,.clearfix:before{content:'';display:table}
-.clearfix:after{clear:both;display:block}
-a{color:inherit;text-decoration:none}
+
+
+*,:after,:before{
+	box-sizing:border-box
+}
+
+.clearfix:after,.clearfix:before{
+	content:'';
+	display:table
+}
+
+.clearfix:after{
+	clear:both;
+	display:block
+}
+
+a{
+	color:inherit;
+	text-decoration:none
+}
 
 ::placeholder{
 	color:rgba(129, 247, 247, 0.685);
@@ -20,15 +38,28 @@ a{color:inherit;text-decoration:none}
 	margin-top: 15%;
 
 }
+
+
 .login-wrap{
 	width:100%;
 	margin:auto;
+	
 	max-width:525px;
 	min-height:670px;
 	position:relative;
-	
 	box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
 }
+
+
+/* Si la pantalla tiene al menos 700px, se pone un margen del 2% en el top del cuadro azul */
+@media only screen and (min-width: 700px) {
+	.margenSuperiorCuadroAzul{
+		margin-top: 2%;
+
+	}
+}
+
+
 .login-html{
 	width:100%;
 	height:100%;
@@ -38,8 +69,9 @@ a{color:inherit;text-decoration:none}
 	padding: 8% 10% 8% 10%;
 	background:rgba(0, 62, 143, 0.719);
 }
-.login-html .sign-in-htm,
-.login-html .sign-up-htm{
+
+
+.sign-in-htm{
 	top:0;
 	left:0;
 	right:0;
@@ -49,6 +81,7 @@ a{color:inherit;text-decoration:none}
 	backface-visibility:hidden;
 	transition:all .4s linear;
 }
+
 .login-html .sign-in,
 .login-html .sign-up,
 .login-form .group .check{
@@ -59,6 +92,8 @@ a{color:inherit;text-decoration:none}
 .login-form .group .button{
 	text-transform:uppercase;
 }
+
+
 .login-html .tab{
 	font-size:22px;
 	margin-right:15px;
