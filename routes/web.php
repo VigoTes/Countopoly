@@ -64,6 +64,11 @@ Route::get('/Partida/getActualizacionSalaEspera/{codPartida}','PartidaController
 Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@HacerBancarioAJugador')
     ->name('Partida.HacerBancarioAJugador');
 
+Route::get('/Partida/ExpulsarJugador/{codJugador}','PartidaController@ExpulsarJugador')->name('Partida.ExpulsarJugador');
+
+Route::get('/Partida/FuiExpulsadoYEstoyRetornandoAlListar/{codPartida}','PartidaController@FuiExpulsadoYEstoyRetornandoAlListar')->name('Partida.FuiExpulsadoYEstoyRetornandoAlListar');
+
+
 Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
     ->name('Partida.CambiarEdicion');
 

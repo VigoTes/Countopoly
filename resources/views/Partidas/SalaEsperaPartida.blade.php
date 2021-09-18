@@ -135,6 +135,25 @@
             });
 
         }
+
+        codJugadorAExpulsar = 0;
+        function clickExpulsarJugador(codJugador){
+            codJugadorAExpulsar = codJugador;
+            confirmarConMensaje("Confirmacion","¿Desea expulsar al jugador?",'warning',ejecutarExpulsarJugador)
+
+        }
+
+        function ejecutarExpulsarJugador(){
+            ruta = "/Partida/ExpulsarJugador/" + codJugadorAExpulsar;
+            $.get(ruta, function(dataRecibida){
+                console.log('DATA RECIBIDA:');
+                console.log(dataRecibida);
+
+                objetoRespuesta = JSON.parse(dataRecibida);
+                alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+            });
+
+        }
     @endif
 </script>
  

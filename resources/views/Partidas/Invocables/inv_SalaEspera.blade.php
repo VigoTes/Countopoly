@@ -62,7 +62,7 @@
                     @if($partida->elHostEstaLogeado()) {{-- OPCIOENS PARA EL HOST DE LA PARTIDA --}}
                     <td>
                         @if($jugador->codCuenta != $cuentaLogeada->codCuenta)
-                            <button type="button" class="btn btn-danger">
+                            <button type="button" class="btn btn-danger" onclick="clickExpulsarJugador({{$jugador->codJugador}})">
                                 Expulsar 
                                 <i class="fas fa-ban"></i>
                             </button>

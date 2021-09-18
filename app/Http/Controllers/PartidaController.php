@@ -57,6 +57,7 @@ class PartidaController extends Controller
             $partida->codCuentaHost = $cuentaLogeada->codCuenta; //por ahora, pondremos que siempre sea Vigo el host
             $partida->codEstadoPartida = 1; //por ahora, pondremos que siempre sea Vigo el host
             $partida->codEdicion = 1;
+            $partida->cambiarToken();
             $partida->save();
             
             //ahora incluimos en esa partida a el host
@@ -68,8 +69,10 @@ class PartidaController extends Controller
             $jugadorHost->save();
 
             $partida->codJugadorBancario = $jugadorHost->codJugador;
+            
             $partida->save(); //ponemos por defecto que sea el host el bancario
 
+             
             db::commit();
             //redirije a la sala de espera de la partida
             return redirect()->route('Partida.IngresarSalaEspera',$partida->codPartida)
@@ -78,6 +81,7 @@ class PartidaController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             Debug::mensajeError('Partida controller', $th);
+            throw $th;
             return $th;
         }
     }
@@ -169,6 +173,45 @@ class PartidaController extends Controller
             return RespuestaAPI::respuestaError("Ha ocurrido un error interno:".$th);
         }
         
+    }
+
+
+    //cUANDO EXPULSAMOS A UN JUGADOR DE LA SALA DE ESPERA
+    public function ExpulsarJugador($codJugador){
+        try {
+            DB::beginTransaction();
+            $jugador = Jugador::findOrFail($codJugador);
+            $nombre = $jugador->getNombreUsuario();
+
+            $partida = Partida::findOrFail($jugador->codPartida);
+            if($partida->codJugadorBancario == $codJugador){
+                return RespuestaAPI::respuestaError("El jugador que desea expulsar es el bancario, por favor seleccione otro bancario antes de expulsarlo.");
+            }
+
+            $jugador->delete();
+            
+            DB::commit();
+            return RespuestaAPI::respuestaOk("Se ha expulsado al jugador '$nombre'");
+    
+        } catch (\Throwable $th) {
+            
+            DB::rollBack();
+            return RespuestaAPI::respuestaError("Ha ocurrido un error interno:".$th);
+        }
+        
+    }
+
+    //El jugador expulsado llega a esta ruta 
+    public function FuiExpulsadoYEstoyRetornandoAlListar($codPartida){
+        Debug::mensajeSimple('si llega');
+        $cuentaLogeada = Cuenta::getCuentaLogeada();
+        Jugador::where('codPartida','=',$codPartida)
+            ->where('codCuenta','=',$cuentaLogeada->codCuenta)
+            ->delete();
+
+        return redirect()->route('Partida.listarPartidasEnEspera')
+            ->with('datos','El host te ha expulsado de la partida.');
+    
     }
 
     public function CambiarEdicion(Request $request){
@@ -346,17 +389,25 @@ class PartidaController extends Controller
         
         $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
 
+        //si la partida tiene al jugador
+        if($partida->tieneAJugador($cuentaLogeada->codCuenta)){
+            $jugador = $cuentaLogeada->getJugadorPorPartida($codPartida);
 
+            $html = (string) view('Partidas.Invocables.inv_SalaEspera',compact('listaJugadores','partida','cuentaLogeada'));
+            
+            $rutaRedireccion = "";
 
-        $html = (string) view('Partidas.Invocables.inv_SalaEspera',compact('listaJugadores','partida','cuentaLogeada'));
-        
-        $rutaRedireccion = "";
-        //si ya se está jugando, redireccionamos al link de la sala de juego
-        if($partida->estaJugandose())
-            $rutaRedireccion = route('Partida.EntrarSalaJuego',$partida->codPartida);
-        if($partida->estaCancelada())
-            $rutaRedireccion = route('Partida.SalirmeDePartida',$partida->codPartida);
-        
+            //si ya se está jugando, redireccionamos al link de la sala de juego
+            if($partida->estaJugandose())
+                $rutaRedireccion = route('Partida.EntrarSalaJuego',$partida->codPartida);
+            if($partida->estaCancelada())
+                $rutaRedireccion = route('Partida.SalirmeDePartida',$partida->codPartida);
+            
+        }else{
+            $html = "";
+            $rutaRedireccion = route('Partida.FuiExpulsadoYEstoyRetornandoAlListar',$partida->codPartida);
+        }
+
         $vector = [
             'html' => $html,
             'rutaRedireccion' => $rutaRedireccion
