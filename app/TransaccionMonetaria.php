@@ -21,23 +21,23 @@ class TransaccionMonetaria extends Model
     
 
     /* 
-        Dependiendo de si el jugador logeado es el emisor o receptor, 
+        Dependiendo de si el jugador pasado como parametro es el emisor o receptor, 
                                     retorna color roojo y verde respectivamente
     
         Si no es ninguno de los dos, retorna negro
     */
-    public function getColorSegunLogeado(){
-        $codJugadorLogeado = Jugador::getJugadorLogeado()->codJugador;
-        if($codJugadorLogeado == $this->codJugadorSaliente)
+    public function getColorSegunJugador($codJugador){ 
+        if($codJugador == $this->codJugadorSaliente)
             return "red";
-        if($codJugadorLogeado == $this->codJugadorEntrante)
+        if($codJugador == $this->codJugadorEntrante)
             return "green";
         
         return "black";
 
     }    
     public function getConcepto(){
-        $jugadorLogeado = Jugador::getJugadorLogeado();
+        $cuentaLogeada = Cuenta::getCuentaLogeada();
+        $jugadorLogeado  = $cuentaLogeada->getJugadorPorPartida($this->codPartida);
         $tipoTransaccion = TipoTransaccionMonetaria::findOrFail($this->codTipoTransaccion);
 
         if($this->codJugadorSaliente == $jugadorLogeado->codJugador)

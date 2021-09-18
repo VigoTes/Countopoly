@@ -117,7 +117,7 @@ class PartidaController extends Controller
                 $transaccion->codJugadorSaliente = $partida->codJugadorBanco;
                 $transaccion->codJugadorEntrante = $jugador->codJugador;
                 $transaccion->codPartida = $codPartida;
-                $transaccion->codTipoTransaccion = 2; //pago del banco
+                $transaccion->codTipoTransaccion = 6; //pago Inicial
                 $transaccion->fechaHora = Carbon::now();
                 $transaccion->monto = $montoInicial;
                 $transaccion->save();
@@ -278,21 +278,30 @@ class PartidaController extends Controller
     public function entrarSalaJuego($codPartida){
         $partida = Partida::findOrFail($codPartida);
         $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
-        $jugadorLogeado = Jugador::getJugadorLogeado();
+
+        $cuentaLogeada = Cuenta::getCuentaLogeada();
+        $jugadorLogeado = $cuentaLogeada->getJugadorPorPartida($codPartida);
         $listaMisPropiedades = $jugadorLogeado->getPropiedades();
 
-        if($jugadorLogeado->codJugador == $partida->codJugadorBancario){
-            $listaTipoTransaccion = TipoTransaccionMonetaria::All();
-        }else{
-            $listaTipoTransaccion = TipoTransaccionMonetaria::where('esDelBanco','=','0')->get();
-        }
+        $listaTipoTransaccion = TipoTransaccionMonetaria::where('esDelBanco','=','0')->get();
+        $listaTipoTransaccion_banco = TipoTransaccionMonetaria::where('esDelBanco','=','1')->get();
+        
+        $jugadorBanco = Jugador::findOrFail($partida->codJugadorBanco);
+        $banco_listaMisPropiedades = $jugadorBanco->getPropiedades();
 
-        return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado','listaTipoTransaccion','listaMisPropiedades'));
+
+        return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado','listaTipoTransaccion','listaMisPropiedades','listaTipoTransaccion_banco','banco_listaMisPropiedades'));
     }
     
     public function realizarPago(Request $request){
          
-        $jugadorLogeado = Jugador::getJugadorLogeado();
+        $cuentaLogeada = Cuenta::getCuentaLogeada();
+        $partida = Partida::findOrFail($request->codPartida);
+
+        if($request->banco=='1')//si se envió como pago del banco 
+            $jugadorLogeado = Jugador::findOrFail($partida->codJugadorBanco);
+        else //jugador normal
+            $jugadorLogeado = $cuentaLogeada->getJugadorPorPartida($request->codPartida);
 
         if($jugadorLogeado->montoActual < $request->montoEnviado){
             return RespuestaAPI::respuestaError("No dispone de fondos suficientes.");
@@ -348,14 +357,20 @@ class PartidaController extends Controller
         $partida = Partida::findOrFail($request->codPartida);
         $tokenSincronizacionActual = $partida->tokenSincronizacion;
 
+        $banco_misPropiedades = "";
+        $banco_misTransacciones = "";
+        $misTransacciones = '';
+        $misPropiedades = '';
+        error_log('                    Rqeust:'.$request->tokenSincronizacion." real:".$tokenSincronizacionActual);
+
         if($request->tokenSincronizacion !=0 //primera iteracion
             && $request->tokenSincronizacion == $tokenSincronizacionActual){ //sincronizado
             $estadoSincronizacion = '1';
-            $misTransacciones = '';
-            $misPropiedades = '';
-            Debug::mensajeSimple('sincro');
+           
+            //Debug::mensajeSimple('sincro');
         }else{ //desincronizado
-            $jugador = Cuenta::getCuentaLogeada()->getJugadorPorPartida($partida->codPartida);
+            $jugador = Cuenta::getCuentaLogeada()->getJugadorPorPartida($partida->codPartida); //jugador
+            Debug::mensajeSimple('Sincronizando...');
             //lista de las transacciones del jugador
             $listaMisTransacciones = $jugador->getListaTransacciones($partida->codPartida);
             $listaMisPropiedades = $jugador->getPropiedades();
@@ -363,6 +378,21 @@ class PartidaController extends Controller
 
             $misTransacciones = (string) view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
             $misPropiedades = (string ) view('Partidas.Invocables.inv_MisPropiedades',compact('jugador','listaMisPropiedades'));
+            
+            
+            if($request->banco=='1') // también se está solicitnado la información del banco
+            {
+                /* TODA ESTA INFO ES DEL BANCO, NO DEL JUGADOR BANCARIO */
+                $jugadorBanco = Jugador::findOrFail($partida->codJugadorBanco);
+                $jugador = $jugadorBanco; //Para que a la vista le llegue esa variable
+                $listaMisTransacciones = $jugador->getListaTransacciones($partida->codPartida); 
+                $listaMisPropiedades = $jugador->getPropiedades();
+
+                $banco_misTransacciones = (string) view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
+                $banco_misPropiedades = (string ) view('Partidas.Invocables.inv_MisPropiedades',compact('jugador','listaMisPropiedades'));
+            
+
+            }   
             //Debug::mensajeSimple($body);
              
         }
@@ -371,6 +401,8 @@ class PartidaController extends Controller
             'sincronizado'=> $estadoSincronizacion,
             'misTransacciones' => $misTransacciones,
             'misPropiedades' => $misPropiedades,
+            'banco_misTransacciones' => $banco_misTransacciones,
+            'banco_misPropiedades' => $banco_misPropiedades,
             'tokenSincronizacion' => $tokenSincronizacionActual
         ];
         

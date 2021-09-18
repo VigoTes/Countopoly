@@ -25,15 +25,18 @@ class PropiedadPartidaController extends Controller
 
     //transfiere la propiedad de un jugador a otro
     public function transferirPropiedad(Request $request){
-
+        
         try {
             DB::beginTransaction();
             $jugadorEmisor = Jugador::findOrFail($request->codJugadorEmisor);
             $jugadorReceptor= Jugador::findOrFail($request->codJugadorReceptor);
+            $partida = $jugadorEmisor->getPartida();
 
             //verificamos que esté logeado el emisor 
             $cuentaLogeada = Cuenta::getCuentaLogeada();
-            if($jugadorEmisor->codCuenta != $cuentaLogeada->codCuenta){
+
+            // Si el jug emisor no es de la cuenta logeada, ni es el banco 
+            if($jugadorEmisor->codCuenta != $cuentaLogeada->codCuenta && $partida->codJugadorBanco != $jugadorEmisor->codJugador){
                 throw new Exception("Ha ocurrido un error de verificacón.");
             }
 
@@ -44,8 +47,10 @@ class PropiedadPartidaController extends Controller
             $nombre = $propiedadPartida->getPropiedad()->nombre;
             $nombreJugador = $jugadorReceptor->getCuenta()->usuario;
             
-            $partida = $jugadorEmisor->getPartida();
+            
+            Debug::mensajeSimple('el token antes era:'.$partida->tokenSincronizacion);
             $partida->cambiarToken();
+            $partida->save();
             
 
             DB::commit();

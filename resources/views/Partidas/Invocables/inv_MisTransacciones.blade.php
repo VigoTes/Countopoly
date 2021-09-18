@@ -48,7 +48,7 @@ Cantidad actual en caja:
                 {{$transaccion->getReceptor()->usuario}}
             </td>
 
-            <td class="text-center" style="color:{{$transaccion->getColorSegunLogeado()}}">
+            <td class="text-center" style="color:{{$transaccion->getColorSegunJugador($jugador->codJugador)}}">
                 {{$transaccion->monto}}
             </td>
         </tr>

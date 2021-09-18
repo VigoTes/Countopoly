@@ -4,6 +4,11 @@
 @section('titulo')
     Partida {{$partida->codPartida}}
 @endsection
+@php
+    $esBancario = $partida->codJugadorBancario == $jugadorLogeado->codJugador;
+@endphp
+
+
 
 @section('contenido')
 @csrf
@@ -112,6 +117,18 @@
     </div>
 
 </div>
+<br>
+<br>
+<div class="row">
+
+    <div class="col">
+        {{--  Si este jugador es el bancario, le presentamos su dashboard  --}}
+        @if($esBancario)
+            @include('Partidas.SalaJuego_Banco')
+        @endif
+
+    </div>
+</div>
  
 @endsection
 
@@ -132,6 +149,9 @@
         datosEnviados = {
             tokenSincronizacion : tokenSincronizacion,
             codPartida:{{$partida->codPartida}}
+            @if ($esBancario)
+                ,banco:'1'
+            @endif
         };
 
 
@@ -145,16 +165,28 @@
                 console.log("El Contenido ya está sincronizado.");
             }else{ //DESINCRONIZADO
                 console.log("Sincronizando el contenido...");
+                console.log(objetoRespuesta);
                 contenidoMisTransacciones = document.getElementById('contenidoMisTransacciones');
                 contenidoMisTransacciones.innerHTML = objetoRespuesta.misTransacciones;
 
                 contenidoMisPropiedades = document.getElementById('contenidoMisPropiedades');
                 contenidoMisPropiedades.innerHTML = objetoRespuesta.misPropiedades;
 
+                @if ($esBancario)
+                    contenidoPropiedadesDelBanco =     document.getElementById('banco_propiedades');
+                    contenidoPropiedadesDelBanco.innerHTML = objetoRespuesta.banco_misPropiedades;
+
+                    contenidoTransaccionesDelBanco =     document.getElementById('banco_Transacciones');
+                    contenidoTransaccionesDelBanco.innerHTML = objetoRespuesta.banco_misTransacciones;
+                
+
+                @endif
+
+                
                 actualizarSelectMisPropiedades();
             }
             tokenSincronizacion = objetoRespuesta.tokenSincronizacion;
-            console.log('Ciclo de sincronización completada. Ultima tr=' + tokenSincronizacion );
+            console.log('Ciclo de sincronización completada. Token=' + tokenSincronizacion );
         });
     }
 
@@ -174,21 +206,33 @@
         }
 
         //                  titulo,         texto,                  tipoMensaje,    nombreFuncionAEjecutar
-        confirmarConMensaje("Confirmacion","¿Seguro que quiere pagar?",'warning',ejecutarRealizarPago);
+        confirmarConMensaje("Confirmacion","¿Seguro que quiere pagar?",'warning',jugadorNormal_ejecutarRealizarPago);
     }
 
-    function ejecutarRealizarPago(){
-        ruta = "/Partida/realizarPago/";
+    function jugadorNormal_ejecutarRealizarPago(){
+
         montoEnviado = document.getElementById('monto').value;
         codJugadorDestino = document.getElementById('codJugadorDestino').value;
         codTipoTransaccion = document.getElementById('codTipoTransaccion').value;
+        
 
+        ejecutarRealizarPago(false,montoEnviado,codJugadorDestino,codTipoTransaccion);
+    }
+
+
+    function ejecutarRealizarPago(esBanco,montoEnviado,codJugadorDestino,codTipoTransaccion){
+        banco = "";
+        if(esBanco) 
+            banco="1"; 
+
+        ruta = "/Partida/realizarPago/";
+        
         datosEnviados = {
             montoEnviado : montoEnviado ,
             codJugadorDestino: codJugadorDestino,
             codPartida : {{$partida->codPartida}},
-            codTipoTransaccion : codTipoTransaccion
-
+            codTipoTransaccion : codTipoTransaccion,
+            banco: banco
         };
         $.get(ruta,datosEnviados, function(dataRecibida){
             console.log('DATA RECIBIDA:');
@@ -221,7 +265,7 @@
         }
 
         //                  titulo,         texto,                  tipoMensaje,    nombreFuncionAEjecutar
-        confirmarConMensaje("Confirmacion","¿Seguro que desea transferir la propiedad?",'warning',ejecutarTransferirPropiedad);
+        confirmarConMensaje("Confirmacion","¿Seguro que desea transferir la propiedad?",'warning',jugadorNormal_ejecutarTransferirPropiedad);
     }
 
     function validarTransferirPropiedad(){
@@ -234,18 +278,30 @@
 
     }
 
-    function ejecutarTransferirPropiedad(){
-
-
-        ruta = "{{route('Partida.transferirPropiedad')}}";
+    function jugadorNormal_ejecutarTransferirPropiedad(){
 
         codPropiedadPartida = document.getElementById('codPropiedadPartida').value;
         codJugadorATransferirPropiedad = document.getElementById('codJugadorATransferirPropiedad').value;
+        ejecutarTransferirPropiedad(false,codPropiedadPartida,codJugadorATransferirPropiedad);
+    }
+
+
+    function ejecutarTransferirPropiedad(esBanco,codPropiedadPartida,codJugadorATransferirPropiedad){
+        banco = "";
+        if(esBanco) 
+            codJugadorEmisor = {{$partida->codJugadorBanco}};
+        else
+            codJugadorEmisor = {{$jugadorLogeado->codJugador}};
+
+        ruta = "{{route('Partida.transferirPropiedad')}}";
+
+        
         token = document.getElementsByName('_token')[0].value;
+
 
         datosEnviados = {
             _token : token,
-            codJugadorEmisor : {{$jugadorLogeado->codJugador}},
+            codJugadorEmisor : codJugadorEmisor,
             codPropiedadPartida : codPropiedadPartida,
             codJugadorReceptor : codJugadorATransferirPropiedad
         };
@@ -282,6 +338,78 @@
         document.getElementById('codJugadorATransferirPropiedad').value = "0";
         document.getElementById('codPropiedadPartida').value = "0";
     }
+
+
+    /* Si este jugador es el bancario, le presentamos su dashboard */
+    @if($esBancario)
+
+        function banco_validarPago(){
+            limpiarEstilos(['banco_codJugadorDestino','banco_monto']);
+            msjError="";
+            msjError = validarSelect(msjError,'banco_codJugadorDestino','0',"Jugador receptor del pago");
+            msjError = validarPositividadYNulidad(msjError,'banco_monto',"Monto a enviar");
+
+            return msjError;
+        }
+
+
+        function banco_clickRealizarPago(){
+            msjError = banco_validarPago();
+            if(msjError!=""){
+                alerta(msjError);
+                return;
+            }
+
+            //                  titulo,         texto,                  tipoMensaje,    nombreFuncionAEjecutar
+            confirmarConMensaje("Confirmacion","¿Seguro que quiere pagar?",'warning',banco_ejecutarRealizarPago);
+
+        }
+
+        function banco_ejecutarRealizarPago(){
+            montoEnviado = document.getElementById('banco_monto').value;
+            codJugadorDestino = document.getElementById('banco_codJugadorDestino').value;
+            codTipoTransaccion = document.getElementById('banco_codTipoTransaccion').value;
+            
+
+            ejecutarRealizarPago(true,montoEnviado,codJugadorDestino,codTipoTransaccion);
+    
+        }
+
+
+        function banco_clickTransferirPropiedad(){
+            msjError = banco_validarTransferirPropiedad();
+            if(msjError!=""){
+                alerta(msjError);
+                return;
+            }
+
+            //                  titulo,         texto,                  tipoMensaje,    nombreFuncionAEjecutar
+            confirmarConMensaje("Confirmacion","¿Seguro que desea transferir la propiedad?",'warning',banco_ejecutarTransferirPropiedad);
+
+        }
+
+        function banco_ejecutarTransferirPropiedad(){
+
+            
+            codPropiedadPartida = document.getElementById('banco_codPropiedadPartida').value;
+            codJugadorATransferirPropiedad = document.getElementById('banco_codJugadorATransferirPropiedad').value;
+            ejecutarTransferirPropiedad(true,codPropiedadPartida,codJugadorATransferirPropiedad);
+
+        }
+        
+        function banco_validarTransferirPropiedad(){
+            
+            limpiarEstilos(['banco_codJugadorATransferirPropiedad','banco_codPropiedadPartida']);
+            msjError="";
+            msjError = validarSelect(msjError,'banco_codJugadorATransferirPropiedad','0',"Jugador a transferir la propiedad");
+            msjError = validarSelect(msjError,'banco_codPropiedadPartida','0',"Propiedad a transferir");
+            
+            return msjError;
+        }
+
+    @endif
+
+
 
 </script>
 @endsection

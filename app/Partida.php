@@ -28,6 +28,7 @@ class Partida extends Model
                 Configuracion::TokenAleatorio_LimiteSuperior
                 );
         $this->save();
+        Debug::mensajeSimple('Se actualizó el token:'. $this->tokenSincronizacion);
 
     }
 

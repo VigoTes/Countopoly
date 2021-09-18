@@ -32,8 +32,12 @@ class Jugador extends Model
     /* 
         Retorna el jugador asociado a la cuenta que está logeada
         si no está jugando en una partida activa, arroja una exception
+
+        LO COMENTÉ PORQUE ESTA FUNCION NO DEBERIA EXISTIR, PQ PARA UNA MISMA CUENTA PUEDEN HABER MUCHOS JUGADORES LOGEADOS
+        en su remplazo, se debe usar Cuenta::getCuentaLogeada()->getJugadorPorPartida($codPartida)
     */
-    public static function getJugadorLogeado(){
+    
+    /* public static function getJugadorLogeado(){
 
         $cuenta = Cuenta::getCuentaLogeada();
         $ultimoJugadorDeCuenta = Jugador::where('codCuenta','=',$cuenta->codCuenta)->get()->last();
@@ -42,7 +46,7 @@ class Jugador extends Model
         
         return $ultimoJugadorDeCuenta;
 
-    }
+    } */
     
 
     //obtiene la lista de transacciones en las que este jugador es emisor o receptor de dinero
