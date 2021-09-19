@@ -102,7 +102,7 @@ class PartidaController extends Controller
             $jugadorBanco->esBanco = 1;
             $jugadorBanco->save();
 
-            //ahora guardamos en partida el codigo de este jugador bancos
+            //ahora guardamos en partida el codigo de este jugador banco
             $partida->codJugadorBanco = $jugadorBanco->codJugador;
             $partida->save();
 
@@ -110,17 +110,19 @@ class PartidaController extends Controller
             //ahora le damos a cada jugador la cantidad inicial de dinero
             $jugadores = $partida->getJugadores();
             foreach ($jugadores as $jugador){
-                $jugador->montoActual = $montoInicial;
-                $jugador->save();
-
-                $transaccion = new TransaccionMonetaria();
-                $transaccion->codJugadorSaliente = $partida->codJugadorBanco;
-                $transaccion->codJugadorEntrante = $jugador->codJugador;
-                $transaccion->codPartida = $codPartida;
-                $transaccion->codTipoTransaccion = 6; //pago Inicial
-                $transaccion->fechaHora = Carbon::now();
-                $transaccion->monto = $montoInicial;
-                $transaccion->save();
+                if($jugador->codJugador != $partida->codJugadorBanco){ //si no es el banco, le seteamos sus datos
+                    $jugador->montoActual = $montoInicial;
+                    $jugador->save();
+    
+                    $transaccion = new TransaccionMonetaria();
+                    $transaccion->codJugadorSaliente = $partida->codJugadorBanco;
+                    $transaccion->codJugadorEntrante = $jugador->codJugador;
+                    $transaccion->codPartida = $codPartida;
+                    $transaccion->codTipoTransaccion = 6; //pago Inicial
+                    $transaccion->fechaHora = Carbon::now();
+                    $transaccion->monto = $montoInicial;
+                    $transaccion->save();
+                }
             }
 
             //Ahora creamos las instancias de propiedad_partida de la partida, inicialmente todas estas las tendrá el Jugador Banco
