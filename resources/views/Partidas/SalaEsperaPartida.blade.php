@@ -3,76 +3,125 @@
     Sala de Espera
 @endsection
 
+@section('estilos')
+
+<style>
+    /* Si la pantalla tiene menos de 700px, se pone un padding más pequeño */
+    @media only screen and (max-width: 700px) {
+        .cardBodyPadding{
+            padding:10px;        
+        }
+    }
+</style>
+@endsection
 @section('contenido')
 
-<div class="row">
-    <div class="col">
-        <h1>
-            Sala de espera de la partida
-        </h1>
-    </div>
-</div>
-<div class="row">
+ 
 
-    <div class="col">
-        <label for="">
-            Tiempo de actualización:
-           
-        </label>
-        <button type="" class="btn btn-primary btn-xs">
-            <i class="fas fa-question" onclick="mostrarInformacionTiempoActualizacion()"></i>
+<div class="mt-2 card">
+    <div class="card-header ui-sortable-handle" style="cursor: move;">
+        <b class="card-title">
+             Sala de Espera - Partida 
+             <b>
+                {{$partida->codPartida}}
+             </b>
+             
+        </b>
+        <div class="card-tools">
 
-        </button>
+        </div>
+    </div><!-- /.card-header -->
+    <div class="card-body cardBodyPadding">
 
-        <div class="slidecontainer">
-            <input type="range" step="0.01" min="0.5" max="8" value="{{$jugador->tiempoActualizacion}}" class="slider" 
-                  id="tiempoActualizacion" name="tiempoActualizacion" onchange="changeTiempoActualizacion()" >
+        <div class="row">
+            
+            <div class="col">
+                <label for="">
+                    Mi tiempo de actualización:
+                
+                </label>
+                <button type="" class="btn btn-primary btn-xs">
+                    <i class="fas fa-question" onclick="mostrarInformacionTiempoActualizacion()"></i>
 
-            <span id="verTiempoActualizacion"></span>
+                </button>
+
+                <div class="slidecontainer">
+                    <input type="range" step="0.01" min="0.5" max="8" value="{{$jugador->tiempoActualizacion}}" class="slider" 
+                        id="tiempoActualizacion" name="tiempoActualizacion" onchange="changeTiempoActualizacion()" >
+
+                    <span id="verTiempoActualizacion"></span>
+                </div>
+
+            </div>
+        </div>
+        {{-- Tabla de jugadores --}}
+        <div class="row m-2">
+            <div class="col" id="contenedor">
+                @include('Partidas.Invocables.inv_SalaEspera')
+
+            </div>
         </div>
 
-    </div>
-    {{-- Estas opciones solo le aparecen al dueño de la partida --}}
-    @if($partida->elHostEstaLogeado())
 
-        <div class="col">
-            <label for="">Edición</label>
-            <select class="form-control" name="codEdicion" id="codEdicion" onchange="cambioEdicion()">
-                @foreach($listaEdiciones as $edicion)
-                    <option value="{{$edicion->codEdicion}}">
-                        {{$edicion->nombre}}
-                    </option>
-                @endforeach
-            </select>
+    </div>
+</div>
+
+@if($partida->elHostEstaLogeado())
+        
+{{-- OPCIONES DEL ADMIN --}}
+<div class="mt-2 card">
+    <div class="card-header ui-sortable-handle" style="cursor: move;">
+        <b class="card-title">
+             Opciones de administrador
+        </b>
+        <div class="card-tools">
+
+        </div>
+    </div><!-- /.card-header -->
+    <div class="card-body cardBodyPadding">
+        <div class="row">
+
+            <div class="col">
+                <label for="">Edición</label>
+                <select class="form-control" name="codEdicion" id="codEdicion" onchange="cambioEdicion()">
+                    @foreach($listaEdiciones as $edicion)
+                        <option value="{{$edicion->codEdicion}}">
+                            {{$edicion->nombre}}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+             
+        </div>
+        <div class="row mt-1">
+
+            
+            <div class="col text-center">
+                
+                <a href="{{route('Partida.CancelarPartida',$partida->codPartida)}}"  class="btn btn-danger">
+                    Cerrar Sala
+                </a>
+            </div>
+            <div class="col text-center">
+                <a href="{{route('Partida.IniciarPartida',$partida->codPartida)}}" class="btn btn-success" >
+                    Iniciar
+                </a>
+            </div>
         </div>
         
-
-        <div class="col text-right">
-            <a href="{{route('Partida.IniciarPartida',$partida->codPartida)}}" class="m-2 btn btn-success" >
-                Iniciar Partida
-            </a>
-            <a href="{{route('Partida.CancelarPartida',$partida->codPartida)}}"  class="m-2 btn btn-danger">
-                Cancelar Partida
-            </a>
-        </div>
-
-
-
-    @endif
-
-</div>
-<div class="row m-2">
-    <div class="col" id="contenedor">
-        @include('Partidas.Invocables.inv_SalaEspera')
-
     </div>
 </div>
- 
+
+
+@endif
+
+
+{{-- Boton de salir --}}
 <div class="row">
     <div class="col">
         <a class="btn btn-danger" href="{{route('Partida.SalirmeDePartida',$partida->codPartida)}}">
             <i class="fas fa-backspace"></i>
-            Salir de la partida
+            Salir
         </a>
     </div>
     
@@ -89,10 +138,10 @@
 
     relojActivo = true;
 
+    /* Falta implementar aqui tambien el token */
     $( document ).ready(function() {
-        inicializarReloj(actualizarPartidas,700);
+        inicializarReloj(actualizarPartidas,1500);
 
-         
     });
 
     contenidoActual = "";
