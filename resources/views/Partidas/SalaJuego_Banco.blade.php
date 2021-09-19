@@ -14,7 +14,7 @@
 
             {{-- Form de PAGAR COMO  BANCO --}}
             <div class="col">    
-                <label  for="" >Pagar a:</label>
+                <label  for="" >Enviar Pago:</label>
                 <div class="row">
                     <input  style="width:30%" placeholder ="Monto pago..." type="number" class="text-right form-control m-1" 
                         step="01" id="banco_monto" name="banco_monto" value="0">
@@ -42,7 +42,6 @@
 
                     <button style="height:70%" onclick="banco_clickRealizarPago()" type="button" class="mt-2 ml-2 btn btn-primary btn-sm">
                         <i class="fas fa-hand-holding-usd"></i>
-                        Pagar
                     </button>
                 </div>
                 
@@ -85,8 +84,7 @@
                     
 
                     <button style="height:70%" onclick="banco_clickTransferirPropiedad()" type="button" class="mt-2 ml-2 btn btn-primary btn-sm">
-                        <i class="fas fa-hand-holding-usd"></i>
-                        Transferir
+                        <i class="fas fa-random"></i>
                     </button>
                 </div>
                 

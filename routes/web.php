@@ -74,7 +74,7 @@ Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
 
 Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Partida.realizarPago');
 
-Route::get('/Partida/getPartidasDeJugador/{codPartida}','PropiedadPartidaController@getPartidasDeJugador');
+Route::get('/Partida/getPropiedadesDeJugador/{codJugador}','PropiedadPartidaController@getPropiedadesDeJugador');
 
 Route::post('/Partida/transferirPropiedad','PropiedadPartidaController@transferirPropiedad')->name('Partida.transferirPropiedad');
 

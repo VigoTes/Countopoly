@@ -1,8 +1,35 @@
 {{-- ESTE ES EL CONTENIDO DEL MODAL TarjetaPropiedad --}}
 
+<style>
+    .tituloCuadradoPropiedad{
+        border:solid 1px;
+        border-width: 3px;
+    }
+
+    .tituloDeLaTarjeta{
+        font-size: 18pt;
+    }
+
+    .textoTituloDePropiedad{
+        padding:0px;
+    }
+</style>
 
 <div class="text-center">
-    
+
+    <div class="row tituloCuadradoPropiedad" style="background-color: {{$propiedad->getColor()->rgb}}">
+
+        <div class="col textoTituloDePropiedad">
+            Titulo de propiedad
+        </div>
+        <div class="w-100"></div>
+
+        <div class="col tituloDeLaTarjeta textoTituloDePropiedad">
+            {{$propiedad->nombre}}
+        </div>
+
+    </div>
+
     <div class="row">
         <div class="col text-center">
             ALQUILER 

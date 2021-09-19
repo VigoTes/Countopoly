@@ -6,6 +6,7 @@ use App\Cuenta;
 use App\Debug;
 use App\Http\Controllers\Controller;
 use App\Jugador;
+use App\Partida;
 use App\Propiedad;
 use App\PropiedadPartida;
 use App\RespuestaAPI;
@@ -15,9 +16,19 @@ use Illuminate\Support\Facades\DB;
 
 class PropiedadPartidaController extends Controller
 {
-    public function getPartidasDeJugador($codPartida){
+    public function getPropiedadesDeJugador($codJugador){
         $cuentaLogeada = Cuenta::getCuentaLogeada();
-        $jugador = $cuentaLogeada->getJugadorPorPartida($codPartida);
+        $jugador = Jugador::findOrFail($codJugador);
+        $partida = Partida::findOrFail($jugador->codPartida);
+
+        //Si es el codJugador es el banco, validamos que la cuenta logeada lo sea en esta partida
+        if($jugador->esBanco == '1'){
+            $jugadorBancario = Jugador::findOrFail($partida->codJugadorBancario);
+            if($jugadorBancario->codCuenta != $cuentaLogeada->codCuenta)
+                return "Error de verificación";
+
+        } 
+
         $listaMisPropiedades  = $jugador->getPropiedades();
         
         return view('Partidas.Invocables.inv_MisPropiedadesSelect',compact('listaMisPropiedades'));
@@ -71,7 +82,15 @@ class PropiedadPartidaController extends Controller
     public function getTarjetaPropiedad($codPropiedad){
         $propiedad = Propiedad::findOrFail($codPropiedad);
 
-        return view('Partidas.Invocables.inv_TarjetaPropiedad',compact('propiedad'));
+        $bodyModal = (string) view('Partidas.Invocables.inv_TarjetaPropiedad',compact('propiedad'));
+
+
+        $vector = [
+            'bodyModal' => $bodyModal,
+            'nombrePropiedad' => $propiedad->nombre
+        ];
+
+        return json_encode($vector);
 
     }
 }
