@@ -6,6 +6,7 @@ use App\Color;
 use App\Edicion;
 use App\Http\Controllers\Controller;
 use App\Propiedad;
+use App\TipoPropiedad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,8 +27,9 @@ class EdicionController extends Controller
             ->orderBy('codPropiedad','DESC')
             ->get();
 
+        $listaTipoPropiedades = TipoPropiedad::All();
 
-        return view('Ediciones.EditarEdicion',compact('listaPropiedades','edicion','listaColores'));
+        return view('Ediciones.EditarEdicion',compact('listaPropiedades','edicion','listaColores','listaTipoPropiedades'));
     }
 
     public function agregarEdicion(){
@@ -65,6 +67,7 @@ class EdicionController extends Controller
             $propiedad->codColor= $request->codColor;
             $propiedad->precioCompra= $request->precioCompra;
             $propiedad->codEdicion= $request->codEdicion;
+            $propiedad->codTipoPropiedad = $request->codTipoPropiedad;
             
             $propiedad->save();
 

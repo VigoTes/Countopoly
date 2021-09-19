@@ -17,6 +17,10 @@ class Propiedad extends Model
     public function getColor(){
         return Color::findOrFail($this->codColor);
     }
+
+    public function getTipoPropiedad(){
+        return TipoPropiedad::findOrFail($this->codTipoPropiedad);
+    }
 }
 /* 
 

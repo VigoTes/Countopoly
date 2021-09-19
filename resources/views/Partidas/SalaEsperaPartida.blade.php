@@ -80,8 +80,8 @@
 
         if(relojActivo)
             $.get(ruta, function(dataRecibida){
-                console.log('DATA RECIBIDA:');
-                console.log(dataRecibida);
+                //console.log('DATA RECIBIDA:');
+                //console.log(dataRecibida);
                 contenedor = document.getElementById('contenedor');
                 objetoRespuesta = JSON.parse(dataRecibida);
                 htmlRecibido = objetoRespuesta.html;

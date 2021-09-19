@@ -50,6 +50,7 @@
                 <th>lado</th>
                 <th>precioCompra</th>
                 <th>Color</th>
+                <th>Tipo Propiedad</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -70,7 +71,9 @@
                     <td>
                         {{$propiedad->precioCompra}}
                     </td>
-
+                    <td>
+                        {{$propiedad->getTipoPropiedad()->nombre}}
+                    </td>
                     <td>
                         {{$propiedad->getColor()->nombre}}
                         <div class="" style="background-color: {{$propiedad->getColor()->rgb}}; width:15px; height:15px; border-radius: 7px;">
@@ -145,7 +148,20 @@
 
                                 </select>
                             </div>
-                             
+                            <div class="col">
+                                <label for="">Tipo Propiedad</label>
+                                <select class="form-control" name="codTipoPropiedad" id="codTipoPropiedad">
+                                    <option value="0">- Tipo -</option>
+                                    @foreach ($listaTipoPropiedades as $tipoPropiedad)
+                                        <option  value="{{$tipoPropiedad->codTipoPropiedad}}">
+                                            {{$tipoPropiedad->nombre}}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                              
+
                         </div>
                         
                     </form>
@@ -207,6 +223,7 @@
         document.getElementById('precioCompra').value = "";
         
         document.getElementById('codColor').value = "0";
+        document.getElementById('codTipoPropiedad').value = "0";
 
         
     }
@@ -231,6 +248,7 @@
         msj = validarSelect(msj,'codColor',"0",'Nombre del color');
         msj = validarPositividadYNulidad(msj,'precioCompra','Precio de compra');
         msj = validarNulidad(msj,'precioCompra','Precio de compra');
+        msj = validarSelect(msj,'codTipoPropiedad',"0",'Tipo de Propiedad');
         
         return msj;
 
@@ -248,7 +266,9 @@
         document.getElementById('lado').value = obj.lado;
         document.getElementById('precioCompra').value = obj.precioCompra;
         document.getElementById('codColor').value = obj.codColor;
+        document.getElementById('codTipoPropiedad').value = obj.codTipoPropiedad;
 
+        
          
     }
 
