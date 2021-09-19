@@ -78,6 +78,10 @@ Route::get('/Partida/getPartidasDeJugador/{codPartida}','PropiedadPartidaControl
 
 Route::post('/Partida/transferirPropiedad','PropiedadPartidaController@transferirPropiedad')->name('Partida.transferirPropiedad');
 
+//Para obtener ModalBody
+Route::get('/Partida/getTarjetaPropiedad/{codPropiedad}','PropiedadPartidaController@getTarjetaPropiedad')->name('Partida.getTarjetaPropiedad');
+
+
 /* CRUD Edicion */
 Route::get('/Edicion/Listar','EdicionController@listarEdiciones')->name('Edicion.Listar');
 Route::get('/Edicion/Editar/{codEdicion}','EdicionController@Editar')->name('Edicion.Editar');

@@ -6,6 +6,7 @@ use App\Cuenta;
 use App\Debug;
 use App\Http\Controllers\Controller;
 use App\Jugador;
+use App\Propiedad;
 use App\PropiedadPartida;
 use App\RespuestaAPI;
 use Exception;
@@ -66,4 +67,11 @@ class PropiedadPartidaController extends Controller
 
     }
 
+
+    public function getTarjetaPropiedad($codPropiedad){
+        $propiedad = Propiedad::findOrFail($codPropiedad);
+
+        return view('Partidas.Invocables.inv_TarjetaPropiedad',compact('propiedad'));
+
+    }
 }

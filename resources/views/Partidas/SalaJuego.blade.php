@@ -130,6 +130,42 @@
     </div>
 </div>
  
+
+
+
+
+
+{{-- MODAL para ver la tarjeta de una propiedad--}}
+<div class="modal fade" id="ModalTarjetaPropiedad" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="TituloModalTarjetaPropiedad">
+                        Tarjeta de Propiedad
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="BodyModalTarjetaPropiedad">
+                    
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Salir
+                    </button>
+ 
+                </div>
+            
+        </div>
+    </div>
+</div>
+      
+
+
+
 @endsection
 
 @section('script')
@@ -338,6 +374,27 @@
         document.getElementById('codJugadorATransferirPropiedad').value = "0";
         document.getElementById('codPropiedadPartida').value = "0";
     }
+
+
+
+
+    /* TARJETA DE PROPIEDAD */
+    function clickAbrirTarjetaPropiedad(codPropiedad){
+
+        ruta = "/Partida/getTarjetaPropiedad/" + codPropiedad;
+        $.get(ruta,function(dataRecibida){
+            //console.log('DATA RECIBIDA:');
+
+            document.getElementById('BodyModalTarjetaPropiedad').innerHTML = dataRecibida;
+
+
+        });
+
+    }
+
+
+
+
 
 
     /* Si este jugador es el bancario, le presentamos su dashboard */
