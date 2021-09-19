@@ -245,6 +245,7 @@
                     contenidoTransaccionesDelBanco =     document.getElementById('banco_Transacciones');
                     contenidoTransaccionesDelBanco.innerHTML = objetoRespuesta.banco_misTransacciones;
                 
+                    document.getElementById('banco_montoActual').innerHTML = objetoRespuesta.banco_montoActual;
 
                 @endif
 
@@ -306,8 +307,11 @@
             objetoRespuesta = JSON.parse(dataRecibida);
             console.log(objetoRespuesta);
             alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
-            if(objetoRespuesta.ok=='1')
+            if(objetoRespuesta.ok=='1'){
                 limpiarCamposPago();
+                banco_limpiarCamposPago();
+            }
+                
             
 
         });
@@ -414,10 +418,7 @@
 
     /* TARJETA DE PROPIEDAD */
     function clickAbrirTarjetaPropiedad(codPropiedad){
-
         document.getElementById('BodyModalTarjetaPropiedad').innerHTML = "";
-
-
         ruta = "/Partida/getTarjetaPropiedad/" + codPropiedad;
         $.get(ruta,function(dataRecibida){
             //console.log('DATA RECIBIDA:');
@@ -516,6 +517,11 @@
           });
   
       }
+        function banco_limpiarCamposPago(){
+            document.getElementById('banco_monto').value = "";
+            document.getElementById('banco_codJugadorDestino').value = "0";
+
+        }
 
 
     @endif

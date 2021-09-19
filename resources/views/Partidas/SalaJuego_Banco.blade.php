@@ -14,7 +14,21 @@
 
             {{-- Form de PAGAR COMO  BANCO --}}
             <div class="col">    
-                <label  for="" >Enviar Pago:</label>
+
+
+                <div class="row">
+                    <div class="col">
+                        <label  for="" >
+                            Enviar pago:
+                        </label>
+                    </div>
+                    <div class="col text-right">
+                        <i class="fas fa-cash-register"></i>
+                        <span id="banco_montoActual"></span>
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <input  style="width:30%" placeholder ="Monto pago..." type="number" class="text-right form-control m-1" 
                         step="01" id="banco_monto" name="banco_monto" value="0">

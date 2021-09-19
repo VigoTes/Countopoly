@@ -362,6 +362,8 @@ class PartidaController extends Controller
         $misTransacciones = '';
         $misPropiedades = '';
         $montoActual = '';
+        $banco_montoActual = '';
+        
         error_log('                    Rqeust:'.$request->tokenSincronizacion." real:".$tokenSincronizacionActual);
 
         if($request->tokenSincronizacion !=0 //primera iteracion
@@ -390,7 +392,7 @@ class PartidaController extends Controller
                 $jugador = $jugadorBanco; //Para que a la vista le llegue esa variable
                 $listaMisTransacciones = $jugador->getListaTransacciones($partida->codPartida); 
                 $listaMisPropiedades = $jugador->getPropiedades();
-
+                $banco_montoActual = $jugador->getMontoActualFormateado();
                 $banco_misTransacciones = (string) view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
                 $banco_misPropiedades = (string ) view('Partidas.Invocables.inv_MisPropiedades',compact('jugador','listaMisPropiedades'));
             
@@ -407,7 +409,8 @@ class PartidaController extends Controller
             'banco_misTransacciones' => $banco_misTransacciones,
             'banco_misPropiedades' => $banco_misPropiedades,
             'tokenSincronizacion' => $tokenSincronizacionActual,
-            'montoActual' => $montoActual 
+            'montoActual' => $montoActual,
+            'banco_montoActual' => $banco_montoActual
         ];
         
         return json_encode($vectorRespuesta);

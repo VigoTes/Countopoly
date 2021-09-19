@@ -9,7 +9,7 @@ Casos de uso:
     ✔ CRUD de usuarios @done(17-09-21 20:36)
     ✔ Al iniciar la partida, a todos los usuarios los debe redirigir @done(17-09-21 20:36)
     ✔ Transferir propiedad @done(17-09-21 20:37)
-    ☐ Dashboard que tiene el jugador bancario
+    ✔ Dashboard que tiene el jugador bancario @done(19-09-21 01:33)
     ☐ Transparencia -> todos los jugadores deben poder ver cuando el banco hace un pago
 
     ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
