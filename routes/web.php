@@ -64,6 +64,10 @@ Route::get('/Partida/getActualizacionSalaEspera/{codPartida}','PartidaController
 Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@HacerBancarioAJugador')
     ->name('Partida.HacerBancarioAJugador');
 
+///para que cada jugador cambie su tiempo de actualizacion
+Route::get('/Partida/cambiarMiTiempoActualizacionJugador/','PartidaController@cambiarMiTiempoActualizacionJugador');
+
+
 Route::get('/Partida/ExpulsarJugador/{codJugador}','PartidaController@ExpulsarJugador')->name('Partida.ExpulsarJugador');
 
 Route::get('/Partida/FuiExpulsadoYEstoyRetornandoAlListar/{codPartida}','PartidaController@FuiExpulsadoYEstoyRetornandoAlListar')->name('Partida.FuiExpulsadoYEstoyRetornandoAlListar');
@@ -77,6 +81,8 @@ Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Par
 Route::get('/Partida/getPropiedadesDeJugador/{codJugador}','PropiedadPartidaController@getPropiedadesDeJugador');
 
 Route::post('/Partida/transferirPropiedad','PropiedadPartidaController@transferirPropiedad')->name('Partida.transferirPropiedad');
+
+
 
 //Para obtener ModalBody
 Route::get('/Partida/getTarjetaPropiedad/{codPropiedad}','PropiedadPartidaController@getTarjetaPropiedad')->name('Partida.getTarjetaPropiedad');

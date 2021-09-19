@@ -11,6 +11,8 @@ Casos de uso:
     ✔ Transferir propiedad @done(17-09-21 20:37)
     ✔ Dashboard que tiene el jugador bancario @done(19-09-21 01:33)
     ☐ Transparencia -> todos los jugadores deben poder ver cuando el banco hace un pago
+    Remplazar formulario de enviar pago y transferir propiedad por modales que se abren con 1 boton
+
 
     ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
     ☐ Tener varias partidas activas

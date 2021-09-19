@@ -14,7 +14,24 @@
 </div>
 <div class="row">
 
+    <div class="col">
+        <label for="">
+            Tiempo de actualización:
+           
+        </label>
+        <button type="" class="btn btn-primary btn-xs">
+            <i class="fas fa-question" onclick="mostrarInformacionTiempoActualizacion()"></i>
 
+        </button>
+
+        <div class="slidecontainer">
+            <input type="range" step="0.01" min="0.5" max="8" value="2" class="slider" 
+                  id="tiempoActualizacion" name="tiempoActualizacion" onchange="changeTiempoActualizacion()" >
+
+            <span id="verTiempoActualizacion"></span>
+        </div>
+
+    </div>
     {{-- Estas opciones solo le aparecen al dueño de la partida --}}
     @if($partida->elHostEstaLogeado())
 
@@ -28,6 +45,7 @@
                 @endforeach
             </select>
         </div>
+        
 
         <div class="col text-right">
             <a href="{{route('Partida.IniciarPartida',$partida->codPartida)}}" class="m-2 btn btn-success" >
@@ -66,12 +84,15 @@
 @include('Layout.ValidatorJS')
 
 <script>
+     
+
 
     relojActivo = true;
 
     $( document ).ready(function() {
         inicializarReloj(actualizarPartidas,700);
-        
+
+         
     });
 
     contenidoActual = "";
@@ -99,6 +120,44 @@
                     relojActivo = false;   
                 }
             });
+    }
+
+    var slider = document.getElementById("tiempoActualizacion");
+    var output = document.getElementById("verTiempoActualizacion");
+    output.innerHTML = slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+        output.innerHTML = this.value + " segundos";
+    }
+
+    function mostrarInformacionTiempoActualizacion(){
+        alertaMensaje("Tiempo de actualización","Es el periodo de tiempo que tardará en actualizarse "+
+        "su tablero de juego, para conexiones lentas le recomendamos valores mayores a 3, ","info")
+
+    }
+
+    function changeTiempoActualizacion(){
+
+        nuevoValor = slider.value;
+        console.log('Enviando actualización de mi tiempoActualizacion "'+nuevoValor+'" al servidor...');
+
+        ruta = "/Partida/cambiarMiTiempoActualizacionJugador/";
+        datos = {
+            codJugador : {{$jugador->codJugador}},
+            nuevoTiempoActualizacion : nuevoValor
+        };
+
+        $.get(ruta,datos, function(dataRecibida){
+            console.log('DATA RECIBIDA:');
+            objetoRespuesta = JSON.parse(dataRecibida);
+            console.log(objetoRespuesta);
+            //alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+
+        
+        });
+
+
     }
 
 

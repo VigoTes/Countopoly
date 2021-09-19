@@ -19,6 +19,10 @@
         }
     }
     
+    .montoActual{
+        font-size:14pt; 
+        font-weight: bold
+    }
 
 </style>
 @endsection
@@ -49,7 +53,7 @@
                             Enviar pago:
                         </label>
                     </div>
-                    <div class="col text-right">
+                    <div class="col text-right montoActual">
                         <i class="fas fa-cash-register"></i>
                         <span id="montoActual"></span>
                     </div>
@@ -205,7 +209,7 @@
      
     debugear = false;
 
-    inicializarReloj(actualizarTransacciones,800);
+    inicializarReloj(actualizarTransacciones,{{$jugadorLogeado->tiempoActualizacion*1000}});
     
     function actualizarTransacciones(){ 
         ruta = "/Partida/getActualizacionPartida/";

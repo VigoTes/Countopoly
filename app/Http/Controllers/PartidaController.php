@@ -65,6 +65,8 @@ class PartidaController extends Controller
             $jugadorHost->codCuenta = $cuentaLogeada->codCuenta;
             $jugadorHost->codPartida = $partida->codPartida;
             $jugadorHost->montoActual = 0;
+            $jugadorHost->tiempoActualizacion= 2;
+            
             $jugadorHost->esBanco =0; //Esto se refiere a que este jugador no es el Banco (aunque será el bancario)
             $jugadorHost->save();
 
@@ -100,6 +102,8 @@ class PartidaController extends Controller
             $jugadorBanco->codPartida = $codPartida;
             $jugadorBanco->montoActual = 99999999;
             $jugadorBanco->esBanco = 1;
+            $jugadorBanco->tiempoActualizacion = 0;
+            
             $jugadorBanco->save();
 
             //ahora guardamos en partida el codigo de este jugador banco
@@ -177,6 +181,24 @@ class PartidaController extends Controller
         
     }
 
+    public function cambiarMiTiempoActualizacionJugador(Request $request){
+
+        try {
+            DB::beginTransaction();
+            $jugador = Jugador::findOrFail($request->codJugador);
+            $jugador->tiempoActualizacion = $request->nuevoTiempoActualizacion;
+            $jugador->save();
+            $nuevoValor = $request->nuevoTiempoActualizacion;
+
+            DB::commit();
+            return RespuestaAPI::respuestaOk("Se ha cambiado su tiempo de actualización a $nuevoValor");
+        } catch (\Throwable $th) {
+            Debug::mensajeError('Partida controller cambiarMitIEMPO', $th);
+            DB::rollBack();
+            return RespuestaAPI::respuestaError("Ha ocurrido un error inesperado");
+        }
+
+    }
 
     //cUANDO EXPULSAMOS A UN JUGADOR DE LA SALA DE ESPERA
     public function ExpulsarJugador($codJugador){
@@ -243,18 +265,21 @@ class PartidaController extends Controller
         $partida = Partida::findOrFail($codPartida);
         $cuentaLogeada = Cuenta::getCuentaLogeada();
         $listaEdiciones = Edicion::All();
+
         if(!$partida->tieneAJugador($cuentaLogeada->codCuenta)){
-            $jugadorHost = new Jugador();
-            $jugadorHost->codCuenta = $cuentaLogeada->codCuenta;
-            $jugadorHost->codPartida = $partida->codPartida;
-            $jugadorHost->montoActual = 0;
-            $jugadorHost->esBanco = 0;
-            $jugadorHost->save();
+            $jugador = new Jugador();
+            $jugador->codCuenta = $cuentaLogeada->codCuenta;
+            $jugador->codPartida = $partida->codPartida;
+            $jugador->montoActual = 0;
+            $jugador->esBanco = 0;
+            $jugador->save();
+        }else{
+            $jugador = $cuentaLogeada->getJugadorPorPartida($codPartida);
         }
         $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
 
 
-        return view('Partidas.SalaEsperaPartida',compact('partida','listaJugadores','cuentaLogeada','listaEdiciones'));
+        return view('Partidas.SalaEsperaPartida',compact('jugador','partida','listaJugadores','cuentaLogeada','listaEdiciones'));
     }
 
     public function SalirmeDePartida($codPartida){
@@ -366,7 +391,7 @@ class PartidaController extends Controller
         $montoActual = '';
         $banco_montoActual = '';
         
-        error_log('                    Rqeust:'.$request->tokenSincronizacion." real:".$tokenSincronizacionActual);
+        //error_log('                    Rqeust:'.$request->tokenSincronizacion." real:".$tokenSincronizacionActual);
 
         if($request->tokenSincronizacion !=0 //primera iteracion
             && $request->tokenSincronizacion == $tokenSincronizacionActual){ //sincronizado

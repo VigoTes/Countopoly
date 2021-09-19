@@ -56,7 +56,10 @@
             </td>
 
             <td class="text-center" style="color:{{$transaccion->getColorSegunJugador($jugador->codJugador)}}">
-                {{$transaccion->monto}}
+                <b>
+                    {{$transaccion->monto}}
+                </b>
+                
             </td>
         </tr>
         @php

@@ -22,7 +22,7 @@
                             Enviar pago:
                         </label>
                     </div>
-                    <div class="col text-right">
+                    <div class="col text-right montoActual">
                         <i class="fas fa-cash-register"></i>
                         <span id="banco_montoActual"></span>
                     </div>
