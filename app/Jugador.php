@@ -16,6 +16,14 @@ class Jugador extends Model
     public $timestamps = false;  //para que no trabaje con los campos fecha 
     
 
+    public function getMontoActualFormateado(){
+        $num = $this->montoActual;
+        
+        return number_format($num, 0, ',', ' ');
+        //Formateamos para que no muestre decimales (pq no existen)
+        // y que separe los millares por espacios
+
+    }
     public function getPartida(){
         return Partida::findOrFail($this->codPartida);
     }

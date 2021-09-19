@@ -4,6 +4,8 @@
     .tituloCuadradoPropiedad{
         border:solid 1px;
         border-width: 3px;
+        border-radius: 7px;
+        border-color:rgb(37, 37, 37);
     }
 
     .tituloDeLaTarjeta{
@@ -13,11 +15,18 @@
     .textoTituloDePropiedad{
         padding:0px;
     }
+
 </style>
 
 <div class="text-center">
 
-    <div class="row tituloCuadradoPropiedad" style="background-color: {{$propiedad->getColor()->rgb}}">
+    <div class="row tituloCuadradoPropiedad" 
+        style="
+            background-color: {{$propiedad->getColor()->rgb}}; 
+            color:{{$propiedad->getColor()->getContrasteRGB()}}
+            "
+            
+        >
 
         <div class="col textoTituloDePropiedad">
             Titulo de propiedad
@@ -26,13 +35,14 @@
 
         <div class="col tituloDeLaTarjeta textoTituloDePropiedad">
             {{$propiedad->nombre}}
+            <i class="{{$propiedad->getTipoPropiedad()->claseIcono}}"></i>
         </div>
 
     </div>
 
     <div class="row">
         <div class="col text-center">
-            ALQUILER 
+            ALQUILER:
             <b>
                 {{$propiedad->alquiler_normal}}
             </b>
@@ -121,13 +131,9 @@
         <div class="col">
             Los hoteles 
             <b>
-
                 {{$propiedad->costo_hotel}}
-            
             </b>
-            
             más 4 casas.
-    
         </div>
         
     </div>

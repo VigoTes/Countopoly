@@ -1,16 +1,18 @@
-
-<h3>
+<br>
+<b>
     Mis propiedades:
-</h3>
+</b>
 
-<div class="row">
+<div class="row contenedorMisPropiedades">
+
+
     @foreach ($listaMisPropiedades as $propiedadPartida)        
     <div class="m-1 carta" style="border-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}" 
          
         data-toggle="modal" data-target="#ModalTarjetaPropiedad" onclick="clickAbrirTarjetaPropiedad({{$propiedadPartida->codPropiedad}})">
         
         <div class="divCircular" style="background-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}">
-            <i class="iconoTotalmenteNegro {{$propiedadPartida->getPropiedad()->getTipoPropiedad()->claseIcono}}"></i>
+            <i class="iconoTotalmenteNegro {{$propiedadPartida->getPropiedad()->getTipoPropiedad()->claseIcono}}" ></i>
         </div>
 
         <p class="nombrePropiedad" onclick="">
@@ -21,7 +23,12 @@
 </div>
 
 <style>
-  
+    
+    .contenedorMisPropiedades{
+        background-color: rgb(211, 211, 211);
+        border-radius: 10px;
+    }
+
     /* div que contiene todo */
     .carta{
       width: 8rem;

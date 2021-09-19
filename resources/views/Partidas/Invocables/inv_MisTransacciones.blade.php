@@ -4,11 +4,18 @@
     $i = $cantidadTransacciones;
 @endphp
 
-codJugador={{$jugador->codJugador}}
-Cantidad actual en caja: 
-<b>
-    {{$jugador->montoActual}} $
-</b>
+<style>
+    .cantidadActual{
+        width:7rem;
+    }
+    .inputCantidadActual{
+        /* arriba derecha abajo izquierda */
+        padding: 6px;
+    }
+</style>
+
+
+
 
 
 <table class="table table-sm">

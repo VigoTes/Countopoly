@@ -43,9 +43,18 @@
         <div class="row">
             <div class="col">    
 
-                <label  for="" >
-                    Enviar pago:
-                </label>
+                <div class="row">
+                    <div class="col">
+                        <label  for="" >
+                            Enviar pago:
+                        </label>
+                    </div>
+                    <div class="col text-right">
+                        <i class="fas fa-cash-register"></i>
+                        <span id="montoActual"></span>
+                    </div>
+                </div>
+                
                 
                 <div class="row">
                     <input  style="width:30%" placeholder ="Monto pago..." type="number" class="text-right form-control m-1" step="01" id="monto" name="monto" value="0">
@@ -155,7 +164,7 @@
 
 {{-- MODAL para ver la tarjeta de una propiedad--}}
 <div class="modal fade" id="ModalTarjetaPropiedad" tabindex="-1" aria-labelledby="" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered  modal-sm">
         <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="TituloModalTarjetaPropiedad">
@@ -225,6 +234,9 @@
 
                 contenidoMisPropiedades = document.getElementById('contenidoMisPropiedades');
                 contenidoMisPropiedades.innerHTML = objetoRespuesta.misPropiedades;
+
+                document.getElementById('montoActual').innerHTML = objetoRespuesta.montoActual;
+                
 
                 @if ($esBancario)
                     contenidoPropiedadesDelBanco =     document.getElementById('banco_propiedades');
