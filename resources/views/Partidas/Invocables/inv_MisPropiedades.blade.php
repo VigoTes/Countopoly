@@ -3,41 +3,58 @@
     Mis propiedades:
 </h3>
 
-<table class="table table-sm">
-    <thead>
-        <tr>
-            <th class="" >
-                Item
-            </th>
-            <th class="">
-                Propiedad
-            </th>
-            <th>
-                Valor Compra
-            </th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="row">
+    @foreach ($listaMisPropiedades as $propiedadPartida)        
+    <div class="m-1 carta" style=" border-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}">
+        <div class="divCircular" style="background-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}">
+        <i class="iconoTotalmenteNegro {{$propiedadPartida->getPropiedad()->getTipoPropiedad()->claseIcono}}"></i>
+        </div>
+        <p class="nombrePropiedad" onclick="">
+        {{$propiedadPartida->getPropiedad()->nombre}}
+        </p>
+    </div> 
+    @endforeach
+</div>
 
-        @foreach ($listaMisPropiedades as $propiedadPartida)
+<style>
+  
+    /* div que contiene todo */
+    .carta{
+      width: 8rem;
+      padding:0.3rem;
+      text-align: center;
+      
+      cursor: pointer;
+  
+      /* Borde */
+      border-radius: 10px;
+      border:solid;
+      border-width: 2px;
+      color:rgb(51, 51, 51);
+      border-color: rgb(158, 158, 158);
+      
+    }
+    .carta:hover{
+      color:rgb(238, 238, 238);
+      background-color:rgb(122, 122, 122);
+    }
+  
+    /* <p> donde esta el nombre */
+    .nombrePropiedad{
+        width:100%;
+        height: 3rem;
         
-        <tr>
-            <td>
-                1
-            </td>
-            <td  >
-                {{$propiedadPartida->getPropiedad()->nombre}}
-
-                <div class="" style="background-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}; width:50px; height:15px; border-radius: 7px;">
-                </div>
-            </td>
-            <td>
-                {{$propiedadPartida->getPropiedad()->precioCompra}}
-            </td>
-        </tr>   
-        @endforeach
-    </tbody>
-</table>
- 
-
-
+        font-weight: bold;
+        font-size:12pt;
+    }
+  
+    .divCircular{
+        width:100%;      
+        border-radius: 10px;
+    }
+  
+    .iconoTotalmenteNegro{
+      color:black;
+    }
+     
+</style>
