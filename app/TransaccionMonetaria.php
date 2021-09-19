@@ -34,7 +34,21 @@ class TransaccionMonetaria extends Model
         
         return "black";
 
-    }    
+    }
+
+
+    /* Retorna el otro jugador, segun el codJugadorLogeado que le mandes (siempre será uno de los 2) */
+    public function getOtroJugadorSegunLogeado($codJugadorLogeado){
+        if($codJugadorLogeado == $this->codJugadorSaliente)
+            return Jugador::findOrFail($this->codJugadorEntrante);
+        if($codJugadorLogeado == $this->codJugadorEntrante)
+            return Jugador::findOrFail($this->codJugadorSaliente);
+        
+        return "";
+
+
+    }
+
     public function getConcepto(){
         $cuentaLogeada = Cuenta::getCuentaLogeada();
         $jugadorLogeado  = $cuentaLogeada->getJugadorPorPartida($this->codPartida);

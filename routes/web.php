@@ -2,6 +2,7 @@
 
 use App\Jugador;
 use App\Partida;
+use App\PropiedadPartida;
 use App\TransaccionMonetaria;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -17,10 +18,16 @@ Route::get('/probandoCosas',function(){
       
     return Partida::findOrFail(17)->getUltimaTransaccion();
     
-    Jugador::where('codJugador','>','-1')->delete();
-    Partida::where('codPartida','>','0')->delete();
-    TransaccionMonetaria::where('codTransaccionMonetaria','>','0')->delete();
+    
+});
 
+Route::get('/borrarTodasLasPartidasYSuInfo',function(){
+    Jugador::where('codJugador','>','-1')->delete(); //todos
+    Partida::where('codPartida','>','0')->delete(); //todas
+    TransaccionMonetaria::where('codTransaccionMonetaria','>','0')->delete(); //todas
+    PropiedadPartida::where('codPropiedadPartida','>','0')->delete();
+    
+    return "BORRADO EXITOSO";
 });
 
 Route::get('/', 'UserController@home')->name('user.home');

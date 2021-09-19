@@ -8,6 +8,11 @@
     $esBancario = $partida->codJugadorBancario == $jugadorLogeado->codJugador;
 @endphp
 
+@section('tiempoEspera')
+    <div class="loader" id="pantallaCarga"></div>
+@endsection
+
+
 @section('estilos')
 <style>
 
@@ -36,7 +41,7 @@
 <div class="mt-2 card">
     <div class="card-header ui-sortable-handle" style="cursor: move;">
         <h3 class="card-title">
-            <i class="fas fa-university"></i>
+            <i class="fas fa-user"></i>
             {{$jugadorLogeado->getNombreUsuario()}}
         </h3>
         <div class="card-tools">
@@ -209,6 +214,16 @@
      
     debugear = false;
 
+    $( document ).ready(function() {
+        
+         
+        actualizarTransacciones();
+
+        $(".loader").fadeOut("slow");
+
+    });
+
+
     inicializarReloj(actualizarTransacciones,{{$jugadorLogeado->tiempoActualizacion*1000}});
     
     function actualizarTransacciones(){ 
@@ -314,6 +329,8 @@
             if(objetoRespuesta.ok=='1'){
                 limpiarCamposPago();
                 banco_limpiarCamposPago();
+                actualizarTransacciones();
+                
             }
                 
             
@@ -389,9 +406,11 @@
             if(objetoRespuesta.ok=='1'){
                 limpiarCamposTransaccionPropiedad();
                 actualizarSelectMisPropiedades();
+                actualizarTransacciones();
 
                 @if ($esBancario)
                     actualizarSelectMisPropiedadesBanco();
+
                 @endif
 
             }

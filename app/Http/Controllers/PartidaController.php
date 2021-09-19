@@ -272,6 +272,7 @@ class PartidaController extends Controller
             $jugador->codPartida = $partida->codPartida;
             $jugador->montoActual = 0;
             $jugador->esBanco = 0;
+            $jugador->tiempoActualizacion= 2;
             $jugador->save();
         }else{
             $jugador = $cuentaLogeada->getJugadorPorPartida($codPartida);
@@ -303,21 +304,31 @@ class PartidaController extends Controller
 
     //despliega la vista de la sala del juego
     public function entrarSalaJuego($codPartida){
-        $partida = Partida::findOrFail($codPartida);
-        $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
-
-        $cuentaLogeada = Cuenta::getCuentaLogeada();
-        $jugadorLogeado = $cuentaLogeada->getJugadorPorPartida($codPartida);
-        $listaMisPropiedades = $jugadorLogeado->getPropiedades();
-
-        $listaTipoTransaccion = TipoTransaccionMonetaria::where('esDelBanco','=','0')->get();
-        $listaTipoTransaccion_banco = TipoTransaccionMonetaria::where('esDelBanco','=','1')->get();
         
-        $jugadorBanco = Jugador::findOrFail($partida->codJugadorBanco);
-        $banco_listaMisPropiedades = $jugadorBanco->getPropiedades();
+        try {
+            $partida = Partida::findOrFail($codPartida);
+            
+            $listaJugadores = Jugador::where('codPartida','=',$codPartida)->get();
+            
+            $cuentaLogeada = Cuenta::getCuentaLogeada();
+            $jugadorLogeado = $cuentaLogeada->getJugadorPorPartida($codPartida);
+            $listaMisPropiedades = $jugadorLogeado->getPropiedades();
+            
+            $listaTipoTransaccion = TipoTransaccionMonetaria::where('esDelBanco','=','0')->get();
+            $listaTipoTransaccion_banco = TipoTransaccionMonetaria::where('esDelBanco','=','1')->get();
+             
+            $jugadorBanco = Jugador::findOrFail($partida->codJugadorBanco);
+            
+            $banco_listaMisPropiedades = $jugadorBanco->getPropiedades();
 
 
-        return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado','listaTipoTransaccion','listaMisPropiedades','listaTipoTransaccion_banco','banco_listaMisPropiedades'));
+            return view('Partidas.SalaJuego',compact('partida','listaJugadores','jugadorLogeado','listaTipoTransaccion','listaMisPropiedades','listaTipoTransaccion_banco','banco_listaMisPropiedades'));
+        } catch (\Throwable $th) {
+            throw $th;
+            Debug::mensajeError('entrar sala juego',$th);
+
+        }
+    
     }
     
     public function realizarPago(Request $request){

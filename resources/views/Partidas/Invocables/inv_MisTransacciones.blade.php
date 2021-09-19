@@ -28,11 +28,9 @@
                 Concepto
             </th>
             <th>
-                Emisor
+                Jugador
             </th>
-            <th>
-                Receptor
-            </th>
+             
             <th class="text-center">
                 Monto
             </th>
@@ -49,11 +47,9 @@
                 {{$transaccion->getConcepto()}}
             </td>
             <td>
-                {{$transaccion->getEmisor()->usuario}}
+                {{$transaccion->getOtroJugadorSegunLogeado($jugador->codJugador)->getNombreUsuario()}}
             </td>
-            <td>
-                {{$transaccion->getReceptor()->usuario}}
-            </td>
+            
 
             <td class="text-center" style="color:{{$transaccion->getColorSegunJugador($jugador->codJugador)}}">
                 <b>

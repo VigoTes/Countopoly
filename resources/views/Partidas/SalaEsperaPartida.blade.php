@@ -25,7 +25,7 @@
         </button>
 
         <div class="slidecontainer">
-            <input type="range" step="0.01" min="0.5" max="8" value="2" class="slider" 
+            <input type="range" step="0.01" min="0.5" max="8" value="{{$jugador->tiempoActualizacion}}" class="slider" 
                   id="tiempoActualizacion" name="tiempoActualizacion" onchange="changeTiempoActualizacion()" >
 
             <span id="verTiempoActualizacion"></span>
