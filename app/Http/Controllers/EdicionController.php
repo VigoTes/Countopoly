@@ -69,6 +69,16 @@ class EdicionController extends Controller
             $propiedad->codEdicion= $request->codEdicion;
             $propiedad->codTipoPropiedad = $request->codTipoPropiedad;
             
+            $propiedad->alquiler_normal = $request->alquiler_normal; 
+            $propiedad->alquiler_1casas = $request->alquiler_1casas; 
+            $propiedad->alquiler_2casas = $request->alquiler_2casas; 
+            $propiedad->alquiler_3casas = $request->alquiler_3casas; 
+            $propiedad->alquiler_4casas = $request->alquiler_4casas; 
+            $propiedad->alquiler_hotel = $request->alquiler_hotel; 
+            $propiedad->valorHipotecable = $request->valorHipotecable; 
+            $propiedad->costo_casa = $request->costo_casa; 
+            $propiedad->costo_hotel = $request->costo_hotel; 
+
             $propiedad->save();
 
             $nombre =$propiedad->nombre;

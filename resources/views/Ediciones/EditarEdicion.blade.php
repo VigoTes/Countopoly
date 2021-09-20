@@ -5,6 +5,16 @@
     Editar Edición
 @endsection
 
+@section('estilos')
+<style>
+    .contenedor{
+        border-radius: 10px;
+        background-color: rgb(226, 226, 226);
+        padding: 10px;
+    }
+</style>
+@endsection
+
 @section('contenido')
 @include('Layout.MensajeEmergenteDatos')
 <form id="frmEdicion" name="frmEdicion" action="{{route('Edicion.ActualizarNombre')}}" method="POST" > 
@@ -49,8 +59,19 @@
                 <th>nombre</th>
                 <th>lado</th>
                 <th>precioCompra</th>
-                <th>Color</th>
+               
                 <th>Tipo Propiedad</th>
+
+                <th>Alquiler Normal</th>
+                <th>Alquiler 1c</th>
+                <th>Alquiler 2c</th>
+                <th>Alquiler 3c</th>
+                <th>Alquiler 4c</th>
+                <th>Alquiler Hotel</th>
+                <th>Valor Hipotecable</th>
+                <th>Costo por casa</th>
+                <th>Costo por hotel</th>
+                <th>Color</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -71,9 +92,46 @@
                     <td>
                         {{$propiedad->precioCompra}}
                     </td>
+                     
                     <td>
                         {{$propiedad->getTipoPropiedad()->nombre}}
                     </td>
+
+
+                    <td>
+                        {{$propiedad->alquiler_normal}}
+                    </td>
+                    <td>
+                        {{$propiedad->alquiler_1casas}}
+                    </td>
+                    <td>
+                        {{$propiedad->alquiler_2casas}}
+                    </td>
+                    <td>
+                        {{$propiedad->alquiler_3casas}}
+                    </td>
+                    <td>
+                        {{$propiedad->alquiler_4casas}}
+                    </td>
+                    <td>
+                        {{$propiedad->alquiler_hotel}}
+                    </td>
+                    <td>
+                        {{$propiedad->valorHipotecable}}
+                    </td>
+                    <td>
+                        {{$propiedad->costo_casa}}
+                    </td>
+                    <td>
+                        {{$propiedad->costo_hotel}}
+                    </td>
+                    
+                    
+                    
+                    
+                    
+                    
+
                     <td>
                         {{$propiedad->getColor()->nombre}}
                         <div class="" style="background-color: {{$propiedad->getColor()->rgb}}; width:15px; height:15px; border-radius: 7px;">
@@ -119,7 +177,8 @@
                         <input type="{{App\Configuracion::getInputTextOHidden()}}" name="codPropiedad" id="codPropiedad" value="0">
                         <input type="{{App\Configuracion::getInputTextOHidden()}}" name="codEdicion" id="codEdicion" value="{{$edicion->codEdicion}}">
                         
-                        <div class="row">
+                        
+                        <div class="row contenedor">
                             <div class="col">
                                 <label for="">nombre</label>
                                 <input type="text" class="form-control" name="nombre" id="nombre">
@@ -129,12 +188,33 @@
                                 <label for="">lado (1-4)</label>
                                 <input type="number" min="1" max="4" step="1" class="form-control" name="lado" id="lado">
                             </div>
-                            <div class="w-100"></div>
+                             
+
                             <div class="col">
                                 <label for="">precioCompra</label>
                                 <input type="number" class="form-control" name="precioCompra" id="precioCompra">
                             </div>
+                             
+
+                            <div class="col">
+                                <label for="">Valor hipotecable</label>
+                                <input type="number" class="form-control" name="valorHipotecable" id="valorHipotecable">
+                            </div>
                             <div class="w-100"></div>
+
+                            <div class="col">
+                                <label for="">Costo x Casa</label>
+                                <input type="number" class="form-control" name="costo_casa" id="costo_casa">
+                            </div>
+                             
+                            <div class="col">
+                                <label for="">Costo de Hotel</label>
+                                <input type="number" class="form-control" name="costo_hotel" id="costo_hotel">
+                            </div>
+                            <div class="w-100"></div>
+
+
+
                             <div class="col">
                                 <label for="">Color</label>
                                 
@@ -160,6 +240,49 @@
 
                                 </select>
                             </div>
+
+                        </div>
+
+                        <label for="">
+                            Alquileres:
+                        </label>
+                        <div class="row contenedor">
+                            
+                            
+                              
+                            <div class="col">
+                                <label for="">Normal</label>
+                                <input type="number" class="form-control" name="alquiler_normal" id="alquiler_normal">
+                            </div>
+                             
+                            <div class="col">
+                                <label for="">1 Casa</label>
+                                <input type="number" class="form-control" name="alquiler_1casas" id="alquiler_1casas">
+                            </div>
+                            
+                            <div class="col">
+                                <label for="">2 Casas</label>
+                                <input type="number" class="form-control" name="alquiler_2casas" id="alquiler_2casas">
+                            </div>
+                            
+                            <div class="col">
+                                <label for="">3 casas</label>
+                                <input type="number" class="form-control" name="alquiler_3casas" id="alquiler_3casas">
+                            </div>
+                            <div class="w-100"></div>
+                            
+                            <div class="col">
+                                <label for="">4 casas</label>
+                                <input type="number" class="form-control" name="alquiler_4casas" id="alquiler_4casas">
+                            </div>
+                           
+                            <div class="col">
+                                <label for="">Hotel</label>
+                                <input type="number" class="form-control" name="alquiler_hotel" id="alquiler_hotel">
+                            </div>
+                            
+                             
+
                               
 
                         </div>
@@ -225,6 +348,15 @@
         document.getElementById('codColor').value = "0";
         document.getElementById('codTipoPropiedad').value = "0";
 
+        document.getElementById('alquiler_normal').value = "";
+        document.getElementById('alquiler_1casas').value = "";
+        document.getElementById('alquiler_2casas').value = "";
+        document.getElementById('alquiler_3casas').value = "";
+        document.getElementById('alquiler_4casas').value = "";
+        document.getElementById('alquiler_hotel').value = "";
+        document.getElementById('valorHipotecable').value = "";
+        document.getElementById('costo_casa').value = "";
+        document.getElementById('costo_hotel').value = "";
         
     }
 
@@ -250,6 +382,17 @@
         msj = validarNulidad(msj,'precioCompra','Precio de compra');
         msj = validarSelect(msj,'codTipoPropiedad',"0",'Tipo de Propiedad');
         
+        msj = validarPositividadYNulidad(msj,'alquiler_normal','alquiler_normal');
+        msj = validarPositividadYNulidad(msj,'alquiler_1casas','alquiler_1casas');
+        msj = validarPositividadYNulidad(msj,'alquiler_2casas','alquiler_2casas');
+        msj = validarPositividadYNulidad(msj,'alquiler_3casas','alquiler_3casas');
+        msj = validarPositividadYNulidad(msj,'alquiler_4casas','alquiler_4casas');
+        msj = validarPositividadYNulidad(msj,'alquiler_hotel','alquiler_hotel');
+        msj = validarPositividadYNulidad(msj,'valorHipotecable','valorHipotecable');
+        msj = validarPositividadYNulidad(msj,'costo_casa','costo_casa');
+        msj = validarPositividadYNulidad(msj,'costo_hotel','costo_hotel');
+
+
         return msj;
 
     }
@@ -268,6 +411,16 @@
         document.getElementById('codColor').value = obj.codColor;
         document.getElementById('codTipoPropiedad').value = obj.codTipoPropiedad;
 
+        document.getElementById('alquiler_normal').value = obj.alquiler_normal;
+        document.getElementById('alquiler_1casas').value = obj.alquiler_1casas;
+        document.getElementById('alquiler_2casas').value = obj.alquiler_2casas;
+        document.getElementById('alquiler_3casas').value = obj.alquiler_3casas;
+        document.getElementById('alquiler_4casas').value = obj.alquiler_4casas;
+        document.getElementById('alquiler_hotel').value = obj.alquiler_hotel;
+        document.getElementById('valorHipotecable').value = obj.valorHipotecable;
+        document.getElementById('costo_casa').value = obj.costo_casa;
+        document.getElementById('costo_hotel').value = obj.costo_hotel;
+        
         
          
     }

@@ -81,8 +81,8 @@ class PropiedadPartidaController extends Controller
 
     public function getTarjetaPropiedad($codPropiedad){
         $propiedad = Propiedad::findOrFail($codPropiedad);
-
-        $bodyModal = (string) view('Partidas.Invocables.inv_TarjetaPropiedad',compact('propiedad'));
+        $edicion = $propiedad->getEdicion();
+        $bodyModal = (string) view('Partidas.Invocables.inv_TarjetaPropiedad',compact('propiedad','edicion'));
 
 
         $vector = [

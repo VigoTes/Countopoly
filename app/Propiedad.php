@@ -21,6 +21,25 @@ class Propiedad extends Model
     public function getTipoPropiedad(){
         return TipoPropiedad::findOrFail($this->codTipoPropiedad);
     }
+
+    public function esTren(){
+
+        return $this->verificarTipoPropiedad('Tren');
+    }
+    public function esNormal(){
+        return $this->verificarTipoPropiedad('Normal');
+
+    }
+    public function esServicio(){
+        return $this->verificarTipoPropiedad('Servicio');
+    }
+
+    private function verificarTipoPropiedad($nombre){
+        $tipo = $this->getTipoPropiedad();
+        return $nombre == $tipo->nombre;
+    }
+
+
 }
 /* 
 
