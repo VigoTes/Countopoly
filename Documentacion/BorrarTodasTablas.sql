@@ -24,7 +24,7 @@ drop table cuenta;
 drop table edicion;
 drop table estado_partida;
 drop table jugador;
-drop table link;
+-- drop table link; ESTA NO DIEGO
 drop table partida;
 drop table propiedad;
 drop table propiedad_partida;
