@@ -261,7 +261,7 @@
                                 <div class="col">
                                     <label for="">Monto:</label>
                                     <input  style="" placeholder ="Monto pago..." type="number" class="text-right form-control" 
-                                        step="01" id="monto" name="monto" value="0">
+                                        step="01" id="monto" name="monto" value="">
                                 
                                 </div>
 
@@ -443,7 +443,10 @@
         limpiarEstilos(['codJugadorDestino','monto']);
         msjError="";
         msjError = validarSelect(msjError,'codJugadorDestino','0',"Jugador receptor del pago");
+        msjError = validarSelect(msjError,'codTipoTransaccion','0',"Concepto del pago");
+
         msjError = validarPositividadYNulidad(msjError,'monto',"Monto a enviar");
+
         return msjError;
     }
 
@@ -662,6 +665,9 @@
             limpiarEstilos(['banco_codJugadorDestino','banco_monto']);
             msjError="";
             msjError = validarSelect(msjError,'banco_codJugadorDestino','0',"Jugador receptor del pago");
+
+            msjError = validarSelect(msjError,'banco_codTipoTransaccion','0',"Concepto del pago");
+        
             msjError = validarPositividadYNulidad(msjError,'banco_monto',"Monto a enviar");
 
             return msjError;

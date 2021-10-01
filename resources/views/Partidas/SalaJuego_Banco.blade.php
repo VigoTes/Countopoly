@@ -119,7 +119,7 @@
                                 <div class="col">
                                     <label for="">Monto:</label>
                                     <input  placeholder ="Monto pago..." type="number" class="text-right form-control m-1" 
-                                        step="01" id="banco_monto" name="banco_monto" value="0">
+                                        step="01" id="banco_monto" name="banco_monto" value="">
                                 
 
                                 
