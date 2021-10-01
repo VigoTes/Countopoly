@@ -11,96 +11,35 @@
     <div class="card-body">
         <div class="row">
             
-
-            {{-- Form de PAGAR COMO  BANCO --}}
             <div class="col">    
-
-
-                <div class="row">
-                    <div class="col">
-                        <label  for="" >
-                            Enviar pago:
-                        </label>
-                    </div>
-                    <div class="col text-right montoActual">
-                        <i class="fas fa-cash-register"></i>
-                        <span id="banco_montoActual"></span>
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <input  style="width:30%" placeholder ="Monto pago..." type="number" class="text-right form-control m-1" 
-                        step="01" id="banco_monto" name="banco_monto" value="0">
-                    <select  style="width:40%" class="form-control m-1" name="banco_codJugadorDestino" id="banco_codJugadorDestino">
-                        <option value="0">- Jugadores -</option>
-                        @foreach ($listaJugadores as $jugador)
-                            @if($jugador->codJugador != $partida->codJugadorBanco)
-                                <option value="{{$jugador->codJugador}}">
-                                    {{$jugador->getNombreUsuario()}}
-                                </option>
-                            @endif
-                            
-                        @endforeach
-                    </select>
-
-                    <select  style="width:40%" class="form-control m-1" name="banco_codTipoTransaccion" id="banco_codTipoTransaccion">
-                        <option value="0">- Tipo Pago - </option>
-                        @foreach ($listaTipoTransaccion_banco as $tipoTransaccion)
-                            <option value="{{$tipoTransaccion->codTipoTransaccion}}">
-                                {{$tipoTransaccion->conceptoEmisor}}
-                            </option>
-                        @endforeach
-                    </select>
-                    
-
-                    <button style="height:70%" onclick="banco_clickRealizarPago()" type="button" class="mt-2 ml-2 btn btn-primary btn-sm">
-                        <i class="fas fa-hand-holding-usd"></i>
-                    </button>
-                </div>
-                
-            </div>   
+                <button class="btn btn-primary btn-sm"   data-toggle="modal" data-target="#ModalBancoEnviarPago">
+                    Enviar Pago
+                 </button>
+            </div>  
+            <div class="col text-right montoActual">
+                <i class="fas fa-cash-register"></i>
+                <span id="banco_montoActual"></span>
+            </div>
+           
         </div>
 
         <div class="row">
             {{-- TABLA DE LAS TRANSACCIONES DEL BANCO --}}
-            <div class="col" id="banco_Transacciones">
+            <div class="col divTablaFijada" id="banco_Transacciones">
                 
             </div>
         
         </div>
+
+        <br>
         <div class="row">
 
             {{-- FORM DE LAS TRANSFERENCIAS DE PROPIEDAD DEL BANCO --}}
             <div class="col">    
-                <label  for="" >Transferir propiedad a:</label>
-                <div class="row">
-                    <select  style="width:40%" class="form-control m-1" name="banco_codJugadorATransferirPropiedad" id="banco_codJugadorATransferirPropiedad">
-                        <option value="0">- Jugadores -</option>
-                        @foreach ($listaJugadores as $jugador)
-                            @if($jugador->codJugador != $partida->codJugadorBanco)
-                                <option value="{{$jugador->codJugador}}">
-                                    {{$jugador->getNombreUsuario()}}
-                                </option>
-                            @endif
-                            
-                        @endforeach
-                    </select>
-
-                    <select  style="width:40%" class="form-control m-1" name="banco_codPropiedadPartida" id="banco_codPropiedadPartida">
-                        <option value="0">- Propiedades -</option>
-                        @foreach ($banco_listaMisPropiedades as $miPropiedad)
-                            <option value="{{$miPropiedad->codPropiedadPartida}}" style="color:black; background-color:{{$miPropiedad->getPropiedad()->getColor()->rgb}}">
-                                {{$miPropiedad->getPropiedad()->nombre}}
-                            </option>
-                        @endforeach
-                    </select>
-                    
-
-                    <button style="height:70%" onclick="banco_clickTransferirPropiedad()" type="button" class="mt-2 ml-2 btn btn-primary btn-sm">
-                        <i class="fas fa-random"></i>
-                    </button>
-                </div>
+                <button class="btn btn-primary btn-sm"   data-toggle="modal" data-target="#ModalBancoTransferirPropiedad">
+                    Transferir propiedad
+                 </button>
+                
                 
             </div> 
 
@@ -113,3 +52,184 @@
         </div>
     </div><!-- /.card-body -->
 </div>
+
+
+
+
+
+
+
+
+
+{{-- MODAL para enviar PAGO DESDE EL BANCO  --}}
+<div class="modal fade" id="ModalBancoEnviarPago" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-sm">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">
+                         Enviar Pago
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="">
+                    <div class="row">
+                        <div class="col">    
+            
+                            <div class="row">
+                                <div class="col">
+                                    <label  for="" >
+                                        Destinatario:
+                                    </label>
+                                    <select  class="form-control m-1" name="banco_codJugadorDestino" id="banco_codJugadorDestino">
+                                        <option value="0">- Jugadores -</option>
+                                        @foreach ($listaJugadores as $jugador)
+                                            @if($jugador->codJugador != $partida->codJugadorBanco)
+                                                <option value="{{$jugador->codJugador}}">
+                                                    {{$jugador->getNombreUsuario()}}
+                                                </option>
+                                            @endif
+                                            
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                 
+                            </div>
+                            
+                            
+                            <div class="row">
+                                <div class="col">
+                                    
+                                    <label for="">Concepto</label>
+                                                    
+                                    <select  class="form-control m-1" name="banco_codTipoTransaccion" id="banco_codTipoTransaccion">
+                                        <option value="0">- Tipo Pago - </option>
+                                        @foreach ($listaTipoTransaccion_banco as $tipoTransaccion)
+                                            <option value="{{$tipoTransaccion->codTipoTransaccion}}">
+                                                {{$tipoTransaccion->conceptoEmisor}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                    
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="">Monto:</label>
+                                    <input  placeholder ="Monto pago..." type="number" class="text-right form-control m-1" 
+                                        step="01" id="banco_monto" name="banco_monto" value="0">
+                                
+
+                                
+                                </div>
+
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col text-right">
+                                    
+
+
+                                    <button onclick="banco_clickRealizarPago()" type="button" class="mt-2 ml-2 btn btn-primary">
+                                        <i class="fas fa-hand-holding-usd"></i>
+                                        Enviar Pago
+                                    </button>
+
+                                    
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button id="botonSalirModalBancoEnviarPago" type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Salir
+                    </button>
+ 
+                </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+{{-- MODAL para TRANSFERIR PROPIEDAD DESDE EL BANCO  --}}
+<div class="modal fade" id="ModalBancoTransferirPropiedad" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-sm">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">
+                         Transferir Propiedad
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="">
+                    <div class="row">
+                        <div class="col">
+                            <label for="">
+                                Destinatario
+                            </label>
+                           
+                            <select class="form-control m-1" name="banco_codJugadorATransferirPropiedad" id="banco_codJugadorATransferirPropiedad">
+                                <option value="0">- Jugadores -</option>
+                                @foreach ($listaJugadores as $jugador)
+                                    @if($jugador->codJugador != $partida->codJugadorBanco)
+                                        <option value="{{$jugador->codJugador}}">
+                                            {{$jugador->getNombreUsuario()}}
+                                        </option>
+                                    @endif
+                                    
+                                @endforeach
+                            </select>
+        
+
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col">
+                            <label for="">
+                                Propiedad
+                            </label>
+                           
+                            <select  class="form-control m-1" name="banco_codPropiedadPartida" id="banco_codPropiedadPartida">
+                                <option value="0">- Propiedades -</option>
+                                @foreach ($banco_listaMisPropiedades as $miPropiedad)
+                                    <option value="{{$miPropiedad->codPropiedadPartida}}" style="color:black; background-color:{{$miPropiedad->getPropiedad()->getColor()->rgb}}">
+                                        {{$miPropiedad->getPropiedad()->nombre}}
+                                    </option>
+                                @endforeach
+                            </select>
+                            
+        
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col text-right">
+  
+                            <button  onclick="banco_clickTransferirPropiedad()" type="button" class="mt-2 ml-2 btn btn-primary">
+                                Transferir <i class="fas fa-random"></i>
+                            </button>
+ 
+                        </div>
+                     </div>
+                      
+                </div>
+                <div class="modal-footer">
+                    <button id="" type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Salir
+                    </button>
+ 
+                </div>
+            
+        </div>
+    </div>
+</div>
+      
+

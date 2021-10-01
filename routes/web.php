@@ -83,6 +83,10 @@ Route::get('/Partida/FuiExpulsadoYEstoyRetornandoAlListar/{codPartida}','Partida
 Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
     ->name('Partida.CambiarEdicion');
 
+
+Route::get('/Partida/CambiarDescripcion/','PartidaController@CambiarDescripcion')
+    ->name('Partida.CambiarDescripcion');
+
 Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Partida.realizarPago');
 
 Route::get('/Partida/getPropiedadesDeJugador/{codJugador}','PropiedadPartidaController@getPropiedadesDeJugador');
@@ -93,6 +97,9 @@ Route::post('/Partida/transferirPropiedad','PropiedadPartidaController@transferi
 
 //Para obtener ModalBody
 Route::get('/Partida/getTarjetaPropiedad/{codPropiedad}','PropiedadPartidaController@getTarjetaPropiedad')->name('Partida.getTarjetaPropiedad');
+
+//Para obtener ModalBody
+Route::get('/Partida/getTransparenciaBancaria/{codPartida}','PartidaController@getTransparenciaBancaria')->name('Partida.getTransparenciaBancaria');
 
 
 /* CRUD Edicion */

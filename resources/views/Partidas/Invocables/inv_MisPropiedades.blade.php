@@ -1,24 +1,26 @@
-<br>
+{{-- 
 <b>
     Mis propiedades:
 </b>
+ --}}
+<div class="row mt-1 mb-1 contenedorMisPropiedades">
 
-<div class="row contenedorMisPropiedades">
 
-
-    @foreach ($listaMisPropiedades as $propiedadPartida)        
-    <div class="m-1 carta" style="border-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}" 
-         
-        data-toggle="modal" data-target="#ModalTarjetaPropiedad" onclick="clickAbrirTarjetaPropiedad({{$propiedadPartida->codPropiedad}})">
+    @foreach ($listaMisPropiedades as $propiedadPartida)
         
-        <div class="divCircular" style="background-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}">
-            <i class="iconoTotalmenteNegro {{$propiedadPartida->getPropiedad()->getTipoPropiedad()->claseIcono}}" ></i>
-        </div>
+        {{-- Cada DIV es una carta propiedad --}}
+        <div class="m-1 carta" style="border-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}" 
+            
+            data-toggle="modal" data-target="#ModalTarjetaPropiedad" onclick="clickAbrirTarjetaPropiedad({{$propiedadPartida->codPropiedad}})">
+            
+            <div class="divCircular" style="background-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}">
+                <i class="iconoTotalmenteNegro {{$propiedadPartida->getPropiedad()->getTipoPropiedad()->claseIcono}}" ></i>
+            </div>
 
-        <p class="nombrePropiedad" onclick="">
-            {{$propiedadPartida->getPropiedad()->nombre}}
-        </p>
-    </div> 
+            <p class="nombrePropiedad" onclick="">
+                {{$propiedadPartida->getPropiedad()->nombre}}
+            </p>
+        </div> 
     @endforeach
 </div>
 

@@ -49,6 +49,7 @@ class TransaccionMonetaria extends Model
 
     }
 
+
     public function getConcepto(){
         $cuentaLogeada = Cuenta::getCuentaLogeada();
         $jugadorLogeado  = $cuentaLogeada->getJugadorPorPartida($this->codPartida);
@@ -61,6 +62,12 @@ class TransaccionMonetaria extends Model
         
     }
 
+    public function getConceptoEmisor(){
+        $tipoTransaccion = TipoTransaccionMonetaria::findOrFail($this->codTipoTransaccion);
+        return $tipoTransaccion->conceptoEmisor;
+
+    }
+
     public function getEmisor(){
         return Cuenta::findOrFail(Jugador::findOrFail($this->codJugadorSaliente)->codCuenta);
 
@@ -69,5 +76,9 @@ class TransaccionMonetaria extends Model
 
     public function getReceptor(){
         return Cuenta::findOrFail(Jugador::findOrFail($this->codJugadorEntrante)->codCuenta);
+    }
+
+    public function getFechaHora(){
+        return Fecha::formatoFechaHoraParaVistas($this->fechaHora);
     }
 }

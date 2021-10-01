@@ -18,8 +18,8 @@
 
 
 
-<table class="table table-sm">
-    <thead>
+<table class="table table-sm table-hover table-striped">
+    <thead class="filaFijada fondoAzul letrasBlancas">
         <tr>
             <th class="text-center" >
                 Item

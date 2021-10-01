@@ -67,50 +67,69 @@
 </div>
 
 @if($partida->elHostEstaLogeado())
-        
-{{-- OPCIONES DEL ADMIN --}}
-<div class="mt-2 card">
-    <div class="card-header ui-sortable-handle" style="cursor: move;">
-        <b class="card-title">
-             Opciones de administrador
-        </b>
-        <div class="card-tools">
+            
+    {{-- OPCIONES DEL ADMIN --}}
+    <div class="mt-2 card">
+        <div class="card-header ui-sortable-handle" style="cursor: move;">
+            <b class="card-title">
+                Opciones de administrador
+            </b>
+            <div class="card-tools">
 
-        </div>
-    </div><!-- /.card-header -->
-    <div class="card-body cardBodyPadding">
-        <div class="row">
+            </div>
+        </div><!-- /.card-header -->
+        <div class="card-body cardBodyPadding">
 
-            <div class="col">
-                <label for="">Edición</label>
-                <select class="form-control" name="codEdicion" id="codEdicion" onchange="cambioEdicion()">
-                    @foreach($listaEdiciones as $edicion)
-                        <option value="{{$edicion->codEdicion}}">
-                            {{$edicion->nombre}}
-                        </option>
-                    @endforeach
-                </select>
+            <div class="row">
+                <div class="col">
+                    <label for="descripcion">Descripción de la partida</label>
+                     
+                    <div class="input-group mb-3">
+                        <input id="descripcion" name="descripcion" type="text" class="form-control" placeholder="Descripción de la partida..." >
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary" type="button" id="" onclick="cambioDescripcion()">
+                              Actualizar
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
              
-        </div>
-        <div class="row mt-1">
+            <div class="row mt-2">
 
-            
-            <div class="col text-center">
+                <div class="col">
+                    <label for="codEdicion">Edición</label>
+                    <select class="form-control" name="codEdicion" id="codEdicion" onchange="cambioEdicion()">
+                        @foreach($listaEdiciones as $edicion)
+                            <option value="{{$edicion->codEdicion}}">
+                                {{$edicion->nombre}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 
-                <a href="{{route('Partida.CancelarPartida',$partida->codPartida)}}"  class="btn btn-danger">
-                    Cerrar Sala
-                </a>
             </div>
-            <div class="col text-center">
-                <a href="{{route('Partida.IniciarPartida',$partida->codPartida)}}" class="btn btn-success" >
-                    Iniciar
-                </a>
+          
+            <div class="row mt-2">
+
+                
+                <div class="col text-center">
+                    
+                    <a href="{{route('Partida.CancelarPartida',$partida->codPartida)}}"  class="btn btn-danger">
+                        Cerrar Sala
+                    </a>
+                </div>
+                <div class="col text-center">
+                    <a href="{{route('Partida.IniciarPartida',$partida->codPartida)}}" class="btn btn-success" >
+                        Iniciar
+                    </a>
+                </div>
             </div>
+            
         </div>
-        
     </div>
-</div>
 
 
 @endif
@@ -241,6 +260,25 @@
                 alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
 
             });
+
+        }
+        function cambioDescripcion(){
+            descripcion = document.getElementById('descripcion').value;
+            ruta = "/Partida/CambiarDescripcion/";
+            datos = {
+                descripcion : descripcion,
+                codPartida : {{$partida->codPartida}}
+            };
+            
+            $.get(ruta, datos, function(dataRecibida){
+                console.log('DATA RECIBIDA:');
+                console.log(dataRecibida);
+                
+                objetoRespuesta = JSON.parse(dataRecibida);
+                alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+
+            });
+
 
         }
 

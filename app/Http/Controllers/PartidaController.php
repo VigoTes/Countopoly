@@ -257,6 +257,29 @@ class PartidaController extends Controller
         }
 
     }
+
+    public function CambiarDescripcion(Request $request){
+        try {
+            db::beginTransaction();
+            $partida = Partida::findOrFail($request->codPartida);
+            $partida->descripcion = $request->descripcion;
+            $partida->save();
+            $nuevaDesc = $request->descripcion;
+             
+            db::commit();
+            return RespuestaAPI::respuestaOk("Se ha cambiado la descripción a '$nuevaDesc' exitosamente.");
+            
+        } catch (\Throwable $th) {
+            db::rollBack();
+            Debug::mensajeError('Partida Controller: ', $th );
+
+            return RespuestaAPI::respuestaError("Ha ocurrido un error interno.");
+        }
+
+    }
+
+
+
 #endregion
 
 
@@ -491,4 +514,17 @@ class PartidaController extends Controller
         ];
         return json_encode($vector); 
     }
+
+
+    /* retorna el body de un modal con todas las salidas de dinero del banco */
+    public function getTransparenciaBancaria($codPartida){
+        $partida = Partida::findOrFail($codPartida);
+        $jugadorBancario = Jugador::findOrFail($partida->codJugadorBancario);
+        $transacciones = TransaccionMonetaria::where('codJugadorSaliente','=',$partida->codJugadorBanco)
+            ->orderBy('fechaHora','DESC')
+            ->get();
+
+        return view('Partidas.Invocables.inv_TransparenciaBanco',compact('transacciones','jugadorBancario'));
+    }
+
 }

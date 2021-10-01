@@ -45,8 +45,6 @@ class Fecha
 
     public static function formatoFechaHoraParaVistas($fecha){
         return date('d/m/Y H:i:s', strtotime($fecha));
-
-
     }
 
     public static function getFechaHoraActual(){

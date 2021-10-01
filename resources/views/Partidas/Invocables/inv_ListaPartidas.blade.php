@@ -9,6 +9,9 @@
                 Host
             </th>
             <th>
+                Descripción
+            </th>
+            <th>
                 Jugadores
             </th>
             <th>
@@ -33,6 +36,9 @@
             </td>
             <td class="text-center">
                 {{$partida->getCuentaHost()->usuario}}
+            </td>
+            <td>
+                {{$partida->descripcion}}
             </td>
             <td>
                 {{$partida->getStringJugadores()}}
