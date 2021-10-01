@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cuenta;
 use App\TipoCuenta;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -45,6 +46,7 @@ class CuentaController extends Controller
             $cuenta->usuario = $request->usuario;
             $cuenta->password= hash::make($request->contraseña);
             $cuenta->codTipoCuenta= $request->codTipoCuenta;
+            $cuenta->fechaHoraCreacion = Carbon::now();
             
             $cuenta->save();
 
