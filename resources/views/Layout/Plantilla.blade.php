@@ -137,7 +137,7 @@
 
 
 
-
+    
     <ul class="navbar-nav ml-auto">
       <!-- Messages Dropdown Menu --> {{-- VER CARRITO RAPIDAMENTE --}}
         @include('Layout.Notificaciones.Usuario')
@@ -194,9 +194,13 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
           role="menu" data-accordion="false">
 
-          
-           @include('Layout.MenuLateral.AdminSistema')  {{-- Este tiene todo --}}
+          @if(App\Cuenta::getCuentaLogeada()->esAdminSistema())
            
+           @include('Layout.MenuLateral.AdminSistema')  {{-- Este tiene todo --}}
+          
+          @else
+            @include('Layout.MenuLateral.Estandar')
+          @endif
         
            
 

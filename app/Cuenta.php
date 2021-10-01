@@ -47,4 +47,8 @@ class Cuenta extends Authenticatable
             ->where('codCuenta','=',$this->codCuenta)->get()[0];
     }
 
+    public function esAdminSistema(){
+        return $this->codTipoCuenta == 3;
+    }
+
 }
