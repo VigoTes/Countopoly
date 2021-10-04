@@ -70,4 +70,13 @@ class Jugador extends Model
         return PropiedadPartida::where('codJugadorDueño','=',$this->codJugador)->get();
 
     }
+
+
+    public function getUltimaTransaccionQueRecibioDinero(){
+        return TransaccionMonetaria::where('codJugadorEntrante','=',$this->codJugador)
+            ->orderBy('fechaHora','DESC') //primero saldrá la mas reciente
+            ->first();
+    }
+
+    
 }

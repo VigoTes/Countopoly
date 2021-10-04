@@ -20,6 +20,10 @@ class TransaccionMonetaria extends Model
     }
     
 
+    public function getMonto(){
+        return number_format($this->monto,0,',',' ');
+
+    }
     /* 
         Dependiendo de si el jugador pasado como parametro es el emisor o receptor, 
                                     retorna color roojo y verde respectivamente

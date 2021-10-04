@@ -10,6 +10,6 @@ class TipoTransaccionMonetaria extends Model
     protected $primaryKey = "codTipoTransaccion";
     public $timestamps = false;  //para que no trabaje con los campos fecha 
     
-
+    const codDadivaInicial = 6;
     
 }

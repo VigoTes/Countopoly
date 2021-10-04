@@ -8,11 +8,13 @@
 
         </div>
     </div><!-- /.card-header -->
-    <div class="card-body">
+    <div class="card-body cardBodyPadding">
         <div class="row">
             
             <div class="col">    
                 <button class="btn btn-primary btn-sm"   data-toggle="modal" data-target="#ModalBancoEnviarPago">
+                    <i class="fas fa-hand-holding-usd"></i>
+
                     Enviar Pago
                  </button>
             </div>  
@@ -36,7 +38,9 @@
 
             {{-- FORM DE LAS TRANSFERENCIAS DE PROPIEDAD DEL BANCO --}}
             <div class="col">    
-                <button class="btn btn-primary btn-sm"   data-toggle="modal" data-target="#ModalBancoTransferirPropiedad">
+                <button class="btn btn-success btn-sm"   data-toggle="modal" data-target="#ModalBancoTransferirPropiedad">
+                    
+                    <i class="fas fa-random"></i>
                     Transferir propiedad
                  </button>
                 
@@ -222,7 +226,7 @@
                       
                 </div>
                 <div class="modal-footer">
-                    <button id="" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <button id="botonCerrarModalBancoTransferirPropiedad" type="button" class="btn btn-secondary" data-dismiss="modal">
                         Salir
                     </button>
  

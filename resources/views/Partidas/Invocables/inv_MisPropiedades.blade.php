@@ -1,30 +1,18 @@
-{{-- 
-<b>
-    Mis propiedades:
-</b>
- --}}
-<div class="row mt-1 mb-1 contenedorMisPropiedades">
-
-
-    @foreach ($listaMisPropiedades as $propiedadPartida)
-        
-        {{-- Cada DIV es una carta propiedad --}}
-        <div class="m-1 carta" style="border-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}" 
-            
-            data-toggle="modal" data-target="#ModalTarjetaPropiedad" onclick="clickAbrirTarjetaPropiedad({{$propiedadPartida->codPropiedad}})">
-            
-            <div class="divCircular" style="background-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}">
-                <i class="iconoTotalmenteNegro {{$propiedadPartida->getPropiedad()->getTipoPropiedad()->claseIcono}}" ></i>
-            </div>
-
-            <p class="nombrePropiedad" onclick="">
-                {{$propiedadPartida->getPropiedad()->nombre}}
-            </p>
-        </div> 
-    @endforeach
-</div>
-
 <style>
+    .dorado{
+        color:rgb(192, 173, 0);
+        
+    }
+
+
+    .flotandoIzquierda{
+        z-index: 5;
+        float: right;
+        margin-right: 0.5em;
+        margin-top: 0.5em;
+    }
+
+ 
     
     .contenedorMisPropiedades{
         background-color: rgb(211, 211, 211);
@@ -71,3 +59,41 @@
     }
      
 </style>
+
+<div class="row m-1 contenedorMisPropiedades">
+
+
+    @foreach ($listaMisPropiedades as $propiedadPartida)
+        
+        {{-- Cada DIV es una carta propiedad --}}
+        <div class="m-1 carta" style="border-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}" 
+            data-toggle="modal" data-target="#ModalTarjetaPropiedad" onclick="clickAbrirTarjetaPropiedad({{$propiedadPartida->codPropiedad}})">
+            
+
+            <div class="divCircular" style="background-color: {{$propiedadPartida->getPropiedad()->getColor()->rgb}}">
+                <i class="iconoTotalmenteNegro {{$propiedadPartida->getPropiedad()->getTipoPropiedad()->claseIcono}}" ></i>
+
+
+                @if($propiedadPartida->jugadorTieneTodoElColor($jugador->codJugador))
+                    <i class="flotandoIzquierda fas fa-star dorado fontSize7"></i>
+                @endif
+            </div>
+
+            <p class="nombrePropiedad">
+                {{$propiedadPartida->getPropiedad()->nombre}}
+                
+                
+            </p>
+            
+            
+        </div> 
+    @endforeach
+</div>
+
+{{-- Para el banco no mostraré el mensaje --}}
+@if($jugador->getPartida()->codJugadorBanco != $jugador->codJugador)
+    <span class="fontSize7">
+        <i class="fas fa-star dorado"></i> Tiene todas las propiedades del color
+    </span>
+@endif
+

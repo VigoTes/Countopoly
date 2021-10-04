@@ -53,7 +53,7 @@
 
             <td class="text-center" style="color:{{$transaccion->getColorSegunJugador($jugador->codJugador)}}">
                 <b>
-                    {{$transaccion->monto}}
+                    {{$transaccion->getMonto()}}
                 </b>
                 
             </td>

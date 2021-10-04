@@ -41,7 +41,7 @@ class PartidaController extends Controller
     
 
     /* 
-    esta funcion se ejecuta cuando le damos a iniciar partida, 
+    esta funcion se ejecuta cuando le damos a iniciar partida, (desde el listar partidas)
         lo cual inicia automaticamente una partida y te redirije a la sala de esper
 
     */
@@ -57,6 +57,7 @@ class PartidaController extends Controller
             $partida->codCuentaHost = $cuentaLogeada->codCuenta; //por ahora, pondremos que siempre sea Vigo el host
             $partida->codEstadoPartida = 1; //por ahora, pondremos que siempre sea Vigo el host
             $partida->codEdicion = 1;
+            $partida->dineroInicial = 5000;
             $partida->cambiarToken();
             $partida->save();
             
@@ -110,7 +111,7 @@ class PartidaController extends Controller
             $partida->codJugadorBanco = $jugadorBanco->codJugador;
             $partida->save();
 
-            $montoInicial = 5000;
+            $montoInicial = $partida->dineroInicial;
             //ahora le damos a cada jugador la cantidad inicial de dinero
             $jugadores = $partida->getJugadores();
             foreach ($jugadores as $jugador){
@@ -251,12 +252,34 @@ class PartidaController extends Controller
             
         } catch (\Throwable $th) {
             db::rollBack();
-            Debug::mensajeError('Partida Controller: ', $th );
+            Debug::mensajeError('Partida Controller: CambiarEdicion ', $th );
 
             return RespuestaAPI::respuestaError("Ha ocurrido un error interno.");
         }
 
     }
+    public function CambiarDineroInicial(Request $request){
+        try {
+            db::beginTransaction();
+            $partida = Partida::findOrFail($request->codPartida);
+            $partida->dineroInicial = $request->dineroInicial;
+            $partida->save();
+            $dineroInicial = $request->dineroInicial;
+
+            db::commit();
+            return RespuestaAPI::respuestaOk("Se ha cambiado la cantidad de dinero inicial a '$dineroInicial'.");
+            
+        } catch (\Throwable $th) {
+            db::rollBack();
+            Debug::mensajeError('Partida Controller: CambiarDineroInicial', $th );
+
+            return RespuestaAPI::respuestaError("Ha ocurrido un error interno.");
+        }
+
+    }
+
+     
+
 
     public function CambiarDescripcion(Request $request){
         try {
@@ -338,7 +361,10 @@ class PartidaController extends Controller
             $listaMisPropiedades = $jugadorLogeado->getPropiedades();
             
             $listaTipoTransaccion = TipoTransaccionMonetaria::where('esDelBanco','=','0')->get();
-            $listaTipoTransaccion_banco = TipoTransaccionMonetaria::where('esDelBanco','=','1')->get();
+            $listaTipoTransaccion_banco = TipoTransaccionMonetaria::
+                  where('esDelBanco','=','1')
+                ->where('codTipoTransaccion','!=',TipoTransaccionMonetaria::codDadivaInicial)
+                ->get();
              
             $jugadorBanco = Jugador::findOrFail($partida->codJugadorBanco);
             
@@ -424,7 +450,9 @@ class PartidaController extends Controller
         $misPropiedades = '';
         $montoActual = '';
         $banco_montoActual = '';
-        
+        $codUltimaTransaccionRecibiDinero = '';
+        $codUltimaTransaccionRecibiDineroBanco = '';
+         
         //error_log('                    Rqeust:'.$request->tokenSincronizacion." real:".$tokenSincronizacionActual);
 
         if($request->tokenSincronizacion !=0 //primera iteracion
@@ -445,7 +473,8 @@ class PartidaController extends Controller
             $misTransacciones = (string) view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
             $misPropiedades = (string ) view('Partidas.Invocables.inv_MisPropiedades',compact('jugador','listaMisPropiedades'));
             
-            
+            $codUltimaTransaccionRecibiDinero = $jugador->getUltimaTransaccionQueRecibioDinero()->codTransaccionMonetaria;
+
             if($request->banco=='1') // también se está solicitnado la información del banco
             {
                 /* TODA ESTA INFO ES DEL BANCO, NO DEL JUGADOR BANCARIO */
@@ -456,7 +485,10 @@ class PartidaController extends Controller
                 $banco_montoActual = $jugador->getMontoActualFormateado();
                 $banco_misTransacciones = (string) view('Partidas.Invocables.inv_MisTransacciones',compact('jugador','listaMisTransacciones'));
                 $banco_misPropiedades = (string ) view('Partidas.Invocables.inv_MisPropiedades',compact('jugador','listaMisPropiedades'));
-            
+                
+                
+                $codUltimaTransaccionRecibiDineroBanco = $jugador->getUltimaTransaccionQueRecibioDinero()->codTransaccionMonetaria;
+
 
             }   
             //Debug::mensajeSimple($body);
@@ -471,7 +503,10 @@ class PartidaController extends Controller
             'banco_misPropiedades' => $banco_misPropiedades,
             'tokenSincronizacion' => $tokenSincronizacionActual,
             'montoActual' => $montoActual,
-            'banco_montoActual' => $banco_montoActual
+            'banco_montoActual' => $banco_montoActual,
+            'codUltimaTransaccionRecibiDinero' => $codUltimaTransaccionRecibiDinero,
+            'codUltimaTransaccionRecibiDineroBanco' => $codUltimaTransaccionRecibiDineroBanco
+            
         ];
         
         return json_encode($vectorRespuesta);

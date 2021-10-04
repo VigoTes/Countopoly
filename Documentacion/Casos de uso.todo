@@ -10,12 +10,14 @@ Casos de uso:
     ✔ Al iniciar la partida, a todos los usuarios los debe redirigir @done(17-09-21 20:36)
     ✔ Transferir propiedad @done(17-09-21 20:37)
     ✔ Dashboard que tiene el jugador bancario @done(19-09-21 01:33)
-    ☐ Transparencia -> todos los jugadores deben poder ver cuando el banco hace un pago
-    ☐ Remplazar formulario de enviar pago y transferir propiedad por modales que se abren con 1 boton
-    ☐ Al poner el color de una propiedad, usar el rgb picker de html
+    ✔ Transparencia -> todos los jugadores deben poder ver cuando el banco hace un pago @done(03-10-21 19:19)
+    ✔ Remplazar formulario de enviar pago y transferir propiedad por modales que se abren con 1 boton @done(03-10-21 19:19)
+    ✔ Al poner el color de una propiedad, usar el rgb picker de html @done(03-10-21 19:49)
+    ✔ Al tener todo un color, aparece una estrella @done(03-10-21 22:52)
+    ✔ Sonidito cuando te pagan y envias pago @done(03-10-21 23:55)
 
     ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
-    ☐ Tener varias partidas activas
+    
     ☐ Valor de mi patrimonio total
     ☐ Sistema de turnos (no puedo hacer pagos ni nada si no es miturno, cuando lo es debo ceder el turno)
     ☐ Personalizacion del perfil

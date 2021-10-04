@@ -19,7 +19,7 @@
     /* Si la pantalla tiene menos de 700px, se pone un padding más pequeño */
     @media only screen and (max-width: 700px) {
         .cardBodyPadding{
-            padding:10px;
+            padding:5px;
              
         }
     }
@@ -58,7 +58,8 @@
 @endsection
 
 @section('contenido')
-
+ 
+@include('Partidas.Audios')
 
 @csrf
 
@@ -80,10 +81,13 @@
         </div>
     </div><!-- /.card-header -->
     <div class="card-body cardBodyPadding">
-       
+        
+            
+        
          <div class="row">
              <div class="col">
                  <button class="btn btn-primary btn-sm"   data-toggle="modal" data-target="#ModalEnviarPago">
+                    <i class="fas fa-hand-holding-usd"></i>
                     Enviar Pago
                  </button>
              </div>
@@ -103,7 +107,9 @@
         <br>
         <div class="row">
             <div class="col">
-                <button class="btn btn-primary btn-sm"   data-toggle="modal" data-target="#ModalTransferirPropiedad">
+                <button class="btn btn-success btn-sm"   data-toggle="modal" data-target="#ModalTransferirPropiedad">
+                    
+                    <i class="fas fa-random"></i>
                     Transferir Propiedad
                  </button>
             </div>
@@ -352,7 +358,7 @@
                       
                 </div>
                 <div class="modal-footer">
-                    <button id="" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <button id="botonCerrarModalTransferirPropiedad" type="button" class="btn btn-secondary" data-dismiss="modal">
                         Salir
                     </button>
  
@@ -374,7 +380,7 @@
         Funcion que actualiza el contenido de la pagina a la ultima transaccion
     */
     tokenSincronizacion = 0;
-     
+    codUltimaTransaccionRecibiDinero = 0;
     debugear = false;
 
     $( document ).ready(function() {
@@ -419,6 +425,13 @@
 
                 document.getElementById('montoActual').innerHTML = objetoRespuesta.montoActual;
                 
+                
+                if(codUltimaTransaccionRecibiDinero != objetoRespuesta.codUltimaTransaccionRecibiDinero 
+                    && codUltimaTransaccionRecibiDinero!=0){ //recibió un pago y esta no es la primera actualizacion
+                    reproducirRecibirPago();
+                }
+                codUltimaTransaccionRecibiDinero = objetoRespuesta.codUltimaTransaccionRecibiDinero;
+
 
                 @if ($esBancario)
                     contenidoPropiedadesDelBanco =     document.getElementById('banco_propiedades');
@@ -429,13 +442,21 @@
                 
                     document.getElementById('banco_montoActual').innerHTML = objetoRespuesta.banco_montoActual;
 
+
+                    if(codUltimaTransaccionRecibiDineroBanco != objetoRespuesta.codUltimaTransaccionRecibiDineroBanco 
+                        && codUltimaTransaccionRecibiDineroBanco!=0){ //recibió un pago y esta no es la primera actualizacion
+                        reproducirRecibirPago();
+                    }
+                    codUltimaTransaccionRecibiDineroBanco = objetoRespuesta.codUltimaTransaccionRecibiDineroBanco;
+
                 @endif
+
 
                 
                 actualizarSelectMisPropiedades();
             }
             tokenSincronizacion = objetoRespuesta.tokenSincronizacion;
-            console.log('Ciclo de sincronización completada. Token=' + tokenSincronizacion );
+            console.log('Ciclo de sincronización completada. Token=' + tokenSincronizacion + "  codUltRecib=" + codUltimaTransaccionRecibiDinero);
         });
     }
 
@@ -495,11 +516,15 @@
             alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
             if(objetoRespuesta.ok=='1'){
                 limpiarCamposPago();
-                banco_limpiarCamposPago();
                 actualizarTransacciones();
-                
                 cerrarModalEnviarPago();
-                cerrarModalBancoEnviarPago();
+                reproducirEnviarPago();
+
+                @if ($esBancario)
+                    banco_limpiarCamposPago();
+                    cerrarModalBancoEnviarPago();
+                @endif
+                
             }
                 
             
@@ -509,16 +534,19 @@
     }
 
     function cerrarModalEnviarPago(){
-        /*  */
         document.getElementById('botonSalirModalEnviarPago').click();
-        
     }
 
     function cerrarModalBancoEnviarPago(){
-
         document.getElementById('botonSalirModalBancoEnviarPago').click();
-        
-        
+    }
+
+    
+    function cerrarModalTransferirPropiedad(){
+        document.getElementById('botonCerrarModalTransferirPropiedad').click();
+    }
+    function cerrarModalBancoTransferirPropiedad(){
+        document.getElementById('botonCerrarModalBancoTransferirPropiedad').click();
     }
 
     function limpiarCamposPago(){
@@ -587,12 +615,17 @@
             alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
             if(objetoRespuesta.ok=='1'){
                 limpiarCamposTransaccionPropiedad();
+                
                 actualizarSelectMisPropiedades();
                 actualizarTransacciones();
 
+                cerrarModalTransferirPropiedad();
+                    
                 @if ($esBancario)
-                    actualizarSelectMisPropiedadesBanco();
+                    cerrarModalBancoTransferirPropiedad();
+                    limpiarCamposBancoTransaccionPropiedad();
 
+                    actualizarSelectMisPropiedadesBanco();
                 @endif
 
             }
@@ -601,6 +634,8 @@
 
     }
 
+
+    
 
     function actualizarSelectMisPropiedades(){
           
@@ -616,6 +651,11 @@
     function limpiarCamposTransaccionPropiedad(){
         document.getElementById('codJugadorATransferirPropiedad').value = "0";
         document.getElementById('codPropiedadPartida').value = "0";
+    }
+
+    function limpiarCamposBancoTransaccionPropiedad(){
+        document.getElementById('banco_codJugadorATransferirPropiedad').value = "0";
+        document.getElementById('banco_codPropiedadPartida').value = "0";
     }
 
 
@@ -660,6 +700,15 @@
 
     /* Si este jugador es el bancario, le presentamos su dashboard */
     @if($esBancario)
+
+        codUltimaTransaccionRecibiDineroBanco = 0;
+
+        function banco_limpiarCamposPago(){
+                document.getElementById('banco_monto').value = "";
+                document.getElementById('banco_codJugadorDestino').value = "0";
+
+        }
+
 
         function banco_validarPago(){
             limpiarEstilos(['banco_codJugadorDestino','banco_monto']);
@@ -739,16 +788,26 @@
           });
   
       }
-        function banco_limpiarCamposPago(){
-            document.getElementById('banco_monto').value = "";
-            document.getElementById('banco_codJugadorDestino').value = "0";
-
-        }
+        
 
 
     @endif
 
+    
+        /* REPRODUCCION DE AUDIOS */
 
+
+
+    function reproducirEnviarPago(){
+        document.getElementById("audioEnviarPago").play();
+        console.log('Reproduciendo sonido de envio de dinero');
+
+    }
+    function reproducirRecibirPago(){
+        document.getElementById("audioRecibirPago").play();
+        console.log('Reproduciendo sonido de recibo de dinero');
+        
+    }
 
 </script>
 @endsection

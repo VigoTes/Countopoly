@@ -6,6 +6,9 @@
 @section('contenido')
 
 
+
+ 
+
 <h1 class="text-center">
     
     BIENVENIDO A ESTA PLANTILLA
@@ -13,4 +16,4 @@
 </h1>
 {{App\Cuenta::getCuentaLogeada()}}
 @endsection
-
+ 

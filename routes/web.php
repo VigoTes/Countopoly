@@ -83,6 +83,9 @@ Route::get('/Partida/FuiExpulsadoYEstoyRetornandoAlListar/{codPartida}','Partida
 Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
     ->name('Partida.CambiarEdicion');
 
+Route::get('/Partida/CambiarDineroInicial/','PartidaController@CambiarDineroInicial')
+    ->name('Partida.CambiarDineroInicial');
+
 
 Route::get('/Partida/CambiarDescripcion/','PartidaController@CambiarDescripcion')
     ->name('Partida.CambiarDescripcion');

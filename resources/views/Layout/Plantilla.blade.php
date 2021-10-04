@@ -8,7 +8,7 @@
 
   {{-- Cambiar esto por una url d --}}
 
-  <link rel="shortcut icon" href="/img/LogoCedepas.png" type="image/png">
+  <link rel="shortcut icon" href="/img/Señor.ico" type="image/png">
   
   
   <!-- Tell the browser to be responsive to screen width -->
@@ -36,6 +36,9 @@
             border-radius: 10px;
             background-color:rgb(190, 190, 190)
       }
+    .fontSize7{
+      font-size: 7pt;
+    }
     .fontSize8{
       font-size: 8pt;
     }

@@ -81,6 +81,25 @@
         <div class="card-body cardBodyPadding">
 
             <div class="row">
+
+
+                
+                <div class="col">
+                    <label for="dineroInicial">Cantidad de dinero inicial</label>
+                     
+                    <div class="input-group mb-3">
+                        <input id="dineroInicial" name="dineroInicial" type="number" class="form-control" 
+                        value="{{$partida->dineroInicial}}" placeholder="Dinero inicial..." >
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary" type="button" id="" onclick="cambioDineroInicial()">
+                              Actualizar
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+             
+                <div class="w-100"></div>
                 <div class="col">
                     <label for="descripcion">Descripción de la partida</label>
                      
@@ -95,9 +114,8 @@
 
                 </div>
 
-            </div>
-             
-            <div class="row mt-2">
+                <div class="w-100"></div>
+              
 
                 <div class="col">
                     <label for="codEdicion">Edición</label>
@@ -274,6 +292,28 @@
                 console.log('DATA RECIBIDA:');
                 console.log(dataRecibida);
                 
+                objetoRespuesta = JSON.parse(dataRecibida);
+                alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+
+            });
+
+
+        }
+
+        function cambioDineroInicial(){
+            dineroInicial = document.getElementById('dineroInicial').value;
+            ruta = "/Partida/CambiarDineroInicial/";
+            datos = {
+                dineroInicial : dineroInicial,
+                codPartida : {{$partida->codPartida}}
+            };
+            
+            $.get(ruta, datos, function(dataRecibida){
+                console.log('DATA RECIBIDA:');
+                console.log(dataRecibida);
+                
+                
+
                 objetoRespuesta = JSON.parse(dataRecibida);
                 alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
 
