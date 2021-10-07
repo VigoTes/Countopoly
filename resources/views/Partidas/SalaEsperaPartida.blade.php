@@ -127,6 +127,30 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="w-100"></div>
+              
+
+                @php
+                    /* Esta lógica es para que se seleccione dependiendo de la opcion que esté en la bd */
+                    if($partida->sePuedenUnirDespues == "1"){
+                        $selectSI = "selected";
+                        $selectNO = "";
+                    }else{
+                        $selectSI = "";
+                        $selectNO = "selected";
+                    }
+                @endphp
+
+                <div class="col">
+                    <label for="sePuedenUnirDespues">Permitir nuevos jugadores después de iniciar</label>
+                    <select class="form-control" name="sePuedenUnirDespues" id="sePuedenUnirDespues" onchange="CambiarSePuedenUnirDespues()">
+                        <option value="1" {{$selectSI}}>Sí</option>
+                        <option value="0" {{$selectNO}}>No</option>
+                    </select>
+                </div>
+
+
+                
                 
             </div>
           
@@ -280,6 +304,8 @@
             });
 
         }
+
+
         function cambioDescripcion(){
             descripcion = document.getElementById('descripcion').value;
             ruta = "/Partida/CambiarDescripcion/";
@@ -299,6 +325,30 @@
 
 
         }
+
+        function CambiarSePuedenUnirDespues(){
+            sePuedenUnirDespues = document.getElementById('sePuedenUnirDespues').value;
+            ruta = "/Partida/CambiarSePuedenUnirDespues/";
+
+            
+            datos = {
+                sePuedenUnirDespues : sePuedenUnirDespues,
+                codPartida : {{$partida->codPartida}}
+            };
+            
+            $.get(ruta, datos, function(dataRecibida){
+                console.log('DATA RECIBIDA:');
+                console.log(dataRecibida);
+                
+                objetoRespuesta = JSON.parse(dataRecibida);
+                alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+
+            });
+
+
+        }
+
+        
 
         function cambioDineroInicial(){
             dineroInicial = document.getElementById('dineroInicial').value;

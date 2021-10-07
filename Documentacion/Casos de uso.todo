@@ -15,6 +15,8 @@ Casos de uso:
     ✔ Al poner el color de una propiedad, usar el rgb picker de html @done(03-10-21 19:49)
     ✔ Al tener todo un color, aparece una estrella @done(03-10-21 22:52)
     ✔ Sonidito cuando te pagan y envias pago @done(03-10-21 23:55)
+    ✔ Imagen con la cantidad de miles que tienees @done(04-10-21 17:23)
+    ✔ Opcion de configuracion para que alguien se pueda unir a una partida cuadno ya inicio @done(05-10-21 14:52)
 
     ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
     

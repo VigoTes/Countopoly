@@ -54,6 +54,8 @@
     }
 
 
+     
+
 </style>
 @endsection
 
@@ -69,10 +71,14 @@
         <h3 class="card-title">
             <i class="fas fa-user"></i>
             {{$jugadorLogeado->getNombreUsuario()}}
+
             
         </h3>
        
         <div class="card-tools">
+            
+            
+
             <button type="button" style="" class="btn btn-primary btn-xs"  onclick="clickVerTransparenciaBancaria()"
                 data-toggle="modal" data-target="#ModalTransparenciaBanco">
                 <i class="fas fa-university"></i>
@@ -92,8 +98,15 @@
                  </button>
              </div>
              <div class="col text-right montoActual">
+                
                 <i class="fas fa-cash-register"></i>
                 <span id="montoActual"></span>
+                
+                <span id="contenedorImagenMonedas">
+                    
+                </span>
+                
+
             </div>
          </div>
         
@@ -369,6 +382,34 @@
 </div>
       
 
+{{-- MODAL DETALLE TRANSACCION MONETARIA  --}}
+<div class="modal fade" id="ModalDetalleTransaccionMonetaria" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-sm">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="TitleBodyModalDetalleTransaccionMonetaria">
+                         Transacción Monetaria
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="BodyModalDetalleTransaccionMonetaria">
+                   
+                      
+                </div>
+                <div class="modal-footer">
+                    <button id="BotonSalirModalDetalleTransaccionMonetaria" type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Salir
+                    </button>
+ 
+                </div>
+            
+        </div>
+    </div>
+</div>
+      
+
 
 
 @endsection
@@ -424,6 +465,9 @@
                 contenidoMisPropiedades.innerHTML = objetoRespuesta.misPropiedades;
 
                 document.getElementById('montoActual').innerHTML = objetoRespuesta.montoActual;
+                document.getElementById('contenedorImagenMonedas').innerHTML = objetoRespuesta.imagenMonedas;
+                
+
                 
                 
                 if(codUltimaTransaccionRecibiDinero != objetoRespuesta.codUltimaTransaccionRecibiDinero 
@@ -809,6 +853,29 @@
         
     }
 
+
+    
+
+
+    function clickModalDetalleTransaccionMonetaria(codTransaccionMonetaria,itemNroTransaccion){
+        
+        document.getElementById('BodyModalDetalleTransaccionMonetaria').innerHTML  ="";
+        
+        dataEnviada= {
+            codTransaccionMonetaria : codTransaccionMonetaria,
+            codJugador : {{$jugadorLogeado->codJugador}},
+        }
+        
+        ruta = "/Partida/getTransaccionMonetariaDetalles";
+
+        $.get(ruta,dataEnviada,function(data){
+             
+            document.getElementById('BodyModalDetalleTransaccionMonetaria').innerHTML = data;
+            document.getElementById('TitleBodyModalDetalleTransaccionMonetaria').innerHTML = "Transacción Monetaria " + itemNroTransaccion;
+        });
+
+
+    }
 </script>
 @endsection
 

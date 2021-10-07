@@ -8,13 +8,36 @@
 
 {{-- Info de la partida que le aparece al jugador y no al admin (pq el host lo tiene como panel de control ) --}}
 @if(!$partida->elHostEstaLogeado())
-                
     <div class="row">
-
+        <div class="col">
+            Descripción de la partida:
+            <b>
+                {{$partida->descripcion}}   
+            </b>
+        </div>
+        <div class="w-100"></div>
         <div class="col">
             Edición: 
             <b>
                 {{$partida->getEdicion()->nombre}}
+            </b>
+        </div>
+        <div class="col">
+            Dinero inicial:
+            <b>
+                {{$partida->dineroInicial}}
+            </b>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+            Permitir nuevos jugadores después de iniciada la partida:
+            <b>
+                @if($partida->sePuedenUnirDespues())
+                    SÍ
+                @else
+                    NO
+                @endif
+
             </b>
             
         </div>

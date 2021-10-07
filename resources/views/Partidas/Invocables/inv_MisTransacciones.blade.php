@@ -40,8 +40,13 @@
 
     @foreach($listaMisTransacciones as $transaccion)
         <tr>
-            <td class="text-center">
-                {{$i}}            
+            <td class="text-center" onclick="clickModalDetalleTransaccionMonetaria({{$transaccion->codTransaccionMonetaria}},{{$i}})">
+                <button type="button" class="btn btn-primary btn-sm"   data-toggle="modal" 
+                    data-target="#ModalDetalleTransaccionMonetaria">
+                    {{$i}}
+                </button>
+                   
+                        
             </td>
             <td class="text-center">
                 {{$transaccion->getConcepto()}}

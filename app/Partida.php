@@ -64,6 +64,7 @@ class Partida extends Model
     public static function getPartidasEnEsperaYJugandose(){
         return Partida::whereIn('codEstadoPartida',[1,2])
             ->orderBy('codEstadoPartida','ASC')
+            ->orderBy('codPartida','DESC')
             ->get();
 
     }
@@ -128,6 +129,11 @@ class Partida extends Model
         ->get();
 
         return count($lista)>0;
+
+    }
+
+    public function sePuedenUnirDespues(){
+        return $this->sePuedenUnirDespues == "1";
 
     }
 }

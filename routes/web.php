@@ -11,12 +11,9 @@ use Illuminate\Support\Facades\Route;
 /* RUTAS PARA INGRESO Y REGISTRO DE USUARIO Y CLIENTE */
 
 Route::get('/probandoCosas',function(){
-    
-    return json_encode(new DateTime());
-    
-    return rand(1,99999999);
-      
-    return Partida::findOrFail(17)->getUltimaTransaccion();
+     
+    $jug = Jugador::findOrFail(127);
+    return $jug->getUltimaTransaccionQueRecibioDinero();
     
     
 });
@@ -30,6 +27,9 @@ Route::get('/borrarTodasLasPartidasYSuInfo',function(){
     return "BORRADO EXITOSO";
 });
 
+
+
+
 Route::get('/', 'UserController@home')->name('user.home');
 
 Route::get('/login', 'UserController@verLogin')->name('user.verLogin'); //para desplegar la vista del Login
@@ -37,123 +37,138 @@ Route::post('/ingresar', 'UserController@logearse')->name('user.logearse'); //po
 
 Route::get('/cerrarSesion','UserController@cerrarSesion')->name('user.cerrarSesion');
 
-Route::get('/Partidas/listarPartidasEnEspera','PartidaController@listarPartidasEnEspera')->name('Partida.listarPartidasEnEspera');
 
-Route::get('/Partida/getActualizacionListaPartidas/','PartidaController@invocarListaPartidasEnEspera')->name('Partida.invocarListaPartidasEnEspera');
+Route::group(['middleware'=>"ValidarSesion"],function()
+{
 
+    Route::get('/Partidas/listarPartidasEnEspera','PartidaController@listarPartidasEnEspera')->name('Partida.listarPartidasEnEspera');
 
-Route::get('/Partida/SalaJuego/{codPartida}','PartidaController@EntrarSalaJuego')->name('Partida.EntrarSalaJuego');
-
-
-//Ruta que te hace unirte a una sala de espera y te retorna la vista de esa sala 
-Route::get('/Partidas/{codPartida}/SalaEspera/','PartidaController@IngresarSalaEspera')
-    ->name('Partida.IngresarSalaEspera');
+    Route::get('/Partida/getActualizacionListaPartidas/','PartidaController@invocarListaPartidasEnEspera')->name('Partida.invocarListaPartidasEnEspera');
 
 
-//Te hace salirte de la sala de espera de una partida, si eres el host, se cancela
-Route::get('/Partidas/SalirmeDePartida/{codPartida}','PartidaController@SalirmeDePartida')
-    ->name('Partida.SalirmeDePartida');
+    Route::get('/Partida/SalaJuego/{codPartida}','PartidaController@EntrarSalaJuego')->name('Partida.EntrarSalaJuego');
 
 
+    //Ruta que te hace unirte a una sala de espera y te retorna la vista de esa sala 
+    Route::get('/Partidas/{codPartida}/SalaEspera/','PartidaController@IngresarSalaEspera')
+        ->name('Partida.IngresarSalaEspera');
 
 
-    //Vista para crear nueva partida
-Route::get('/Partida/abrirPartida/','PartidaController@abrirPartida')->name('Partida.abrirPartida');
+    //Te hace salirte de la sala de espera de una partida, si eres el host, se cancela
+    Route::get('/Partidas/SalirmeDePartida/{codPartida}','PartidaController@SalirmeDePartida')
+        ->name('Partida.SalirmeDePartida');
 
-Route::get('/Partida/IniciarPartida/{codPartida}','PartidaController@IniciarPartida')->name('Partida.IniciarPartida');
-Route::get('/Partida/CancelarPartida/{codPartida}','PartidaController@CancelarPartida')->name('Partida.CancelarPartida');
-
-//INVOCABLES JS
-Route::get('/Partida/getActualizacionPartida/','PartidaController@getActualizacionPartida');
-
-Route::get('/Partida/getActualizacionSalaEspera/{codPartida}','PartidaController@getActualizacionSalaEspera');
-
-Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@HacerBancarioAJugador')
-    ->name('Partida.HacerBancarioAJugador');
-
-///para que cada jugador cambie su tiempo de actualizacion
-Route::get('/Partida/cambiarMiTiempoActualizacionJugador/','PartidaController@cambiarMiTiempoActualizacionJugador');
+    
 
 
-Route::get('/Partida/ExpulsarJugador/{codJugador}','PartidaController@ExpulsarJugador')->name('Partida.ExpulsarJugador');
+        //Vista para crear nueva partida
+    Route::get('/Partida/abrirPartida/','PartidaController@abrirPartida')->name('Partida.abrirPartida');
 
-Route::get('/Partida/FuiExpulsadoYEstoyRetornandoAlListar/{codPartida}','PartidaController@FuiExpulsadoYEstoyRetornandoAlListar')->name('Partida.FuiExpulsadoYEstoyRetornandoAlListar');
+    Route::get('/Partida/IniciarPartida/{codPartida}','PartidaController@IniciarPartida')->name('Partida.IniciarPartida');
+    Route::get('/Partida/CancelarPartida/{codPartida}','PartidaController@CancelarPartida')->name('Partida.CancelarPartida');
 
+    Route::get('/Partida/entrarAPartidaYaIniciada/{codPartida}','PartidaController@entrarAPartidaYaIniciada')->name('Partida.entrarAPartidaYaIniciada');
 
-Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
-    ->name('Partida.CambiarEdicion');
+    //INVOCABLES JS
+    Route::get('/Partida/getActualizacionPartida/','PartidaController@getActualizacionPartida');
 
-Route::get('/Partida/CambiarDineroInicial/','PartidaController@CambiarDineroInicial')
-    ->name('Partida.CambiarDineroInicial');
+    Route::get('/Partida/getActualizacionSalaEspera/{codPartida}','PartidaController@getActualizacionSalaEspera');
 
+    Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@HacerBancarioAJugador')
+        ->name('Partida.HacerBancarioAJugador');
 
-Route::get('/Partida/CambiarDescripcion/','PartidaController@CambiarDescripcion')
-    ->name('Partida.CambiarDescripcion');
-
-Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Partida.realizarPago');
-
-Route::get('/Partida/getPropiedadesDeJugador/{codJugador}','PropiedadPartidaController@getPropiedadesDeJugador');
-
-Route::post('/Partida/transferirPropiedad','PropiedadPartidaController@transferirPropiedad')->name('Partida.transferirPropiedad');
+    ///para que cada jugador cambie su tiempo de actualizacion
+    Route::get('/Partida/cambiarMiTiempoActualizacionJugador/','PartidaController@cambiarMiTiempoActualizacionJugador');
 
 
+    Route::get('/Partida/ExpulsarJugador/{codJugador}','PartidaController@ExpulsarJugador')->name('Partida.ExpulsarJugador');
 
-//Para obtener ModalBody
-Route::get('/Partida/getTarjetaPropiedad/{codPropiedad}','PropiedadPartidaController@getTarjetaPropiedad')->name('Partida.getTarjetaPropiedad');
-
-//Para obtener ModalBody
-Route::get('/Partida/getTransparenciaBancaria/{codPartida}','PartidaController@getTransparenciaBancaria')->name('Partida.getTransparenciaBancaria');
+    Route::get('/Partida/FuiExpulsadoYEstoyRetornandoAlListar/{codPartida}','PartidaController@FuiExpulsadoYEstoyRetornandoAlListar')->name('Partida.FuiExpulsadoYEstoyRetornandoAlListar');
 
 
-/* CRUD Edicion */
-Route::get('/Edicion/Listar','EdicionController@listarEdiciones')->name('Edicion.Listar');
-Route::get('/Edicion/Editar/{codEdicion}','EdicionController@Editar')->name('Edicion.Editar');
-Route::get('/Edicion/Eliminar/{codEdicion}','EdicionController@EliminarEdicion')->name('Edicion.Eliminar');
+    Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
+        ->name('Partida.CambiarEdicion');
 
-Route::post('/Edicion/ActualizarNombre','EdicionController@ActualizarNombre')->name('Edicion.ActualizarNombre');
+    Route::get('/Partida/CambiarSePuedenUnirDespues','PartidaController@CambiarSePuedenUnirDespues')
+        ->name('Partida.CambiarSePuedenUnirDespues');
 
 
-/* CRUD PROPIEDAD */
+    Route::get('/Partida/CambiarDineroInicial/','PartidaController@CambiarDineroInicial')
+        ->name('Partida.CambiarDineroInicial');
 
-Route::post('/Edicion/agregarEditarPropiedad','EdicionController@agregarEditarPropiedad')->name('Edicion.agregarEditarPropiedad');
-Route::get('/Edicion/eliminarPropiedad/{codPropiedad}','EdicionController@eliminarPropiedad')->name('Edicion.eliminarPropiedad');
 
-/* CRUD COLOR */
-Route::get('/Color/Listar','ColorController@listarColores')->name('Color.Listar');
-Route::post('/Color/agregarEditarColor','ColorController@agregarEditarColor')->name('Color.agregarEditarColor');
-Route::get('/Color/eliminar/{codColor}','ColorController@Eliminar')->name('Color.Eliminar');
- 
+    Route::get('/Partida/CambiarDescripcion/','PartidaController@CambiarDescripcion')
+        ->name('Partida.CambiarDescripcion');
+
+    Route::get('/Partida/realizarPago/','PartidaController@realizarPago')->name('Partida.realizarPago');
+
+    Route::get('/Partida/getPropiedadesDeJugador/{codJugador}','PropiedadPartidaController@getPropiedadesDeJugador');
+
+    Route::post('/Partida/transferirPropiedad','PropiedadPartidaController@transferirPropiedad')->name('Partida.transferirPropiedad');
 
 
 
-/* CRUD USUARIOS */
+    //Para obtener ModalBody
+    Route::get('/Partida/getTarjetaPropiedad/{codPropiedad}','PropiedadPartidaController@getTarjetaPropiedad')->name('Partida.getTarjetaPropiedad');
 
-Route::get('/Cuenta/Listar','CuentaController@listar')->name('Cuenta.Listar');
-
-Route::get('/Cuenta/Crear','CuentaController@crear')->name('Cuenta.Crear');
-Route::post('/Cuenta/AgregarEditarCuenta','CuentaController@agregarEditarCuenta')->name('Cuenta.AgregarEditarCuenta');
-
-Route::get('/Cuenta/{cod}/Eliminar','CuentaController@eliminar')->name('Cuenta.Eliminar');
+    //Para obtener ModalBody
+    Route::get('/Partida/getTransparenciaBancaria/{codPartida}','PartidaController@getTransparenciaBancaria')->name('Partida.getTransparenciaBancaria');
 
 
-/* ****************************************************************************************************************************** */
-/* ****************************************************************************************************************************** */
-/* ****************************************************************************************************************************** */
-/* ****************************************************************************************************************************** */
-/* *********************************************         SISTEMA LINKS      ***************************************************** */
-/* ****************************************************************************************************************************** */
-/* ****************************************************************************************************************************** */
-/* ****************************************************************************************************************************** */
-/* ****************************************************************************************************************************** */
+    //Para obtener modal body con los datos de una transaccion monetaria
+    Route::get('/Partida/getTransaccionMonetariaDetalles/','PartidaController@getTransaccionMonetariaDetalles')->name('Partida.GetJSONTransaccionMonetaria');
 
 
-/* SISTEMA LINKS */
-Route::post('/QRs/agregarEditarLink','LinkController@agregarEditarLink')->name('Link.agregarEditarLink');
+    /* CRUD Edicion */
+    Route::get('/Edicion/Listar','EdicionController@listarEdiciones')->name('Edicion.Listar');
+    Route::get('/Edicion/Editar/{codEdicion}','EdicionController@Editar')->name('Edicion.Editar');
+    Route::get('/Edicion/Eliminar/{codEdicion}','EdicionController@EliminarEdicion')->name('Edicion.Eliminar');
 
-Route::get('/QRs/eliminarLink/{codLink}','LinkController@eliminarLink')->name('Link.eliminarLink');
+    Route::post('/Edicion/ActualizarNombre','EdicionController@ActualizarNombre')->name('Edicion.ActualizarNombre');
 
-Route::get('/QRs/ListarLinks/','LinkController@ListarLinks')->name('Link.ListarLinks');
 
+    /* CRUD PROPIEDAD */
+
+    Route::post('/Edicion/agregarEditarPropiedad','EdicionController@agregarEditarPropiedad')->name('Edicion.agregarEditarPropiedad');
+    Route::get('/Edicion/eliminarPropiedad/{codPropiedad}','EdicionController@eliminarPropiedad')->name('Edicion.eliminarPropiedad');
+
+    /* CRUD COLOR */
+    Route::get('/Color/Listar','ColorController@listarColores')->name('Color.Listar');
+    Route::post('/Color/agregarEditarColor','ColorController@agregarEditarColor')->name('Color.agregarEditarColor');
+    Route::get('/Color/eliminar/{codColor}','ColorController@Eliminar')->name('Color.Eliminar');
+    
+    /* CRUD USUARIOS */
+
+    Route::get('/Cuenta/Listar','CuentaController@listar')->name('Cuenta.Listar');
+
+    Route::get('/Cuenta/Crear','CuentaController@crear')->name('Cuenta.Crear');
+    Route::post('/Cuenta/AgregarEditarCuenta','CuentaController@agregarEditarCuenta')->name('Cuenta.AgregarEditarCuenta');
+
+    Route::get('/Cuenta/{cod}/Eliminar','CuentaController@eliminar')->name('Cuenta.Eliminar');
+
+
+    /* ****************************************************************************************************************************** */
+    /* ****************************************************************************************************************************** */
+    /* ****************************************************************************************************************************** */
+    /* ****************************************************************************************************************************** */
+    /* *********************************************         SISTEMA LINKS      ***************************************************** */
+    /* ****************************************************************************************************************************** */
+    /* ****************************************************************************************************************************** */
+    /* ****************************************************************************************************************************** */
+    /* ****************************************************************************************************************************** */
+
+
+    /* SISTEMA LINKS */
+    Route::post('/QRs/agregarEditarLink','LinkController@agregarEditarLink')->name('Link.agregarEditarLink');
+
+    Route::get('/QRs/eliminarLink/{codLink}','LinkController@eliminarLink')->name('Link.eliminarLink');
+
+    Route::get('/QRs/ListarLinks/','LinkController@ListarLinks')->name('Link.ListarLinks');
+
+
+
+    
+});
 
 Route::get('/QRs/{string}','LinkController@verLink')->name('Link.Ver');
 

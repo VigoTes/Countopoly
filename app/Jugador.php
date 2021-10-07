@@ -72,10 +72,18 @@ class Jugador extends Model
     }
 
 
-    public function getUltimaTransaccionQueRecibioDinero(){
-        return TransaccionMonetaria::where('codJugadorEntrante','=',$this->codJugador)
+
+    /* No necesariamente un jugador habrá recibido dinero en un momento dado, */
+    public function getCodUltimaTransaccionQueRecibioDinero(){
+        $listaTran = TransaccionMonetaria::where('codJugadorEntrante','=',$this->codJugador)
             ->orderBy('fechaHora','DESC') //primero saldrá la mas reciente
-            ->first();
+            ->get();
+        if(count($listaTran)==0)
+            return 0;
+        
+
+        return $listaTran[0]->codTransaccionMonetaria;
+
     }
 
     

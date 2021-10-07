@@ -3,7 +3,9 @@
     <label>
         Salidas de dinero del banco
     </label>
-    
+    @php
+        $codJugadorBanco = $partida->codJugadorBanco;
+    @endphp
     
 </div>
 <div class="row">
@@ -38,20 +40,20 @@
         @endphp
         @foreach ($transacciones as $transaccion)
             <tr>
-                <td>
+                <td class="text-center">
                     {{$i}}
                 </td>
                 <td class="text-center fontSize9">
                     {{$transaccion->getFechaHora()}}
                 </td>
-                <td>
+                <td class="text-center">
                     {{$transaccion->getReceptor()->usuario}}
                 </td>
-                <td>
+                <td class="text-center">
                     {{$transaccion->getConceptoEmisor()}}
                 </td>
-                <td>
-                    {{$transaccion->monto}}
+                <td class="text-right" style="color:{{$transaccion->getColorSegunJugador($codJugadorBanco)}}">
+                    {{$transaccion->getMonto()}}
                 </td>
             </tr>
         @php
