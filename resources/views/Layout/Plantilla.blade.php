@@ -132,9 +132,11 @@
 
     <ul class="navbar-nav ml-auto" style="margin-right:10%;">
       <!-- Messages Dropdown Menu --> {{-- VER CARRITO RAPIDAMENTE --}}
-      
+      {{-- 
       @include('Layout.Notificaciones.Solicitudes')
-      
+       --}}
+
+        
     </ul>
       
 

@@ -115,6 +115,22 @@
                 </div>
 
                 <div class="w-100"></div>
+
+                <div class="col">
+                    <label for="descripcion">Pago por pasar GO</label>
+                     
+                    <div class="input-group mb-3">
+                        <input id="pagoSalida" name="pagoSalida" type="text" class="form-control" placeholder="Pago de salida" value="{{$partida->pagoSalida}}" >
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary" type="button" id="" onclick="cambioPagoSalida()">
+                              Actualizar
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="w-100"></div>
               
 
                 <div class="col">
@@ -148,10 +164,6 @@
                         <option value="0" {{$selectNO}}>No</option>
                     </select>
                 </div>
-
-
-                
-                
             </div>
           
             <div class="row mt-2">
@@ -371,6 +383,29 @@
 
 
         }
+
+
+        function cambioPagoSalida(){
+            pagoSalida = document.getElementById('pagoSalida').value;
+            ruta = "/Partida/CambiarPagoSalida/";
+            datos = {
+                pagoSalida : pagoSalida,
+                codPartida : {{$partida->codPartida}}
+            };
+            
+            $.get(ruta, datos, function(dataRecibida){
+                console.log('DATA RECIBIDA:');
+                console.log(dataRecibida);
+                
+                objetoRespuesta = JSON.parse(dataRecibida);
+                alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+
+            });
+
+
+        }
+
+        
 
         codJugadorAExpulsar = 0;
         function clickExpulsarJugador(codJugador){

@@ -41,7 +41,14 @@
             </b>
             
         </div>
+        <div class="w-100"></div>
+        <div class="col">
+            Pago por pasar por GO:
+            <b>
+                {{$partida->pagoSalida}}
+            </b>
 
+        </div>
     </div>
 @endif
 <div class="row">

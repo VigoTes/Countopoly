@@ -35,7 +35,7 @@
     */
     .divTablaFijada { /* Este se pone al div que contiene la tabla */
         max-width: 100%;
-        max-height: 300px;
+        max-height: 200px; 
         overflow: scroll;
     }
 
@@ -467,7 +467,6 @@
                 document.getElementById('montoActual').innerHTML = objetoRespuesta.montoActual;
                 document.getElementById('contenedorImagenMonedas').innerHTML = objetoRespuesta.imagenMonedas;
                 
-
                 
                 
                 if(codUltimaTransaccionRecibiDinero != objetoRespuesta.codUltimaTransaccionRecibiDinero 
@@ -484,6 +483,9 @@
                     contenidoTransaccionesDelBanco =     document.getElementById('banco_Transacciones');
                     contenidoTransaccionesDelBanco.innerHTML = objetoRespuesta.banco_misTransacciones;
                 
+                    document.getElementById('frmEnviarPozo_monto').value = objetoRespuesta.pozoPartida;
+
+
                     document.getElementById('banco_montoActual').innerHTML = objetoRespuesta.banco_montoActual;
 
 
@@ -552,6 +554,8 @@
             codTipoTransaccion : codTipoTransaccion,
             banco: banco
         };
+        $(".loader").fadeIn("slow");
+
         $.get(ruta,datosEnviados, function(dataRecibida){
             console.log('DATA RECIBIDA:');
             
@@ -570,6 +574,9 @@
                 @endif
                 
             }
+
+            $(".loader").fadeOut("slow");
+
                 
             
 
@@ -650,6 +657,7 @@
             codPropiedadPartida : codPropiedadPartida,
             codJugadorReceptor : codJugadorATransferirPropiedad
         };
+        $(".loader").fadeIn("slow");
 
         $.post(ruta,datosEnviados, function(dataRecibida){
             console.log('DATA RECIBIDA:');
@@ -673,7 +681,8 @@
                 @endif
 
             }
-                
+            $(".loader").fadeOut("slow");
+
         });
 
     }
@@ -834,7 +843,132 @@
       }
         
 
+      /* ------------------------- ENVIAR DINERO DEL POZO ------------------------------ */
+      function banco_clickEnviarPozo(){
+        msjError = banco_validarFormEnviarPozo();
+        if(msjError!=""){
+            alerta(msjError);
+            return;
+        }
 
+        //                  titulo,         texto,                  tipoMensaje,    nombreFuncionAEjecutar
+        confirmarConMensaje("Confirmacion","¿Seguro que desea enviar el pozo al jugador?",'warning',banco_ejecutarEnviarPozo );
+
+      }
+
+      function banco_validarFormEnviarPozo(){
+            limpiarEstilos(['banco_codJugadorAEnviarPozo']);
+            msjError = "";
+            msjError = validarSelect(msjError,'banco_codJugadorAEnviarPozo','0','Jugador a enviar pozo');
+            return msjError;
+      }
+
+      function banco_ejecutarEnviarPozo(){
+
+        ruta = "/Partida/enviarPozo";
+        
+        codJugadorDestino = document.getElementById('banco_codJugadorAEnviarPozo').value; 
+
+        datosEnviados = {
+            codJugadorDestino: codJugadorDestino,
+            codPartida : {{$partida->codPartida}}
+        };
+        
+        $(".loader").fadeIn("slow");
+
+        $.get(ruta,datosEnviados, function(dataRecibida){
+            console.log('DATA RECIBIDA:');
+            
+            objetoRespuesta = JSON.parse(dataRecibida);
+            console.log(objetoRespuesta);
+            alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+            if(objetoRespuesta.ok=='1'){
+                
+                actualizarTransacciones();
+                limpiarFormEnviarPozo();
+                cerrarModalEnviarPozo();
+            }
+
+            $(".loader").fadeOut("slow");
+
+        });
+
+      }
+
+      function limpiarFormEnviarPozo(){
+            document.getElementById('banco_codJugadorAEnviarPozo').value = 0;
+            document.getElementById('frmEnviarPozo_monto').value = "";
+      }
+
+      function cerrarModalEnviarPozo(){
+          
+        document.getElementById('botonCerrarEnviarPozo').click();
+
+      }
+
+
+      /* ------------------------ ENVIAR PAGO SALIDA ---------------------------- */
+      function banco_clickEnviarPagoSalida(){
+        msjError = banco_validarEnviarPagoSalida();
+        if(msjError!=""){
+            alerta(msjError);
+            return;
+        }
+
+        //                  titulo,         texto,                  tipoMensaje,    nombreFuncionAEjecutar
+        confirmarConMensaje("Confirmacion","¿Desea enviar el pago de {{$partida->pagoSalida}} por pasar por GO ?",'warning', ejecutarEnviarPagoSalida);
+      }
+
+      function banco_validarEnviarPagoSalida(){
+        limpiarEstilos(['banco_codJugadorAEnviarSalida']);
+            msjError = "";
+            msjError = validarSelect(msjError,'banco_codJugadorAEnviarSalida','0','Jugador a enviar pago por pasar salida');
+            return msjError;        
+      }
+
+      function ejecutarEnviarPagoSalida(){
+            
+        ruta = "/Partida/realizarPago/";
+        
+        codJugadorDestino = document.getElementById('banco_codJugadorAEnviarSalida').value;
+
+        datosEnviados = {
+            montoEnviado : {{$partida->pagoSalida}} ,
+            codJugadorDestino: codJugadorDestino,
+            codPartida : {{$partida->codPartida}},
+            codTipoTransaccion : {{App\TipoTransaccionMonetaria::codSalidaGo}},
+            banco: "1"
+        };
+
+        $(".loader").fadeIn("slow");
+        $.get(ruta,datosEnviados, function(dataRecibida){
+            console.log('DATA RECIBIDA:');
+            
+            objetoRespuesta = JSON.parse(dataRecibida);
+            console.log(objetoRespuesta);
+            alertaMensaje(objetoRespuesta.titulo,objetoRespuesta.mensaje,objetoRespuesta.tipoWarning);
+            if(objetoRespuesta.ok=='1'){
+                actualizarTransacciones();
+                reproducirEnviarPago();
+                banco_limpiarFormEnviarPagoSalida();
+                cerrarModalEnviarPagoSalida();
+            }
+
+            $(".loader").fadeOut("slow");
+        });
+
+      }
+
+      function banco_limpiarFormEnviarPagoSalida(){
+        document.getElementById('banco_codJugadorAEnviarSalida').value = 0;
+
+      }
+
+      function cerrarModalEnviarPagoSalida(){
+        document.getElementById('botonCerrarEnviarSalida').click();
+
+
+      }
     @endif
 
     

@@ -85,7 +85,7 @@ class Partida extends Model
             ->where('esBanco','!=','1')
             ->get();
         foreach($listaJugadores as $jugador){
-                $string .= ",".$jugador->getCuenta()->usuario;
+                $string .= ", ".$jugador->getCuenta()->usuario;
         }
        
         $string = trim($string,',');

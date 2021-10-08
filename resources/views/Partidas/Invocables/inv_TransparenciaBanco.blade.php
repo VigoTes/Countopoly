@@ -10,7 +10,22 @@
 </div>
 <div class="row">
     <p class="fontSize8">Manejado por: {{$jugadorBancario->getNombreUsuario()}}</p>
+
+
 </div>
+
+<div class="row">
+    <div class="col text-center">
+        Pozo de la partida:
+        <b>
+            {{$partida->pozo}}
+    
+        </b>
+    </div>
+   
+    
+</div>
+
  
 <table class="table table-sm table-hover">
     <thead>

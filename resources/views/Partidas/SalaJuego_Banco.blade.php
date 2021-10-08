@@ -12,11 +12,25 @@
         <div class="row">
             
             <div class="col">    
-                <button class="btn btn-primary btn-sm"   data-toggle="modal" data-target="#ModalBancoEnviarPago">
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#ModalBancoEnviarPago">
                     <i class="fas fa-hand-holding-usd"></i>
 
-                    Enviar Pago
+                    Pago
                  </button>
+
+
+                 <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalEnviarPozo">
+                    <i class="fas fa-hand-holding-usd"></i>
+
+                    Pozo
+                 </button>
+
+                 <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalEnviarPagoSalida">
+                    <i class="fas fa-play"></i>
+                    go
+                 </button>
+                 
+
             </div>  
             <div class="col text-right montoActual">
                 <i class="fas fa-cash-register"></i>
@@ -236,4 +250,132 @@
     </div>
 </div>
       
+{{-- MODAL para ENVIAR EL DINERO DEL POZO DESDE EL BANCO  --}}
+<div class="modal fade" id="ModalEnviarPozo" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-sm">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">
+                         Enviar dinero del pozo
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="">
+                    <div class="row">
+                        <div class="col">
+                            <label for="">
+                                Destinatario
+                            </label>
+                           
+                            <select class="form-control m-1" name="banco_codJugadorAEnviarPozo" id="banco_codJugadorAEnviarPozo">
+                                <option value="0">- Jugadores -</option>
+                                @foreach ($listaJugadores as $jugador)
+                                    @if($jugador->codJugador != $partida->codJugadorBanco)
+                                        <option value="{{$jugador->codJugador}}">
+                                            {{$jugador->getNombreUsuario()}}
+                                        </option>
+                                    @endif
+                                    
+                                @endforeach
+                            </select>
+        
+
+                        </div>
+                        <div class="w-100">
+
+                        </div>
+                        <div class="col">
+                            <label for="">
+                                Monto
+                            </label>
+                            <input type="text" id="frmEnviarPozo_monto" class="text-right form-control" readonly value="{{$partida->pozo}}">
+
+                        </div>
+                     </div>
+                    
+                     <div class="row">
+                        <div class="col text-right">
+  
+                            <button  onclick="banco_clickEnviarPozo()" type="button" class="mt-2 ml-2 btn btn-primary">
+                                Enviar <i class="fas fa-random"></i>
+                            </button>
+ 
+                        </div>
+                     </div>
+                      
+                </div>
+                <div class="modal-footer">
+                    <button id="botonCerrarEnviarPozo" type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Salir
+                    </button>
+ 
+                </div>
+            
+        </div>
+    </div>
+</div>
+      
+{{-- MODAL para HACER UN PAGO RAPIDO POR SALIDA  --}}
+<div class="modal fade" id="ModalEnviarPagoSalida" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-sm">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">
+                         Enviar pago SALIDA
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="">
+                    <div class="row">
+                        <div class="col">
+                            <label for="">
+                                Destinatario
+                            </label>
+                           
+                            <select class="form-control m-1" name="banco_codJugadorAEnviarSalida" id="banco_codJugadorAEnviarSalida">
+                                <option value="0">- Jugadores -</option>
+                                @foreach ($listaJugadores as $jugador)
+                                    @if($jugador->codJugador != $partida->codJugadorBanco)
+                                        <option value="{{$jugador->codJugador}}">
+                                            {{$jugador->getNombreUsuario()}}
+                                        </option>
+                                    @endif
+                                    
+                                @endforeach
+                            </select>
+        
+
+                        </div>
+                        
+                        
+                     </div>
+                    
+                     <div class="row">
+                        <div class="col text-right">
+  
+                            <button  onclick="banco_clickEnviarPagoSalida()" type="button" class="mt-2 ml-2 btn btn-primary">
+                                Enviar <i class="fas fa-random"></i>
+                            </button>
+ 
+                        </div>
+                     </div>
+                      
+                </div>
+                <div class="modal-footer">
+                    <button id="botonCerrarEnviarSalida" type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Salir
+                    </button>
+ 
+                </div>
+            
+        </div>
+    </div>
+</div>
+      
+
+
 

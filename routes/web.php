@@ -77,6 +77,12 @@ Route::group(['middleware'=>"ValidarSesion"],function()
     Route::get('/Partida/HacerBancarioAJugador/{codJugador}','PartidaController@HacerBancarioAJugador')
         ->name('Partida.HacerBancarioAJugador');
 
+
+    Route::get('/Partida/enviarPozo','PartidaController@enviarPozo')
+        ->name('Partida.enviarPozo');
+
+    
+
     ///para que cada jugador cambie su tiempo de actualizacion
     Route::get('/Partida/cambiarMiTiempoActualizacionJugador/','PartidaController@cambiarMiTiempoActualizacionJugador');
 
@@ -88,6 +94,11 @@ Route::group(['middleware'=>"ValidarSesion"],function()
 
     Route::get('/Partida/CambiarEdicion/','PartidaController@CambiarEdicion')
         ->name('Partida.CambiarEdicion');
+
+    Route::get('/Partida/CambiarPagoSalida/','PartidaController@CambiarPagoSalida')
+        ->name('Partida.CambiarPagoSalida');
+
+    
 
     Route::get('/Partida/CambiarSePuedenUnirDespues','PartidaController@CambiarSePuedenUnirDespues')
         ->name('Partida.CambiarSePuedenUnirDespues');

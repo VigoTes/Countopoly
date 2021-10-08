@@ -59,6 +59,9 @@ class PartidaController extends Controller
             $partida->codEdicion = 1;
             $partida->dineroInicial = 5000;
             $partida->sePuedenUnirDespues = 0;
+            $partida->pagoSalida = 200;
+            $partida->pozo = 0;
+            
             $partida->cambiarToken();
             $partida->save();
             
@@ -202,6 +205,57 @@ class PartidaController extends Controller
 
     }
 
+
+    //Funcion para que el banco, en la partida, le envie el dinero a quien cayó en partida libre
+    public function enviarPozo(Request $request){
+        try {
+            DB::beginTransaction();
+            $jugadorDestino = Jugador::findOrFail($request->codJugadorDestino);
+            $partida = Partida::findOrFail($request->codPartida);
+
+            $jugadorEmisor = Cuenta::getCuentaLogeada()->getJugadorPorPartida($request->codPartida); 
+            if($jugadorEmisor->codJugador != $partida->codJugadorBancario){ //si el jugador logeado no es el bancario en su partida
+                return RespuestaAPI::respuestaError("Solo el banco puede gestionar el pozo de la partida.");
+            }
+
+            $monto = $partida->pozo;
+
+            if($monto==0){
+                return RespuestaAPI::respuestaError("No hay dinero en el pozo de la partida.");
+            }
+            $transaccion = new TransaccionMonetaria();
+            $transaccion->codJugadorSaliente = $partida->codJugadorBanco;
+            $transaccion->codJugadorEntrante = $jugadorDestino->codJugador;
+
+            $transaccion->codPartida = $request->codPartida;
+            $transaccion->codTipoTransaccion = TipoTransaccionMonetaria::codCobroDelPozo;
+
+            $transaccion->fechaHora = Carbon::now();
+            $transaccion->monto = $monto;
+            $transaccion->save();
+
+            $jugadorEntrante = Jugador::findOrFail($request->codJugadorDestino);
+            $jugadorEntrante->montoActual = $jugadorEntrante->montoActual + $monto;
+             
+            $jugadorEntrante->save();
+            $partida->pozo = 0;
+            $partida->save();
+            
+            $partida->cambiarToken();
+            $nombreJugadorReceptor = $jugadorEntrante->getNombreUsuario();
+
+            DB::commit();
+            return RespuestaAPI::respuestaOk("Se ha enviado el pozo al jugador $nombreJugadorReceptor");
+        } catch (\Throwable $th) {
+            Debug::mensajeError('enviarPozo', $th);
+            DB::rollBack();
+            return RespuestaAPI::respuestaError("Ha ocurrido un error inesperado");
+        }
+
+    }
+
+    
+
     //cUANDO EXPULSAMOS A UN JUGADOR DE LA SALA DE ESPERA
     public function ExpulsarJugador($codJugador){
         try {
@@ -259,6 +313,28 @@ class PartidaController extends Controller
         }
 
     }
+    public function CambiarPagoSalida(Request $request){
+        try {
+            db::beginTransaction();
+            $partida = Partida::findOrFail($request->codPartida);
+            $partida->pagoSalida = $request->pagoSalida;
+            $partida->save();
+
+            $nuevoPago = $partida->pagoSalida;
+
+            db::commit();
+            return RespuestaAPI::respuestaOk("Se ha cambiado el pago por pasar por GO a '$nuevoPago' exitosamente.");
+            
+        } catch (\Throwable $th) {
+            db::rollBack();
+            Debug::mensajeError('Partida Controller: CambiarPagoSalida ', $th );
+
+            return RespuestaAPI::respuestaError("Ha ocurrido un error interno.");
+        }
+
+    }
+
+
     public function CambiarDineroInicial(Request $request){
         try {
             db::beginTransaction();
@@ -384,10 +460,15 @@ class PartidaController extends Controller
             $jugadorLogeado = $cuentaLogeada->getJugadorPorPartida($codPartida);
             $listaMisPropiedades = $jugadorLogeado->getPropiedades();
             
-            $listaTipoTransaccion = TipoTransaccionMonetaria::where('esDelBanco','=','0')->get();
+            
+            $listaTipoTransaccion = TipoTransaccionMonetaria::where('soloPuedeEnviarElBanco','=','0')->get();
+
+            
             $listaTipoTransaccion_banco = TipoTransaccionMonetaria::
-                  where('esDelBanco','=','1')
-                ->where('codTipoTransaccion','!=',TipoTransaccionMonetaria::codDadivaInicial)
+                 //where('soloPuedeEnviarElBanco','=','1')->
+                  where('codTipoTransaccion','!=',TipoTransaccionMonetaria::codDadivaInicial)
+                  ->where('codTipoTransaccion','!=',TipoTransaccionMonetaria::codCobroDelPozo)
+                
                 ->get();
              
             $jugadorBanco = Jugador::findOrFail($partida->codJugadorBanco);
@@ -461,39 +542,63 @@ class PartidaController extends Controller
 
 
     public function realizarPago(Request $request){
-         
-        $cuentaLogeada = Cuenta::getCuentaLogeada();
-        $partida = Partida::findOrFail($request->codPartida);
+        
+        try{
 
-        if($request->banco=='1')//si se envió como pago del banco 
-            $jugadorLogeado = Jugador::findOrFail($partida->codJugadorBanco);
-        else //jugador normal
-            $jugadorLogeado = $cuentaLogeada->getJugadorPorPartida($request->codPartida);
+            db::beginTransaction();
 
-        if($jugadorLogeado->montoActual < $request->montoEnviado){
-            return RespuestaAPI::respuestaError("No dispone de fondos suficientes.");
+            $cuentaLogeada = Cuenta::getCuentaLogeada();
+            $partida = Partida::findOrFail($request->codPartida);
+
+            if($request->banco=='1')//si se envió como pago del banco 
+                $jugadorLogeado = Jugador::findOrFail($partida->codJugadorBanco);
+            else //jugador normal
+                $jugadorLogeado = $cuentaLogeada->getJugadorPorPartida($request->codPartida);
+
+            if($jugadorLogeado->montoActual < $request->montoEnviado){
+                return RespuestaAPI::respuestaError("No dispone de fondos suficientes.");
+            }
+
+            if($request->codTipoTransaccion == TipoTransaccionMonetaria::codPagoImpuestos){ //si es un pago de impuestos
+                if($request->codJugadorDestino != $partida->codJugadorBanco ) //si no va destinado al banco, error
+                    return RespuestaAPI::respuestaError("El pago de impuestos solo puede ser hecho al banco.");
+            
+                //si sí va al banco, añadimos el monto al pozo actual de la partida
+                $partida->pozo = $partida->pozo + $request->montoEnviado;
+                $partida->save();
+
+                //seguimos como si nada
+            }
+
+            $transaccion = new TransaccionMonetaria();
+            $transaccion->codJugadorSaliente = $jugadorLogeado->codJugador;
+            $transaccion->codJugadorEntrante = $request->codJugadorDestino;
+            $transaccion->codPartida = $request->codPartida;
+            $transaccion->codTipoTransaccion = $request->codTipoTransaccion;
+            $transaccion->fechaHora = Carbon::now();
+            $transaccion->monto = $request->montoEnviado;
+            $transaccion->save();
+
+            $jugadorEntrante = Jugador::findOrFail($request->codJugadorDestino);
+            $jugadorEntrante->montoActual = $jugadorEntrante->montoActual + $request->montoEnviado;
+            $jugadorLogeado->montoActual = $jugadorLogeado->montoActual - $request->montoEnviado;
+
+            $jugadorEntrante->save();
+            $jugadorLogeado->save();
+
+            $partida = $jugadorLogeado->getPartida();
+            $partida->cambiarToken();
+
+            DB::commit();
+            return RespuestaAPI::respuestaOk("Se ha realizado el pago exitosamente.");
+
+
+        } catch (\Throwable $th) {
+            db::rollBack();
+            throw $th;
+            return RespuestaAPI::respuestaError("Ha ocurrido un error interno $th.");
+            Debug::mensajeError('realizarPago ',$th);
         }
-
-        $transaccion = new TransaccionMonetaria();
-        $transaccion->codJugadorSaliente = $jugadorLogeado->codJugador;
-        $transaccion->codJugadorEntrante = $request->codJugadorDestino;
-        $transaccion->codPartida = $request->codPartida;
-        $transaccion->codTipoTransaccion = $request->codTipoTransaccion;
-        $transaccion->fechaHora = Carbon::now();
-        $transaccion->monto = $request->montoEnviado;
-        $transaccion->save();
-
-        $jugadorEntrante = Jugador::findOrFail($request->codJugadorDestino);
-        $jugadorEntrante->montoActual = $jugadorEntrante->montoActual + $request->montoEnviado;
-        $jugadorLogeado->montoActual = $jugadorLogeado->montoActual - $request->montoEnviado;
-
-        $jugadorEntrante->save();
-        $jugadorLogeado->save();
-
-        $partida = $jugadorLogeado->getPartida();
-        $partida->cambiarToken();
-
-        return RespuestaAPI::respuestaOk("Se ha realizado el pago exitosamente.");
 
     }
 
@@ -534,6 +639,7 @@ class PartidaController extends Controller
         $codUltimaTransaccionRecibiDineroBanco = '';
         $imagenMonedas = "";
         $imagenMonedasBanco = "";
+        $pozoPartida = $partida->pozo;
         
         //error_log('                    Rqeust:'.$request->tokenSincronizacion." real:".$tokenSincronizacionActual);
 
@@ -600,7 +706,8 @@ class PartidaController extends Controller
             'codUltimaTransaccionRecibiDinero' => $codUltimaTransaccionRecibiDinero,
             'codUltimaTransaccionRecibiDineroBanco' => $codUltimaTransaccionRecibiDineroBanco,
             'imagenMonedas' => $imagenMonedas,
-            'imagenMonedasBanco' => $imagenMonedasBanco
+            'imagenMonedasBanco' => $imagenMonedasBanco,
+            'pozoPartida' => $pozoPartida
         ];
         
         return json_encode($vectorRespuesta);

@@ -14,14 +14,14 @@
 
     </div>
     <div class="col text-right">
-        <a href="{{route('Partida.abrirPartida')}}" class="m-2 btn btn-success" >
+        <a href="{{route('Partida.abrirPartida')}}" class="m-2 btn-xs btn btn-success" >
             Nueva Partida
 
         </a>
     </div>
 
 </div>
-<div class="row m-2">
+<div class="row">
     <div class="col" id="contenedor">
         {{-- Para que aparezcan las partidas antes de empezar a actualizarse --}}
         @include('Partidas.Invocables.inv_ListaPartidas')

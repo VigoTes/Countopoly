@@ -17,7 +17,10 @@ Casos de uso:
     ✔ Sonidito cuando te pagan y envias pago @done(03-10-21 23:55)
     ✔ Imagen con la cantidad de miles que tienees @done(04-10-21 17:23)
     ✔ Opcion de configuracion para que alguien se pueda unir a una partida cuadno ya inicio @done(05-10-21 14:52)
-
+    ✔ Implementar Pozo de impuestos () @done(08-10-21 13:12)
+    ☐ Agregar otros tipos de transacciones (casualidad, arca comunal, )
+    ✔ Agregar boton de pago de salida rápido @done(08-10-21 13:45)
+    
     ☐ Guardar la partida para continuarla luego (en caso de partidas largas)
     
     ☐ Valor de mi patrimonio total
