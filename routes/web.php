@@ -197,3 +197,30 @@ Route::get('/QRs/{string}','LinkController@verLink')->name('Link.Ver');
  //  "1gatosinventana.maracsoft.com/QRs/hfhm4fmhda58yky45h"   //24
  //  "1gatosinventana.maracsoft.com/QRs/c6fds46masflhm8458"  
  //  "1gatosinventana.maracsoft.com/QRs/ityrutkk5y8ky3udfd"   //26
+
+
+
+
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+/*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
+
+Route::get('/Compatibilidad','CompatibilidadController@ver')->name('Compatibilidad.Ver');
