@@ -224,3 +224,43 @@ Route::get('/QRs/{string}','LinkController@verLink')->name('Link.Ver');
 /*--------------------- APLICACIÓN DE LA COMPATIBILIDAD DE LENGUAJES DEL AMOOOORS  ------------------------- */
 
 Route::get('/Compatibilidad','CompatibilidadController@ver')->name('Compatibilidad.Ver');
+
+
+
+
+
+
+
+
+
+
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+/*--------------------- APLICACIÓN DE PROYECCIONES DINÁMICAS  ------------------------- */
+
+
+
+Route::get('/Proyecciones/{hash}/Panel','Proyecciones\ProyeccionController@Panel')->name('PROY.Proyeccion.Panel');
+Route::get('/Proyecciones/{hash}/Visualizar','Proyecciones\ProyeccionController@Visualizar')->name('PROY.Proyeccion.Visualizar');
+
+/* Desde JS */
+Route::get('/Proyecciones/{codProyeccion}/retornarOrdenesPendientes/{tokenActualizacion}','Proyecciones\ProyeccionController@retornarOrdenesPendientes')->name('PROY.Proyeccion.retornarOrdenesPendientes');
+
+Route::get('/Proyecciones/AgregarOrden','Proyecciones\ProyeccionController@AgregarOrden');
+
+Route::get('/Proyecciones/Listar','Proyecciones\ProyeccionController@Listar')->name('PROY.Proyeccion.Listar');
+
+
+Route::post('/Proyecciones/agregarEditarProyeccion','Proyecciones\ProyeccionController@agregarEditarProyeccion')->name('PROY.Proyeccion.agregarEditar');
+
+
