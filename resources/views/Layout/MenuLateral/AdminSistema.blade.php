@@ -72,6 +72,18 @@
       
 
 
+       
+      <li class="nav-item">
+        <a href="{{route('Pasarela.Probar')}}" class="nav-link">
+          <i class="far fa-address-card nav-icon"></i>
+          <p>Pasarela</p>
+        </a>
+      </li>
+
+ 
+      
+
+
       
 
 

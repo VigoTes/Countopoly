@@ -264,3 +264,21 @@ Route::get('/Proyecciones/Listar','Proyecciones\ProyeccionController@Listar')->n
 Route::post('/Proyecciones/agregarEditarProyeccion','Proyecciones\ProyeccionController@agregarEditarProyeccion')->name('PROY.Proyeccion.agregarEditar');
 
 
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+/* -------------------------------------- DEMO DE CINE CHIMU PASARELA DE PAGO ------------------------------------- */
+
+
+Route::get('/CineChimu/ProbarPasarlea','PasarelaController@probarPasarela')->name('Pasarela.Probar');
