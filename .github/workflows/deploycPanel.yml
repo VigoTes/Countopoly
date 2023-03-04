@@ -23,3 +23,19 @@ jobs:
           **/node_modules/**
           fileToExclude.txt
           **/vendor/**
+
+
+    - name: Send mail
+      uses: dawidd6/action-send-mail@v3
+      with:
+        connection_url: ${{secrets.MAIL_CONNECTION}}
+        server_address: smtp.gmail.com
+        server_port: 465
+        secure: true
+        subject: Github Actions job result
+        to: maracsoft@gmail.com
+        from: Deploys Autom <deploys@maracsoft.com>
+        body: Build job of ${{github.repository}} COMMIT ${{github.sha}}  ${{github.ref}}  completed successfully!
+          
+
+    
