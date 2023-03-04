@@ -1,5 +1,7 @@
 
-on: push
+on: 
+  push:
+    branches: [master]
 name: Publish Website to CPanel
 jobs:
   FTP-Deploy-Action:
